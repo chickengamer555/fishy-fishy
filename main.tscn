@@ -1,9 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5w807e2siywa"]
+[gd_scene load_steps=3 format=3 uid="uid://b5w807e2siywa"]
 
 [ext_resource type="Script" uid="uid://44yusc5xbx2s" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://fyfghj3gqj4e" path="res://player_test_1.tscn" id="2_0xm2m"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
+
+[node name="Player_test_1" parent="." instance=ExtResource("2_0xm2m")]
+position = Vector2(927, 182)
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
@@ -32,7 +36,7 @@ layout_mode = 2
 text = "send"
 
 [node name="TypingTimer" type="Timer" parent="."]
-wait_time = 0.03
+wait_time = 0.005
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="ChatUI/HBoxContainer/SendButton" to="." method="_on_send_button_pressed"]
