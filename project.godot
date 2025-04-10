@@ -11,6 +11,6 @@ config_version=5
 [application]
 
 config/name="Fishy fishy"
-run/main_scene="uid://b5w807e2siywa"
+run/main_scene="uid://vuffx8f85i0g"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
