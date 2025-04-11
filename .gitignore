@@ -1,3 +1,20 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+emotion test/Pajama_Sam.png
+emotion test/Pajama_Sam.png.import
+horse_emotion.tscn
+main.gd.uid
+main.tscn
+main.tscn1322667004.tmp
+main.tscn1341924048.tmp
+main.tscn1362635669.tmp
+main.tscn19909083.tmp
+normal_guy.gd
+normal_guy.gd.uid
+normal_guy.tscn
+normal_horse.gd
+normal_horse.gd.uid
+normal_horse.tscn
+player_test_1.tscn
+project.godot

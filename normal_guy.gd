@@ -1,6 +1,6 @@
 extends Node
 
-var API_KEY = "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"  # Replace with your OpenRouter key
+var API_KEY = "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"
 var MODEL = "meta-llama/llama-4-scout:free"
 
 @onready var http_request = $HTTPRequest
