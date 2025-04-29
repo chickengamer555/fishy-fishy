@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqo35voi18fb2"]
+[gd_scene load_steps=5 format=3 uid="uid://bqo35voi18fb2"]
 
 [ext_resource type="Texture2D" uid="uid://df063sk0di4pl" path="res://emotion test/istockphoto-157030584-612x612.jpg" id="1_dlp7n"]
 [ext_resource type="Texture2D" uid="uid://jonn0rrngsqu" path="res://emotion test/360_F_86182546_Gy93hyoCFXmK0JlXYnOekv05v66MUmfb.jpg" id="2_nctdk"]
 [ext_resource type="Texture2D" uid="uid://b7goki8m5gqke" path="res://emotion test/istockphoto-505826084-612x612.jpg" id="3_ce657"]
 [ext_resource type="Texture2D" uid="uid://b4y1mcjx4g6tf" path="res://icon.svg" id="4_holtq"]
-[ext_resource type="Texture2D" uid="uid://diip7tywi40n8" path="res://emotion test/Pajama_Sam.png" id="5_1yhbn"]
 
 [node name="horse_emotion" type="Node2D"]
 visible = false
@@ -27,6 +26,3 @@ texture = ExtResource("3_ce657")
 position = Vector2(0.999996, 1.5)
 scale = Vector2(2.4375, 2.30469)
 texture = ExtResource("4_holtq")
-
-[node name="Darkness" type="Sprite2D" parent="."]
-texture = ExtResource("5_1yhbn")

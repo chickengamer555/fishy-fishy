@@ -26,6 +26,7 @@ layout_mode = 2
 [node name="PlayerInput" type="LineEdit" parent="ChatUI/HBoxContainer"]
 custom_minimum_size = Vector2(500, 50)
 layout_mode = 2
+max_length = 200
 
 [node name="SendButton" type="Button" parent="ChatUI/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
@@ -36,7 +37,9 @@ text = "send"
 wait_time = 0.005
 
 [node name="horse_emotion" parent="." instance=ExtResource("2_vkv0t")]
-position = Vector2(914, 224)
+visible = true
+position = Vector2(60, 614)
+scale = Vector2(0.363243, 0.370811)
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="ChatUI/HBoxContainer/SendButton" to="." method="_on_send_button_pressed"]
