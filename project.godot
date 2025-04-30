@@ -11,10 +11,11 @@ config_version=5
 [application]
 
 config/name="Fishy fishy"
-run/main_scene="uid://vuffx8f85i0g"
+run/main_scene="uid://d3ky8ukpolq71"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Memory="*res://memory.gd"
+Memory="*res://code stuff/memory.gd"
+MapMemory="*res://code stuff/map_memory.gd"
