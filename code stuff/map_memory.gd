@@ -9,3 +9,12 @@ func unlock_area(area: String):
 
 func is_area_unlocked(area: String) -> bool:
 	return area in unlocked_areas
+
+var current_location: String = "unknown"
+
+func set_location(loc: String):
+	current_location = loc
+	print("📍 Current location set to:", current_location)
+
+func get_location() -> String:
+	return current_location

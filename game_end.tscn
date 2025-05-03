@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc7lf41ocet7r"]
+
+[ext_resource type="Script" uid="uid://ditnxcyitsxyk" path="res://game_end.gd" id="1_npjxs"]
+
+[node name="Game_end" type="Node2D"]
+script = ExtResource("1_npjxs")
+
+[node name="HorseScore" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Horse"

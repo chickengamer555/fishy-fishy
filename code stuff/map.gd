@@ -4,8 +4,10 @@ extends Node2D
 
 func _on_horse_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scene stuff/normal_horse.tscn")
+	MapMemory.set_location("horse")
 
 func _ready():
+	print("🗓️ Days: %d, Actions: %d" % [GameState.days_left, GameState.actions_left])
 	for child in get_children():
 		# Assume buttons are named after the areas (e.g. "bar", "forest")
 		var area_name := child.name.to_lower()
