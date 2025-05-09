@@ -1,6 +1,7 @@
 extends Node
-var days_left := 2
-var actions_left := 2
+var days_left := 0
+var actions_left := 3
+var should_end_game := false  # <-- Add this
 
 # Store final scores per AI
 var ai_scores := {}
@@ -17,11 +18,13 @@ func use_action():
 	print("🎮 Action used. Actions left: %d" % actions_left)
 	if actions_left <= 0 and days_left > 0:
 		reset_day()
-	elif actions_left < 0 and days_left <= 0:
-		end_game()
+	elif actions_left <= 0 and days_left <= 0:
+		should_end_game = true  # <-- Wait for user to press "Next"
+
 
 func end_game():
 	get_tree().change_scene_to_file("res://game_end.tscn")
 	print("🏁 Game over! Final relationships:")
 	for name in ai_scores.keys():
 		print("%s: %d" % [name, ai_scores[name]])
+ 	

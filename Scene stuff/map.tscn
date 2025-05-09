@@ -5,7 +5,7 @@
 [node name="Map" type="Node2D"]
 script = ExtResource("1_cttu5")
 
-[node name="horse" type="Button" parent="."]
+[node name="horse area" type="Button" parent="."]
 offset_left = 231.0
 offset_top = 189.0
 offset_right = 278.0
@@ -20,5 +20,5 @@ offset_bottom = 8.0
 scale = Vector2(6.72, 2)
 text = "Bar"
 
-[connection signal="pressed" from="horse" to="." method="_on_horse_pressed"]
+[connection signal="pressed" from="horse area" to="." method="_on_horse_pressed"]
 [connection signal="pressed" from="bar" to="." method="_on_bar_pressed"]

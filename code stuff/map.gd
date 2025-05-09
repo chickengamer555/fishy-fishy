@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var horse_button = $horse
+@onready var horse_button = $"horse area"
 
 func _on_horse_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scene stuff/normal_horse.tscn")
