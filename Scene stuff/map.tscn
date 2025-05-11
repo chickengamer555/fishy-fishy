@@ -20,5 +20,14 @@ offset_bottom = 8.0
 scale = Vector2(6.72, 2)
 text = "Bar"
 
+[node name="shop" type="Button" parent="."]
+offset_left = 788.0
+offset_top = 338.0
+offset_right = 842.0
+offset_bottom = 369.0
+scale = Vector2(2.8, 3.22857)
+text = "SHOP"
+
 [connection signal="pressed" from="horse area" to="." method="_on_horse_pressed"]
 [connection signal="pressed" from="bar" to="." method="_on_bar_pressed"]
+[connection signal="pressed" from="shop" to="." method="_on_shop_pressed"]

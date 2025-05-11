@@ -1,9 +1,9 @@
 extends Node2D
 
 @onready var horse_button = $"horse area"
-
+@onready var shop = $shop
 func _on_horse_pressed() -> void:
-	get_tree().change_scene_to_file("res://Scene stuff/normal_horse.tscn")
+	get_tree().change_scene_to_file("res://normal_horse.tscn")
 	MapMemory.set_location("horse")
 
 func _ready():
@@ -17,7 +17,13 @@ func _ready():
 		else:
 			child.visible = false
 	horse_button.visible = true
+	shop.visible = true
+
 
 
 func _on_bar_pressed() -> void:
 	get_tree().change_scene_to_file("res://bar.tscn")
+
+
+func _on_shop_pressed() -> void:
+	get_tree().change_scene_to_file("res://shop.tscn")

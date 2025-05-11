@@ -12,7 +12,8 @@ func reset_day():
 	days_left -= 1
 	actions_left = 3
 	print("📅 New day! Days left: %d" % days_left)
-
+	emit_signal("day_or_action_changed")
+	
 func use_action():
 	actions_left -= 1
 	print("🎮 Action used. Actions left: %d" % actions_left)
