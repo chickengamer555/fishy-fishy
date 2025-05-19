@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://df063sk0di4pl"
-path="res://.godot/imported/istockphoto-157030584-612x612.jpg-01cffc66effc36a15706a9f5ba0af515.ctex"
+uid="uid://diip7tywi40n8"
+path="res://.godot/imported/Pajama_Sam.png-563c30fb55d50465fa27b874c4861a4a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://emotion test/istockphoto-157030584-612x612.jpg"
-dest_files=["res://.godot/imported/istockphoto-157030584-612x612.jpg-01cffc66effc36a15706a9f5ba0af515.ctex"]
+source_file="res://emotion/Pajama_Sam.png"
+dest_files=["res://.godot/imported/Pajama_Sam.png-563c30fb55d50465fa27b874c4861a4a.ctex"]
 
 [params]
 

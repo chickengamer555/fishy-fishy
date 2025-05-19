@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jonn0rrngsqu"
-path="res://.godot/imported/360_F_86182546_Gy93hyoCFXmK0JlXYnOekv05v66MUmfb.jpg-cdaf6f561548d66fa811a836a20da963.ctex"
+uid="uid://df063sk0di4pl"
+path="res://.godot/imported/istockphoto-157030584-612x612.jpg-88d5a6c09ef81e96c9c88967e36e1f93.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://emotion test/360_F_86182546_Gy93hyoCFXmK0JlXYnOekv05v66MUmfb.jpg"
-dest_files=["res://.godot/imported/360_F_86182546_Gy93hyoCFXmK0JlXYnOekv05v66MUmfb.jpg-cdaf6f561548d66fa811a836a20da963.ctex"]
+source_file="res://emotion/istockphoto-157030584-612x612.jpg"
+dest_files=["res://.godot/imported/istockphoto-157030584-612x612.jpg-88d5a6c09ef81e96c9c88967e36e1f93.ctex"]
 
 [params]
 
