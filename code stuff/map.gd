@@ -1,10 +1,9 @@
 extends Node2D
 
-@onready var horse_button = $"horse area"
-@onready var shop = $shop
+@onready var kelp_man = $Kelp_man_cove
 func _on_horse_pressed() -> void:
-	get_tree().change_scene_to_file("res://normal_horse.tscn")
-	MapMemory.set_location("horse")
+	get_tree().change_scene_to_file("res://kelp_man.tscn")
+	MapMemory.set_location("kelp man cove")
 
 func _ready():
 	print("🗓️ Days: %d, Actions: %d" % [GameState.days_left, GameState.actions_left])
@@ -16,14 +15,9 @@ func _ready():
 			child.visible = true
 		else:
 			child.visible = false
-	horse_button.visible = true
-	shop.visible = true
+	kelp_man.visible = true
 
 
 
 func _on_bar_pressed() -> void:
 	get_tree().change_scene_to_file("res://bar.tscn")
-
-
-func _on_shop_pressed() -> void:
-	get_tree().change_scene_to_file("res://shop.tscn")

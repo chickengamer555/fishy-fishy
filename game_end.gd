@@ -1,9 +1,9 @@
 extends Node
 
-@onready var horse_score_field = $HorseScore
+@onready var kelp_score_field = $KelpManScore  # Rename node in editor too if needed
 
 func _ready():
-	update_score_field("Horse", horse_score_field)
+	update_score_field("Kelp man", kelp_score_field)
 
 func update_score_field(ai_name: String, field: Label):
 	if ai_name in GameState.ai_scores:

@@ -1,0 +1,129 @@
+[gd_scene load_steps=9 format=3 uid="uid://3v4j8f6k7rre"]
+
+[ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/kelp_man.gd" id="1_5tm4q"]
+[ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="2_u432q"]
+[ext_resource type="Script" uid="uid://bc8vl7582f5l0" path="res://Scene stuff/label.gd" id="3_g3hot"]
+[ext_resource type="PackedScene" uid="uid://bqo35voi18fb2" path="res://Scene stuff/horse_emotion.tscn" id="4_7ef5s"]
+
+[sub_resource type="FontVariation" id="FontVariation_p2uai"]
+base_font = ExtResource("2_u432q")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2uai"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6wc0"]
+bg_color = Color(0.133333, 0.658824, 0.831373, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thotk"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="KELP MAN" type="Node2D"]
+position = Vector2(-173, -5)
+script = ExtResource("1_5tm4q")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="AIResponsePanel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 173.0
+offset_top = 409.0
+offset_right = 983.0
+offset_bottom = 669.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.969, 0.8)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="AIResponsePanel"]
+clip_contents = true
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 150.0
+scale = Vector2(1.01006, 1.71233)
+theme_override_fonts/font = SubResource("FontVariation_p2uai")
+theme_override_font_sizes/font_size = 40
+autowrap_mode = 2
+clip_text = true
+script = ExtResource("3_g3hot")
+
+[node name="horse_emotion" parent="." instance=ExtResource("4_7ef5s")]
+position = Vector2(556, 235)
+scale = Vector2(2, 1.2)
+
+[node name="map" type="Button" parent="."]
+offset_left = 1245.0
+offset_top = 12.0
+offset_right = 1288.0
+offset_bottom = 43.0
+scale = Vector2(1.84, 1.52)
+text = "map
+"
+
+[node name="TypingTimer" type="Timer" parent="."]
+wait_time = 0.005
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 976.0
+offset_top = 226.0
+offset_right = 1476.0
+offset_bottom = 526.0
+scale = Vector2(0.7, 1.299)
+
+[node name="PlayerInput" type="TextEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_p2uai")
+wrap_mode = 1
+indent_wrapped_lines = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 976.0
+offset_top = 181.0
+offset_right = 1176.0
+offset_bottom = 212.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 1.299)
+
+[node name="NextButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_v6wc0")
+text = "Next/Send
+"
+
+[node name="ChatLog" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_thotk")
+text = "Chat log"
+
+[node name="ChatLogWindow" type="Window" parent="."]
+position = Vector2i(0, 36)
+visible = false
+
+[node name="ChatLogLabel" type="Label" parent="ChatLogWindow"]
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(2.52106, 4.32)
+size_flags_vertical = 1
+autowrap_mode = 3
+
+[node name="DayState" type="Label" parent="."]
+offset_left = 174.0
+offset_top = 9.0
+offset_right = 214.0
+offset_bottom = 32.0
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
+[connection signal="pressed" from="map" to="." method="_on_map_pressed"]
+[connection signal="timeout" from="TypingTimer" to="AIResponsePanel/Label" method="_on_typing_timer_timeout"]
+[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/ChatLog" to="." method="_on_chat_log_pressed"]
