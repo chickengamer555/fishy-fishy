@@ -1,6 +1,6 @@
 extends Label
 
-@export var font_path := "res://Space_Grotesk,Underdog/Underdog/Underdog-Regular.ttf"
+@export var font_path := "res://PixelifySans-VariableFont_wght.ttf"
 @export var max_font_size := 40
 @export var min_font_size := 10
 
