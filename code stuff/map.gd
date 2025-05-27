@@ -16,8 +16,3 @@ func _ready():
 		else:
 			child.visible = false
 	kelp_man.visible = true
-
-
-
-func _on_bar_pressed() -> void:
-	get_tree().change_scene_to_file("res://bar.tscn")
