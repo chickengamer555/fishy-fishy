@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfgtbdtiuq16h"
-path="res://.godot/imported/UI.png-2a1849b179d11b431802496ee8cf0453.ctex"
+uid="uid://mdjoikqduak2"
+path="res://.godot/imported/Kelp_man_cove_layout.png-e9915a71ef8f0d758af5b8aa332f6ca6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scene stuff/UI.png"
-dest_files=["res://.godot/imported/UI.png-2a1849b179d11b431802496ee8cf0453.ctex"]
+source_file="res://UI STUFF/Kelp_man_cove_layout.png"
+dest_files=["res://.godot/imported/Kelp_man_cove_layout.png-e9915a71ef8f0d758af5b8aa332f6ca6.ctex"]
 
 [params]
 

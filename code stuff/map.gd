@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var kelp_man = $Kelp_man_cove
 func _on_horse_pressed() -> void:
-	get_tree().change_scene_to_file("res://kelp_man.tscn")
+	get_tree().change_scene_to_file("res://Scene stuff/kelp_man.tscn")
 	MapMemory.set_location("kelp man cove")
 
 func _ready():

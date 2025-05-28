@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://cc7lf41ocet7r"]
 
-[ext_resource type="Script" uid="uid://ditnxcyitsxyk" path="res://game_end.gd" id="1_npjxs"]
+[ext_resource type="Script" uid="uid://ditnxcyitsxyk" path="res://code stuff/game_end.gd" id="1_ydmnu"]
 
 [node name="Game_end" type="Node2D"]
-script = ExtResource("1_npjxs")
+script = ExtResource("1_ydmnu")
 
 [node name="KelpManScore" type="Label" parent="."]
 offset_right = 40.0

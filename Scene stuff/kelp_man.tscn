@@ -1,11 +1,13 @@
-[gd_scene load_steps=14 format=3 uid="uid://3v4j8f6k7rre"]
+[gd_scene load_steps=17 format=3 uid="uid://3v4j8f6k7rre"]
 
-[ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/kelp_man.gd" id="1_5tm4q"]
-[ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="2_u432q"]
-[ext_resource type="Script" uid="uid://bc8vl7582f5l0" path="res://Scene stuff/label.gd" id="3_g3hot"]
-[ext_resource type="PackedScene" uid="uid://bqo35voi18fb2" path="res://Scene stuff/kelp_emotion.tscn" id="4_7ef5s"]
-[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://underwater.gdshader" id="5_u432q"]
-[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/chatlog.gd" id="6_chatlog"]
+[ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/kelp_man.gd" id="1_orawk"]
+[ext_resource type="PackedScene" uid="uid://bqo35voi18fb2" path="res://emotion/KELP MAN/kelp_emotion.tscn" id="2_ol3r6"]
+[ext_resource type="Script" uid="uid://bc8vl7582f5l0" path="res://code stuff/label.gd" id="3_co7ud"]
+[ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="4_1qk4g"]
+[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/chatlog.gd" id="5_lbieo"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://underwater.gdshader" id="6_w2ql3"]
+[ext_resource type="Shader" uid="uid://b4usabyy0jjn" path="res://fish_move.gdshader" id="7_a81c1"]
+[ext_resource type="Texture2D" uid="uid://u6q1apywxmp5" path="res://images.jpeg" id="8_g5soc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2uai"]
 bg_color = Color(0, 0, 0, 1)
@@ -49,70 +51,86 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g3hot"]
-shader = ExtResource("5_u432q")
-shader_parameter/wave_amplitude = 0.002
-shader_parameter/wave_frequency = 10.0
-shader_parameter/wave_speed = 0.5
-shader_parameter/caustic_strength = 0.002
+shader = ExtResource("6_w2ql3")
+shader_parameter/wave_amplitude = 0.001
+shader_parameter/wave_frequency = 1.0
+shader_parameter/wave_speed = 0.1
+shader_parameter/caustic_strength = 0.001
 shader_parameter/caustic_speed = 0.1
 shader_parameter/tint_color = Color(0, 0.145098, 0.129412, 0.419608)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d2h8b"]
+shader = ExtResource("7_a81c1")
+shader_parameter/fish_image_1 = ExtResource("8_g5soc")
+shader_parameter/fish_image_2 = ExtResource("8_g5soc")
+shader_parameter/fish_image_3 = ExtResource("8_g5soc")
+shader_parameter/fish_image_4 = ExtResource("8_g5soc")
+shader_parameter/fish_image_5 = ExtResource("8_g5soc")
+shader_parameter/fish_amount = 12
+shader_parameter/base_fish_speed = 0.1
+shader_parameter/fish_size = 0.1
+shader_parameter/overall_fish_alpha = 0.8
+shader_parameter/swimming_curve_strength = 1.0
+shader_parameter/tail_wag_speed = 3.0
+shader_parameter/schooling_strength = 0.0
+shader_parameter/speed_variation = 0.63
+shader_parameter/spawn_rate = 0.1
+shader_parameter/enable_vertical_spawn = false
+shader_parameter/enable_horizontal_spawn = false
+
 [node name="KELP MAN" type="Node2D"]
 position = Vector2(-173, -5)
-script = ExtResource("1_5tm4q")
+script = ExtResource("1_orawk")
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
+[node name="kelp_emotion" parent="." instance=ExtResource("2_ol3r6")]
+position = Vector2(550, 325)
+scale = Vector2(8.5, 8.5)
+
 [node name="AIResponsePanel" type="Panel" parent="."]
+top_level = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 173.0
-offset_top = 409.0
-offset_right = 983.0
-offset_bottom = 669.0
+offset_left = 20.0
+offset_top = 420.0
+offset_right = -360.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.969, 0.8)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Label" type="RichTextLabel" parent="AIResponsePanel"]
-layout_mode = 0
-offset_right = 800.0
-offset_bottom = 150.0
-scale = Vector2(1.01006, 1.71233)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 fit_content = true
-script = ExtResource("3_g3hot")
-
-[node name="kelp_emotion" parent="." instance=ExtResource("4_7ef5s")]
-position = Vector2(556, 235)
-scale = Vector2(5, 5)
-
-[node name="map" type="Button" parent="."]
-offset_left = 1245.0
-offset_top = 12.0
-offset_right = 1288.0
-offset_bottom = 43.0
-scale = Vector2(1.84, 1.52)
-text = "map
-"
+script = ExtResource("3_co7ud")
 
 [node name="TypingTimer" type="Timer" parent="."]
 wait_time = 0.005
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_left = 976.0
-offset_top = 226.0
+offset_top = 280.0
 offset_right = 1476.0
-offset_bottom = 526.0
-scale = Vector2(0.7, 1.299)
+offset_bottom = 520.0
+scale = Vector2(0.7, 1.2)
 
 [node name="PlayerInput" type="TextEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(400, 300)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_p2uai")
 wrap_mode = 1
@@ -123,12 +141,12 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 976.0
-offset_top = 181.0
+offset_top = 240.0
 offset_right = 1176.0
-offset_bottom = 212.0
+offset_bottom = 271.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.7, 1.299)
+scale = Vector2(0.7, 1.2)
 
 [node name="NextButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
@@ -154,7 +172,7 @@ content_scale_mode = 1
 content_scale_aspect = 1
 theme_override_colors/title_color = Color(0.9, 0.9, 0.95, 1)
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_window_panel")
-script = ExtResource("6_chatlog")
+script = ExtResource("5_lbieo")
 
 [node name="ChatLogPanel" type="Panel" parent="ChatLogWindow"]
 anchors_preset = 15
@@ -178,7 +196,7 @@ grow_vertical = 2
 [node name="TitleLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 16
 text = "Conversation History"
 autowrap_mode = 3
@@ -189,19 +207,19 @@ layout_mode = 2
 [node name="FontSizeLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 12
 text = "Font Size:"
 
 [node name="DecreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 12
 text = "A-"
 
 [node name="IncreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 12
 text = "A+"
 
@@ -211,7 +229,7 @@ layout_mode = 2
 [node name="FullscreenButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
 tooltip_text = "Toggle Fullscreen"
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 12
 text = "⛶"
 
@@ -222,7 +240,7 @@ layout_mode = 2
 layout_mode = 2
 tooltip_text = "Close Chat Log"
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 12
 text = "✕"
 
@@ -240,7 +258,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.9, 0.9, 0.95, 1)
-theme_override_fonts/normal_font = ExtResource("2_u432q")
+theme_override_fonts/normal_font = ExtResource("4_1qk4g")
 bbcode_enabled = true
 scroll_following = true
 
@@ -250,38 +268,11 @@ layout_mode = 2
 [node name="StatusLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
-theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_fonts/font = ExtResource("4_1qk4g")
 theme_override_font_sizes/font_size = 10
 text = "0 messages"
 horizontal_alignment = 2
 autowrap_mode = 3
-
-[node name="ColorRect" type="ColorRect" parent="ChatLogWindow"]
-show_behind_parent = true
-top_level = true
-material = SubResource("ShaderMaterial_g3hot")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="DayState" type="Label" parent="."]
-offset_left = 174.0
-offset_top = 9.0
-offset_right = 214.0
-offset_bottom = 32.0
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-show_behind_parent = true
-top_level = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
 show_behind_parent = true
@@ -294,8 +285,93 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+visible = false
+show_behind_parent = true
+top_level = true
+material = SubResource("ShaderMaterial_d2h8b")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopNavigationBar" type="Control" parent="."]
+top_level = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -588.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TopBarBackground" type="Panel" parent="TopNavigationBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_window_panel")
+
+[node name="DayState" type="Label" parent="TopNavigationBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 15.0
+offset_top = -15.0
+offset_right = 250.0
+offset_bottom = 15.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_fonts/font = ExtResource("4_1qk4g")
+theme_override_font_sizes/font_size = 16
+text = "Day 1 - Morning"
+vertical_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="TopNavigationBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -15.0
+offset_right = 120.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_fonts/font = ExtResource("4_1qk4g")
+theme_override_font_sizes/font_size = 20
+text = "KELP MAN COVE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="map" type="Button" parent="TopNavigationBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -15.0
+offset_right = -15.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_fonts/font = ExtResource("4_1qk4g")
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_v6wc0")
+text = "Map"
+
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
-[connection signal="pressed" from="map" to="." method="_on_map_pressed"]
 [connection signal="timeout" from="TypingTimer" to="AIResponsePanel/Label" method="_on_typing_timer_timeout"]
 [connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/ChatLog" to="." method="_on_chat_log_pressed"]
@@ -303,3 +379,4 @@ mouse_filter = 2
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/IncreaseFontButton" to="ChatLogWindow" method="_on_increase_font_button_pressed"]
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/FullscreenButton" to="ChatLogWindow" method="_on_fullscreen_button_pressed"]
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/CloseButton" to="ChatLogWindow" method="_on_close_button_pressed"]
+[connection signal="pressed" from="TopNavigationBar/map" to="." method="_on_map_pressed"]
