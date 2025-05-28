@@ -4,11 +4,13 @@ signal day_or_action_changed
 signal final_turn_started
 var just_started_new_day := false
 var days_left := 2
-var actions_left := 2
+var actions_left := 999
 var final_turn_triggered := false
 var ai_scores := {}
 var should_reset_ai := true
 var last_ai_response := ""
+
+
 
 func use_action():
 	if final_turn_triggered:

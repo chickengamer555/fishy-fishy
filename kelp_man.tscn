@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://3v4j8f6k7rre"]
+[gd_scene load_steps=14 format=3 uid="uid://3v4j8f6k7rre"]
 
 [ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/kelp_man.gd" id="1_5tm4q"]
 [ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="2_u432q"]
 [ext_resource type="Script" uid="uid://bc8vl7582f5l0" path="res://Scene stuff/label.gd" id="3_g3hot"]
 [ext_resource type="PackedScene" uid="uid://bqo35voi18fb2" path="res://Scene stuff/kelp_emotion.tscn" id="4_7ef5s"]
-[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://kelp_man.gdshader" id="5_u432q"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://underwater.gdshader" id="5_u432q"]
+[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/chatlog.gd" id="6_chatlog"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2uai"]
 bg_color = Color(0, 0, 0, 1)
@@ -15,14 +16,46 @@ bg_color = Color(0.133333, 0.658824, 0.831373, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thotk"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_window_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.3, 0.4, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_panel"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.3, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_scroll"]
+bg_color = Color(0.05, 0.05, 0.1, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.2, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g3hot"]
 shader = ExtResource("5_u432q")
-shader_parameter/wave_amplitude = 0.005
-shader_parameter/wave_frequency = 5.0
-shader_parameter/wave_speed = 1.0
-shader_parameter/caustic_strength = 0.001
-shader_parameter/caustic_speed = 0.01
-shader_parameter/tint_color = Color(0.054902, 0, 0.72549, 0.180392)
+shader_parameter/wave_amplitude = 0.002
+shader_parameter/wave_frequency = 10.0
+shader_parameter/wave_speed = 0.5
+shader_parameter/caustic_strength = 0.002
+shader_parameter/caustic_speed = 0.1
+shader_parameter/tint_color = Color(0, 0.145098, 0.129412, 0.419608)
 
 [node name="KELP MAN" type="Node2D"]
 position = Vector2(-173, -5)
@@ -109,21 +142,146 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_thotk")
 text = "Chat log"
 
 [node name="ChatLogWindow" type="Window" parent="."]
-position = Vector2i(0, 36)
+title = "Chat Log - Kelp Man"
+initial_position = 1
+size = Vector2i(600, 400)
 visible = false
+transient = true
+always_on_top = true
+min_size = Vector2i(300, 200)
+max_size = Vector2i(1920, 1080)
+content_scale_mode = 1
+content_scale_aspect = 1
+theme_override_colors/title_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_styles/embedded_border = SubResource("StyleBoxFlat_window_panel")
+script = ExtResource("6_chatlog")
 
-[node name="ChatLogLabel" type="Label" parent="ChatLogWindow"]
-offset_right = 40.0
-offset_bottom = 23.0
-scale = Vector2(2.52106, 4.32)
-size_flags_vertical = 1
+[node name="ChatLogPanel" type="Panel" parent="ChatLogWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_chat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatLogWindow/ChatLogPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 16
+text = "Conversation History"
 autowrap_mode = 3
+
+[node name="FontSizeContainer" type="HBoxContainer" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FontSizeLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 12
+text = "Font Size:"
+
+[node name="DecreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 12
+text = "A-"
+
+[node name="IncreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 12
+text = "A+"
+
+[node name="VSeparator" type="VSeparator" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+
+[node name="FullscreenButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+tooltip_text = "Toggle Fullscreen"
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 12
+text = "⛶"
+
+[node name="VSeparator2" type="VSeparator" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+tooltip_text = "Close Chat Log"
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 12
+text = "✕"
+
+[node name="HSeparator" type="HSeparator" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_chat_scroll")
+horizontal_scroll_mode = 0
+
+[node name="ChatLogLabel" type="RichTextLabel" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_fonts/normal_font = ExtResource("2_u432q")
+bbcode_enabled = true
+scroll_following = true
+
+[node name="HSeparator2" type="HSeparator" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+theme_override_fonts/font = ExtResource("2_u432q")
+theme_override_font_sizes/font_size = 10
+text = "0 messages"
+horizontal_alignment = 2
+autowrap_mode = 3
+
+[node name="ColorRect" type="ColorRect" parent="ChatLogWindow"]
+show_behind_parent = true
+top_level = true
+material = SubResource("ShaderMaterial_g3hot")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="DayState" type="Label" parent="."]
 offset_left = 174.0
 offset_top = 9.0
 offset_right = 214.0
 offset_bottom = 32.0
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+show_behind_parent = true
+top_level = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
 show_behind_parent = true
@@ -141,3 +299,7 @@ mouse_filter = 2
 [connection signal="timeout" from="TypingTimer" to="AIResponsePanel/Label" method="_on_typing_timer_timeout"]
 [connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/ChatLog" to="." method="_on_chat_log_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/DecreaseFontButton" to="ChatLogWindow" method="_on_decrease_font_button_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/IncreaseFontButton" to="ChatLogWindow" method="_on_increase_font_button_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/FullscreenButton" to="ChatLogWindow" method="_on_fullscreen_button_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/CloseButton" to="ChatLogWindow" method="_on_close_button_pressed"]

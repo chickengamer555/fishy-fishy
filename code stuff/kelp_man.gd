@@ -9,17 +9,17 @@ extends Node
 @onready var emotion_default = $kelp_emotion/Default
 @onready var emotion_happy = $kelp_emotion/Happy
 @onready var input_field = $VBoxContainer/PlayerInput
-@onready var chat_log_label = $ChatLogWindow/ChatLogLabel
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_state = $"DayState"
 @onready var input_container = $HBoxContainer
 
 @export var ai_name := "Kelp man"
 var message_history: Array = []
-var chat_log: Array = []
 var horse_total_score := 0
 var known_areas := ["bar", "kelp man cove"]
 var unlocked_areas: Array = []
+
+
 
 var ENCODED_KEY := "c2stcHJvai1XNk1BcXVFR0FmQ0NpTl9BWWlJRlJtX08tcVlkbEJKaGZNVGg3Zml2SGR6aUVUOWx0T2JIRzI5cURxeV9OMEk4UGdaN1lCczRNMVQzQmxia0ZKTVJDUkdWNFd6Z0ZzbG5CejZhRzlzOGZvd3h3THlaVkpxVzQ5RldhNzdYRWZ5ZXJvMXBPVHVsVVh5RUk5X1RvZ0xKRFA5ZjlVMEE="
 var API_KEY = Marshalls.base64_to_raw(ENCODED_KEY).get_string_from_utf8()
@@ -31,6 +31,7 @@ func _ready():
 	update_day_state()
 
 	await get_tree().process_frame
+	
 	if GameState.should_reset_ai:
 		get_ai_intro_response()
 		GameState.should_reset_ai = false
@@ -146,8 +147,10 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	Memory.add_message(ai_name, reply, "User")
 	GameState.last_ai_response = reply
-	chat_log.append({ "role": "assistant", "content": reply })
-
+	
+	# Add to chat log window
+	chat_log_window.add_message("assistant", reply)
+	
 	response_label.call("show_text_with_typing", reply)
 	update_emotion_sprite(emotion)
 	check_for_area_mentions(reply)
@@ -185,7 +188,7 @@ func _on_next_button_pressed():
 		GameState.should_reset_ai = true
 		GameState.last_ai_response = ""
 		message_history.clear()
-		chat_log.clear()
+		chat_log_window.clear_chat_log()
 		return
 
 	var msg = input_field.text.strip_edges()
@@ -198,18 +201,20 @@ func _on_next_button_pressed():
 
 	Memory.add_message("User", msg, ai_name)
 	message_history.append({ "role": "user", "content": msg })
-	chat_log.append({ "role": "user", "content": msg })
+	
+	# Add to chat log window
+	chat_log_window.add_message("user", msg)
+	
 	send_request()
 
 func _on_chat_log_pressed():
-	var log := ""
-	for entry in chat_log:
-		if entry["role"] == "user":
-			log += "🧑 You: " + entry["content"] + "\n\n"
-		else:
-			log += "🤖 Kelp Man: " + entry["content"] + "\n\n"
-	chat_log_label.text = log.strip_edges()
-	chat_log_window.popup_centered()
+	# Toggle chat log window
+	if chat_log_window.visible:
+		chat_log_window.hide()
+	else:
+		chat_log_window.show_chat_log()
+
+
 
 func update_day_state():
 	if day_state:
@@ -220,7 +225,6 @@ func _on_final_turn_started():
 	response_label.call("show_text_with_typing", "[default]\nKelp Man stares longingly as the world fades.\n(RELATIONSHIP: 0)")
 	await get_tree().create_timer(3.0).timeout
 	GameState.end_game()
-
 
 func _on_map_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scene stuff/map.tscn")
