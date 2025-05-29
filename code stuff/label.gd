@@ -46,7 +46,9 @@ func _fit_font_to_label(preview_text: String):
 		return
 
 	# Wait for layout to be ready
-	await get_tree().process_frame
+	var tree = get_tree()
+	if tree:
+		await tree.process_frame
 	
 	var label_size := get_size()
 	

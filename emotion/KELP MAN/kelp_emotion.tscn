@@ -13,6 +13,7 @@ visible = false
 texture = ExtResource("1_mbstq")
 
 [node name="Sad" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(0.500002, 7.62939e-06)
 texture = ExtResource("2_lx8og")
 
@@ -21,8 +22,7 @@ visible = false
 position = Vector2(0, -0.5)
 texture = ExtResource("3_lx8og")
 
-[node name="Default" type="Sprite2D" parent="."]
-visible = false
+[node name="Grabbing" type="Sprite2D" parent="."]
 position = Vector2(0.999996, 1.5)
 texture = ExtResource("5_mbstq")
 

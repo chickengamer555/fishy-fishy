@@ -29,7 +29,9 @@ func show_chat_log():
 		popup_centered()
 		
 		# Apply initial scaling and constraints
-		await get_tree().process_frame
+		var tree = get_tree()
+		if tree:
+			await tree.process_frame
 		update_text_scaling()
 		constrain_window_position()
 	else:
@@ -135,5 +137,7 @@ func _on_fullscreen_button_pressed():
 		print("Chat window: Fullscreen size")
 	
 	# Update text scaling for new size
-	await get_tree().process_frame
+	var tree = get_tree()
+	if tree:
+		await tree.process_frame
 	update_text_scaling() 
