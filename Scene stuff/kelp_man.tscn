@@ -2,32 +2,31 @@
 
 [ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/kelp_man.gd" id="1_orawk"]
 [ext_resource type="Texture2D" uid="uid://b326nhly54e7e" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Spritesheet1.png" id="2_1qk4g"]
-[ext_resource type="Texture2D" uid="uid://mdjoikqduak2" path="res://UI STUFF/Kelp cove/Kelp_man_cove_layout.png" id="2_co7ud"]
 [ext_resource type="PackedScene" uid="uid://bqo35voi18fb2" path="res://emotion/KELP MAN/kelp_emotion.tscn" id="2_ol3r6"]
 [ext_resource type="Script" uid="uid://bc8vl7582f5l0" path="res://code stuff/label.gd" id="3_co7ud"]
 [ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="4_1qk4g"]
-[ext_resource type="Texture2D" uid="uid://ba1vc022gkdek" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Spritesheet11.png" id="5_1qk4g"]
+[ext_resource type="Texture2D" uid="uid://ci23hje88tif5" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Character_Text_box.png" id="5_1qk4g"]
 [ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/chatlog.gd" id="5_lbieo"]
+[ext_resource type="FontFile" uid="uid://cgw4400ha4cr4" path="res://Jersey20-Regular.ttf" id="5_w2ql3"]
+[ext_resource type="Texture2D" uid="uid://ddjy0nlnpak3a" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Player_Text_box.png" id="6_co7ud"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://underwater.gdshader" id="6_w2ql3"]
-[ext_resource type="Shader" uid="uid://b4usabyy0jjn" path="res://fish_move.gdshader" id="7_a81c1"]
-[ext_resource type="Texture2D" uid="uid://bk1wyr65cvt0f" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Spritesheet10.png" id="7_lbieo"]
-[ext_resource type="Texture2D" uid="uid://u6q1apywxmp5" path="res://images.jpeg" id="8_g5soc"]
+[ext_resource type="Texture2D" uid="uid://d20k3u1uh148t" path="res://UI STUFF/Kelp_Man_Cove_Enter.png" id="9_1qk4g"]
+[ext_resource type="Texture2D" uid="uid://bp5rrliqtk2x5" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove_Log.png" id="9_lbieo"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1qk4g"]
 texture = ExtResource("5_1qk4g")
-modulate_color = Color(0, 0.729412, 0, 0.882353)
+modulate_color = Color(1, 1, 1, 0.933333)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
-texture = ExtResource("7_lbieo")
-modulate_color = Color(0, 0.729412, 0, 0.882353)
+texture = ExtResource("6_co7ud")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a81c1"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6wc0"]
-bg_color = Color(0.133333, 0.658824, 0.831373, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cc3mg"]
+texture = ExtResource("9_lbieo")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thotk"]
-bg_color = Color(0, 0, 0, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5soc"]
+texture = ExtResource("9_1qk4g")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_window_panel"]
 bg_color = Color(0.1, 0.1, 0.15, 1)
@@ -61,33 +60,16 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_g3hot"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("6_w2ql3")
-shader_parameter/wave_amplitude = 0.001
-shader_parameter/wave_frequency = 1.0
-shader_parameter/wave_speed = 0.1
-shader_parameter/caustic_strength = 0.001
-shader_parameter/caustic_speed = 0.1
-shader_parameter/tint_color = Color(0, 0.513726, 0.776471, 0.239216)
+shader_parameter/wave_amplitude = 0.003
+shader_parameter/wave_frequency = 12.0
+shader_parameter/wave_speed = 0.3
+shader_parameter/caustic_strength = 0.004
+shader_parameter/caustic_speed = 0.25
+shader_parameter/tint_color = Color(0.294118, 0.615686, 0.592157, 0.345098)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_d2h8b"]
-shader = ExtResource("7_a81c1")
-shader_parameter/fish_image_1 = ExtResource("8_g5soc")
-shader_parameter/fish_image_2 = ExtResource("8_g5soc")
-shader_parameter/fish_image_3 = ExtResource("8_g5soc")
-shader_parameter/fish_image_4 = ExtResource("8_g5soc")
-shader_parameter/fish_image_5 = ExtResource("8_g5soc")
-shader_parameter/fish_amount = 12
-shader_parameter/base_fish_speed = 0.1
-shader_parameter/fish_size = 0.1
-shader_parameter/overall_fish_alpha = 0.8
-shader_parameter/swimming_curve_strength = 1.0
-shader_parameter/tail_wag_speed = 3.0
-shader_parameter/schooling_strength = 0.0
-shader_parameter/speed_variation = 0.63
-shader_parameter/spawn_rate = 0.1
-shader_parameter/enable_vertical_spawn = false
-shader_parameter/enable_horizontal_spawn = false
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6wc0"]
 
 [node name="KELP MAN" type="Node2D"]
 position = Vector2(-173, -5)
@@ -98,11 +80,6 @@ position = Vector2(750, 325)
 scale = Vector2(9, 9)
 texture = ExtResource("2_1qk4g")
 
-[node name="KelpManCoveLayout" type="Sprite2D" parent="."]
-position = Vector2(2166, 713)
-scale = Vector2(8.94531, 8.63889)
-texture = ExtResource("2_co7ud")
-
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
 [node name="kelp_emotion" parent="." instance=ExtResource("2_ol3r6")]
@@ -110,32 +87,28 @@ position = Vector2(550, 325)
 scale = Vector2(9.5, 9.5)
 
 [node name="AIResponsePanel" type="Panel" parent="."]
-top_level = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 364.0
-offset_right = -476.0
-offset_bottom = -59.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.2, 1.2)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxTexture_lbieo")
+offset_left = 193.0
+offset_top = 329.0
+offset_right = 968.0
+offset_bottom = 629.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_1qk4g")
 
 [node name="Label" type="RichTextLabel" parent="AIResponsePanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 53.0
-offset_top = 50.0
-offset_right = -71.0
-offset_bottom = -28.0
+offset_left = 52.85
+offset_top = 82.8
+offset_right = -5.15002
+offset_bottom = -14.2
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.933333, 0.866667)
+theme_override_colors/default_color = Color(1.73271e-05, 0.907263, 0.0760686, 1)
+theme_override_colors/font_outline_color = Color(0, 0.0705882, 0.168627, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/normal_font = ExtResource("5_w2ql3")
 fit_content = true
 script = ExtResource("3_co7ud")
 
@@ -144,22 +117,28 @@ wait_time = 0.005
 
 [node name="PlayerInputPanel" type="Panel" parent="."]
 offset_left = 977.0
-offset_top = 61.0
+offset_top = 76.0
 offset_right = 1477.0
-offset_bottom = 486.0
+offset_bottom = 526.0
 scale = Vector2(0.7, 1.2)
 theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
 
 [node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
 custom_minimum_size = Vector2(400, 300)
 layout_mode = 0
-offset_left = 76.9
-offset_top = 40.68
-offset_right = 476.9
-offset_bottom = 340.68
-scale = Vector2(0.833, 0.712)
+offset_left = 78.95
+offset_top = 54.3
+offset_right = 478.95
+offset_bottom = 354.3
+scale = Vector2(0.855, 0.86)
 size_flags_vertical = 3
-theme_override_fonts/font = ExtResource("4_1qk4g")
+theme_override_colors/font_outline_color = Color(0, 0.0705882, 0.168627, 1)
+theme_override_colors/font_color = Color(2.45467e-05, 0.98826, 0.0870997, 1)
+theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/caret_width = 10
+theme_override_fonts/font = ExtResource("5_w2ql3")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
 wrap_mode = 1
@@ -169,24 +148,38 @@ indent_wrapped_lines = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1078.0
-offset_top = 522.0
-offset_right = 1278.0
-offset_bottom = 553.0
+offset_left = 995.0
+offset_top = 453.0
+offset_right = 1399.0
+offset_bottom = 543.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.7, 1.2)
-
-[node name="NextButton" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_v6wc0")
-text = "Next/Send
-"
+scale = Vector2(0.8, 1.2)
 
 [node name="ChatLog" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 90)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_thotk")
-text = "Chat log"
+theme_override_styles/hover = SubResource("StyleBoxTexture_cc3mg")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_cc3mg")
+theme_override_styles/normal = SubResource("StyleBoxTexture_cc3mg")
+
+[node name="DayCompleteButton" type="Button" parent="HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(200, 90)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/hover = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g5soc")
+text = "Day Complete"
+
+[node name="NextButton" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 90)
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g5soc")
 
 [node name="ChatLogWindow" type="Window" parent="."]
 title = "Chat Log - Kelp Man"
@@ -303,27 +296,14 @@ text = "0 messages"
 horizontal_alignment = 2
 autowrap_mode = 3
 
-[node name="ColorRect" type="ColorRect" parent="."]
-show_behind_parent = true
-top_level = true
-material = SubResource("ShaderMaterial_g3hot")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
 [node name="ColorRect2" type="ColorRect" parent="."]
-visible = false
-show_behind_parent = true
 top_level = true
-material = SubResource("ShaderMaterial_d2h8b")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+material = SubResource("ShaderMaterial_1qk4g")
+offset_left = 1.00001
+offset_top = 51.0
+offset_right = 116.0
+offset_bottom = 110.0
+scale = Vector2(10, 10)
 mouse_filter = 2
 
 [node name="TopNavigationBar" type="Control" parent="."]
@@ -400,9 +380,9 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_v6wc0")
 text = "Map"
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
-[connection signal="timeout" from="TypingTimer" to="AIResponsePanel/Label" method="_on_typing_timer_timeout"]
-[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/ChatLog" to="." method="_on_chat_log_pressed"]
+[connection signal="pressed" from="HBoxContainer/DayCompleteButton" to="." method="_on_day_complete_pressed"]
+[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/DecreaseFontButton" to="ChatLogWindow" method="_on_decrease_font_button_pressed"]
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/IncreaseFontButton" to="ChatLogWindow" method="_on_increase_font_button_pressed"]
 [connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/FullscreenButton" to="ChatLogWindow" method="_on_fullscreen_button_pressed"]

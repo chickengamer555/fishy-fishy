@@ -1,0 +1,118 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwrxmnnoqcjqo"]
+
+[ext_resource type="FontFile" uid="uid://crxxdqw51b1yr" path="res://PixelifySans-VariableFont_wght.ttf" id="1_pixel_font"]
+[ext_resource type="Script" uid="uid://drwsnra8ipfqk" path="res://code stuff/day_transition.gd" id="2_transition_script"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://underwater.gdshader" id="3_underwater_shader"]
+
+[sub_resource type="ShaderMaterial" id="underwater_material"]
+shader = ExtResource("3_underwater_shader")
+shader_parameter/wave_amplitude = 0.003
+shader_parameter/wave_frequency = 12.0
+shader_parameter/wave_speed = 0.3
+shader_parameter/caustic_strength = 0.004
+shader_parameter/caustic_speed = 0.25
+shader_parameter/tint_color = Color(0.4, 0.7, 0.9, 0.04)
+
+[sub_resource type="StyleBoxFlat" id="transition_bg"]
+bg_color = Color(0.1, 0.15, 0.2, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.5, 0.7, 0.8)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="DayTransition" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_transition_script")
+
+[node name="UnderwaterBackground" type="ColorRect" parent="."]
+show_behind_parent = true
+material = SubResource("underwater_material")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="TransitionPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("transition_bg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TransitionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DayCompleteLabel" type="Label" parent="TransitionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_fonts/font = ExtResource("1_pixel_font")
+theme_override_font_sizes/font_size = 32
+text = "Day Complete!"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="TransitionPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SummaryLabel" type="Label" parent="TransitionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_fonts/font = ExtResource("1_pixel_font")
+theme_override_font_sizes/font_size = 16
+text = "You've finished all your actions for today.
+Time to rest and prepare for tomorrow."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="VSeparator" type="Control" parent="TransitionPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="NextDayButton" type="Button" parent="TransitionPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_fonts/font = ExtResource("1_pixel_font")
+theme_override_font_sizes/font_size = 20
+text = "Continue to Next Day"
+
+[connection signal="pressed" from="TransitionPanel/VBoxContainer/NextDayButton" to="." method="_on_next_day_pressed"]
