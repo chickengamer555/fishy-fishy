@@ -21,6 +21,17 @@ var horse_total_score := 0
 var known_areas := ["bar", "kelp man cove"]
 var unlocked_areas: Array = []
 
+# Talking animation variables
+var is_talking := false
+var original_position: Vector2
+var original_rotation: float
+var original_scale: Vector2
+var talking_tween: Tween
+@export var talk_move_intensity := 15.0  # Much more visible kelp-like swaying movement
+@export var talk_rotation_intensity := 0.25  # Very noticeable but smooth kelp sway rotation
+@export var talk_scale_intensity := 0.08  # More dramatic but gentle scale changes
+@export var talk_animation_speed := 0.8  # Slightly faster for more dynamic but still smooth feel
+
 var ENCODED_KEY := "c2stcHJvai1XNk1BcXVFR0FmQ0NpTl9BWWlJRlJtX08tcVlkbEJKaGZNVGg3Zml2SGR6aUVUOWx0T2JIRzI5cURxeV9OMEk4UGdaN1lCczRNMVQzQmxia0ZKTVJDUkdWNFd6Z0ZzbG5CejZhRzlzOGZvd3h3THlaVkpxVzQ5RldhNzdYRWZ5ZXJvMXBPVHVsVVh5RUk5X1RvZ0xKRFA5ZjlVMEE="
 var API_KEY = Marshalls.base64_to_raw(ENCODED_KEY).get_string_from_utf8()
 var MODEL = "gpt-4o"
@@ -31,16 +42,157 @@ func _ready():
 	GameState.connect("day_completed", Callable(self, "_on_day_completed"))
 	update_day_state()
 
+	# Configure player input field to prevent scrolling and limit text
+	setup_player_input()
+
+	# Store original sprite position and rotation for talking animation
+	original_position = emotion_sprite_root.position
+	original_rotation = emotion_sprite_root.rotation
+	original_scale = emotion_sprite_root.scale
+
 	# Wait for the next frame, but check if tree exists first
 	var tree = get_tree()
 	if tree:
 		await tree.process_frame
 	
-	if GameState.should_reset_ai:
+	# Check if there's any previous conversation history to determine behavior
+	var has_previous_interactions = Memory.shared_memory.size() > 0
+	
+	# For the very first interaction ever, show intro
+	if not has_previous_interactions:
 		get_ai_intro_response()
-		GameState.should_reset_ai = false
-	elif GameState.last_ai_response != "":
-		response_label.call("show_text_with_typing", GameState.last_ai_response)
+	else:
+		# Always generate a new response based on previous interactions - never just replay old response
+		get_ai_continuation_response()
+
+func setup_player_input():
+	# Force disable all scrolling and ensure no overflow
+	input_field.scroll_fit_content_height = false
+	
+	# Connect to text_changed signal for active monitoring
+	input_field.text_changed.connect(_on_input_text_changed)
+	
+	# Set initial properties
+	input_field.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	
+	# Clear any existing text to start fresh
+	input_field.text = ""
+
+func _on_input_text_changed():
+	# Prevent recursive calls by temporarily disconnecting the signal
+	if input_field.text_changed.is_connected(_on_input_text_changed):
+		input_field.text_changed.disconnect(_on_input_text_changed)
+	
+	var current_text = input_field.text
+	var max_chars = 200  # Reduced character limit
+	
+	# Hard character limit
+	if current_text.length() > max_chars:
+		input_field.text = current_text.substr(0, max_chars)
+		current_text = input_field.text
+	
+	# Hard line limit - only allow 3 lines maximum
+	var lines = current_text.split("\n")
+	if lines.size() > 3:
+		var limited_text = ""
+		for i in range(3):
+			if i > 0:
+				limited_text += "\n"
+			limited_text += lines[i]
+		input_field.text = limited_text
+	
+	# Force scroll position to 0,0 to prevent any scrolling
+	input_field.scroll_horizontal = 0
+	input_field.scroll_vertical = 0
+	
+	# Position cursor at end
+	var final_line = input_field.get_line_count() - 1
+	input_field.set_caret_line(final_line)
+	input_field.set_caret_column(input_field.get_line(final_line).length())
+	
+	# Reconnect the signal
+	input_field.text_changed.connect(_on_input_text_changed)
+
+# Talking animation functions
+func start_talking_animation():
+	if is_talking:
+		return
+	
+	is_talking = true
+
+func animate_talking_tick():
+	if not is_talking:
+		return
+	
+	# Stop any existing tween to prevent conflicts
+	if talking_tween:
+		talking_tween.kill()
+	
+	# Create smooth, kelp-like flowing animation
+	talking_tween = create_tween()
+	talking_tween.set_ease(Tween.EASE_IN_OUT)  # Smoother easing
+	talking_tween.set_trans(Tween.TRANS_SINE)  # More flowing, wave-like motion
+	
+	# Gentle kelp-like gestures that flow naturally
+	var gesture_type = randi() % 4
+	
+	match gesture_type:
+		0:  # Gentle forward sway
+			var target_pos = original_position + Vector2(0, -talk_move_intensity * 1.2)
+			var target_rotation = original_rotation + talk_rotation_intensity * 1.8
+			var target_scale = original_scale * (1.0 + talk_scale_intensity * 1.5)
+			
+			talking_tween.tween_property(emotion_sprite_root, "position", target_pos, talk_animation_speed * 0.5)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rotation, talk_animation_speed * 0.5)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, talk_animation_speed * 0.5)
+			
+		1:  # Gentle side sway (kelp flowing in current)
+			var target_rotation = original_rotation + talk_rotation_intensity * 3.0
+			var target_pos = original_position + Vector2(talk_move_intensity * 1.5, -talk_move_intensity * 0.6)
+			var target_scale = original_scale * (1.0 + talk_scale_intensity * 1.2)
+			
+			talking_tween.tween_property(emotion_sprite_root, "rotation", target_rotation, talk_animation_speed * 0.4)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, talk_animation_speed * 0.4)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, talk_animation_speed * 0.4)
+			
+		2:  # Gentle emphasis sway
+			var target_pos = original_position + Vector2(0, talk_move_intensity * 1.0)
+			var target_scale = original_scale * (1.0 + talk_scale_intensity * 2.0)
+			
+			talking_tween.tween_property(emotion_sprite_root, "position", target_pos, talk_animation_speed * 0.3)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, talk_animation_speed * 0.3)
+			
+		3:  # Gentle questioning tilt
+			var target_rotation = original_rotation - talk_rotation_intensity * 1.5
+			var target_pos = original_position + Vector2(-talk_move_intensity * 0.8, -talk_move_intensity * 0.7)
+			
+			talking_tween.tween_property(emotion_sprite_root, "rotation", target_rotation, talk_animation_speed * 0.4)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, talk_animation_speed * 0.4)
+	
+	# Always return to original position smoothly with kelp-like flow
+	talking_tween.tween_property(emotion_sprite_root, "position", original_position, talk_animation_speed * 0.6)
+	talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", original_rotation, talk_animation_speed * 0.6)
+	talking_tween.parallel().tween_property(emotion_sprite_root, "scale", original_scale, talk_animation_speed * 0.6)
+
+func stop_talking_animation():
+	if not is_talking:
+		return
+	
+	is_talking = false
+	
+	# Stop the talking tween
+	if talking_tween:
+		talking_tween.kill()
+	
+	# Smoothly return to original position, rotation, and scale
+	var return_tween = create_tween()
+	return_tween.tween_property(emotion_sprite_root, "position", original_position, 0.3)
+	return_tween.parallel().tween_property(emotion_sprite_root, "rotation", original_rotation, 0.3)
+	return_tween.parallel().tween_property(emotion_sprite_root, "scale", original_scale, 0.3)
+
+func on_typing_tick():
+	# Called from label.gd on each character typed
+	animate_talking_tick()
 
 func build_system_prompt() -> String:
 	var memory_text := ""
@@ -87,17 +239,35 @@ func build_system_prompt() -> String:
 func get_ai_intro_response():
 	var prompt := build_system_prompt()
 
-	# Clear any existing conversation and start fresh
-	message_history.clear()
+	# Only clear conversation if this is truly the first interaction
+	# This preserves any existing conversation history
+	if message_history.is_empty():
+		message_history = [
+			{ "role": "system", "content": prompt }
+		]
+	else:
+		# Update the system prompt but keep existing conversation
+		message_history[0]["content"] = prompt
 	
 	# Simple, direct intro that forces the format
 	var intro_message := "Say hello to a new visitor in your underwater kelp cove. You haven't seen anyone in a while and feel lonely."
 
-	message_history = [
-		{ "role": "system", "content": prompt },
-		{ "role": "user", "content": intro_message }
-	]
+	message_history.append({ "role": "user", "content": intro_message })
+	send_request()
 
+func get_ai_continuation_response():
+	var prompt := build_system_prompt()
+
+	# Don't clear message history - preserve everything
+	if message_history.is_empty():
+		message_history = [
+			{ "role": "system", "content": prompt }
+		]
+	
+	# Generate a response that acknowledges the returning visitor
+	var continuation_message := "The person you've been talking to has returned to visit you. Greet them based on your previous interactions and current relationship with them."
+
+	message_history.append({ "role": "user", "content": continuation_message })
 	send_request()
 
 func estimate_token_count(text: String) -> int:
@@ -230,19 +400,18 @@ func _on_next_button_pressed():
 	if msg == "":
 		return
 
-	# Handle new day reset but don't return early - allow message processing to continue
+	# REMOVED: No longer clear message history on new days - kelp man remembers everything
+	# Handle new day reset but preserve all conversation memory
 	if GameState.just_started_new_day:
 		GameState.just_started_new_day = false
-		GameState.should_reset_ai = true
-		GameState.last_ai_response = ""
-		message_history.clear()
-		chat_log_window.clear_chat_log()
+		# Don't reset AI or clear history - kelp man remembers across days
+		GameState.should_reset_ai = false
 		
-		# Set up fresh conversation context for the new day using shared prompt function
-		var prompt := build_system_prompt()
-		message_history = [
-			{ "role": "system", "content": prompt }
-		]
+		# Update the system prompt to include all previous conversations
+		if not message_history.is_empty():
+			# Update the system message with current context
+			var updated_prompt := build_system_prompt()
+			message_history[0]["content"] = updated_prompt
 
 	input_field.text = ""
 	GameState.use_action()

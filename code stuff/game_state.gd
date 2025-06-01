@@ -5,11 +5,11 @@ signal final_turn_started
 signal day_completed
 var just_started_new_day := false
 var days_left := 3
-var actions_left := 2
+var actions_left := 3
 var final_turn_triggered := false
 var day_complete_available := false
 var ai_scores := {}
-var should_reset_ai := true
+var should_reset_ai := false
 var last_ai_response := ""
 
 func use_action():
@@ -49,3 +49,18 @@ func end_game():
 	var tree = get_tree()
 	if tree:
 		tree.change_scene_to_file("res://Scene stuff/game_end.tscn")
+
+func _input(event):
+	# Handle F11 for window maximize toggle
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_F11:
+			toggle_window_size()
+
+func toggle_window_size():
+	var current_mode = DisplayServer.window_get_mode()
+	if current_mode == DisplayServer.WINDOW_MODE_MAXIMIZED:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		print("Switched to normal window size")
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+		print("Switched to maximized window")

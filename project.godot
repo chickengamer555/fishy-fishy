@@ -21,6 +21,12 @@ Memory="*res://code stuff/memory.gd"
 MapMemory="*res://code stuff/map_memory.gd"
 GameState="*res://code stuff/game_state.gd"
 
+[display]
+
+window/size/mode=3
+window/stretch/mode="viewport"
+window/stretch/aspect="ignore"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

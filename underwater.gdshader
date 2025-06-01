@@ -32,6 +32,6 @@ void fragment() {
 
     // Apply underwater tint using built-in alpha
     vec3 final_color = mix(color.rgb, tint_color.rgb, tint_color.a);
-    
+
     COLOR = vec4(final_color, color.a);
 }
