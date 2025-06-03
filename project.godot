@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Fishy fishy"
-run/main_scene="uid://d3ky8ukpolq71"
+run/main_scene="uid://c17mkmrioiovk"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
 [autoload]
@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 Memory="*res://code stuff/Main/memory.gd"
 MapMemory="*res://code stuff/Main/map_memory.gd"
 GameState="*res://code stuff/Main/game_state.gd"
+ApiManager="*res://api_manager.gd"
 
 [display]
 

@@ -32,11 +32,22 @@ var talking_tween: Tween
 @export var talk_scale_intensity := 0.08  # More dramatic but gentle scale changes
 @export var talk_animation_speed := 0.8  # Slightly faster for more dynamic but still smooth feel
 
-var ENCODED_KEY := "c2stcHJvai1XNk1BcXVFR0FmQ0NpTl9BWWlJRlJtX08tcVlkbEJKaGZNVGg3Zml2SGR6aUVUOWx0T2JIRzI5cURxeV9OMEk4UGdaN1lCczRNMVQzQmxia0ZKTVJDUkdWNFd6Z0ZzbG5CejZhRzlzOGZvd3h3THlaVkpxVzQ5RldhNzdYRWZ5ZXJvMXBPVHVsVVh5RUk5X1RvZ0xKRFA5ZjlVMEE="
-var API_KEY = Marshalls.base64_to_raw(ENCODED_KEY).get_string_from_utf8()
+# API configuration
 var MODEL = "gpt-4o"
 
 func _ready():
+	# Try to load API key from ApiManager (which may have loaded from file)
+	if not ApiManager.has_api_key():
+		ApiManager.load_api_key_from_file()
+	
+	# Validate API key exists
+	if not ApiManager.has_api_key():
+		push_error("OpenAI API key not found! Please use the main menu 'Api key' button to load your API key from a file.")
+		response_label.text = "Error: API key not configured. Use the main menu 'Api key' button to load your API key."
+		return
+	
+	print("✅ API key loaded successfully from ApiManager")
+
 	GameState.connect("day_or_action_changed", Callable(self, "update_day_state"))
 	GameState.connect("final_turn_started", Callable(self, "_on_final_turn_started"))
 	GameState.connect("day_completed", Callable(self, "_on_day_completed"))
@@ -333,7 +344,7 @@ func send_request():
 		"https://api.openai.com/v1/chat/completions",
 		[
 			"Content-Type: application/json",
-			"Authorization: Bearer " + API_KEY
+			"Authorization: Bearer " + ApiManager.get_api_key()
 		],
 		HTTPClient.METHOD_POST,
 		JSON.stringify({

@@ -1,6 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# API Keys and sensitive configuration - DO NOT COMMIT
+api_config.json
+.env
+*.key
+
+# Temporary and test files
 emotion test/Pajama_Sam.png
 emotion test/Pajama_Sam.png.import
 horse_emotion.tscn
