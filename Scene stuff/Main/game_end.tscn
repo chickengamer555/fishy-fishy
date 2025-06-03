@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc7lf41ocet7r"]
+
+[ext_resource type="Script" uid="uid://ditnxcyitsxyk" path="res://code stuff/Main/game_end.gd" id="1_q3gt3"]
+
+[node name="Game_end" type="Node2D"]
+script = ExtResource("1_q3gt3")
+
+[node name="KelpManScore" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Kelp Man"
