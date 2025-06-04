@@ -13,6 +13,20 @@ func setup_file_dialog() -> void:
 	file_dialog.add_filter("*.json", "JSON Files")
 	file_dialog.add_filter("*.txt", "Text Files")
 	file_dialog.file_selected.connect(_on_file_selected)
+	
+	# Set the initial directory to the user's Documents folder
+	var documents_path = ""
+	if OS.has_environment("USERPROFILE"):  # Windows
+		documents_path = OS.get_environment("USERPROFILE") + "/Documents"
+	elif OS.has_environment("HOME"):  # macOS/Linux
+		documents_path = OS.get_environment("HOME") + "/Documents"
+	
+	if documents_path != "" and DirAccess.dir_exists_absolute(documents_path):
+		file_dialog.current_dir = documents_path
+		print("Set file dialog to start in Documents: ", documents_path)
+	else:
+		print("Could not find Documents folder, using default location")
+	
 	add_child(file_dialog)
 
 func _on_play_pressed() -> void:
@@ -40,8 +54,8 @@ func _on_file_selected(path: String) -> void:
 	
 	if api_key != "":
 		ApiManager.set_api_key(api_key)
-		ApiManager.save_api_key_to_file()  # Save for persistence
-		print("API Key loaded and saved successfully!")
+		# Removed save_api_key_to_file() - API key is not saved for persistence
+		print("API Key loaded successfully for this session!")
 	else:
 		print("Error: No valid API key found in file")
 

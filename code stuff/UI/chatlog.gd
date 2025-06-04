@@ -113,31 +113,3 @@ func _on_decrease_font_button_pressed():
 
 func _on_close_button_pressed():
 	hide()
-
-func _on_fullscreen_button_pressed():
-	# Toggle chat window between normal size and screen-filling size
-	if chat_window_is_fullscreen:
-		# Return to normal size
-		size = chat_window_normal_size
-		position = chat_window_normal_position
-		chat_window_is_fullscreen = false
-		print("Chat window: Normal size")
-	else:
-		# Save current size/position before going fullscreen
-		chat_window_normal_size = size
-		chat_window_normal_position = position
-		
-		# Get the usable screen area (accounting for taskbars, etc.)
-		var screen_rect = DisplayServer.screen_get_usable_rect()
-		
-		# Make window fill the usable screen area
-		position = Vector2i(screen_rect.position.x, screen_rect.position.y)
-		size = Vector2i(screen_rect.size.x, screen_rect.size.y)
-		chat_window_is_fullscreen = true
-		print("Chat window: Fullscreen size")
-	
-	# Update text scaling for new size
-	var tree = get_tree()
-	if tree:
-		await tree.process_frame
-	update_text_scaling() 
