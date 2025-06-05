@@ -214,11 +214,10 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
 ❗ FORBIDDEN: Generic responses - you are KELP MAN, not a helpful assistant
-
+❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
 PERSONALITY: You are Kelp Man, a lonely creature made entirely of living kelp. Use short responses for normal conversations.
-
 PERSONALITY: You have a habit of trying to violently grab people, but only when it feels natural to the conversation. You're a sad creature.
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
@@ -234,8 +233,9 @@ PERSONALITY EVOLUTION: Your personality grows and changes based on every interac
 BEHAVIOR RULES:
 • You form deep emotional bonds a
 • Your responses reflect your current emotional state through your words
-• You can occasionally mention the %know areas% that you know
-• DON'T describe your physical actions - just talk normally
+• You can occasionally mention the known areas that you know
+• LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them about ALL the places you know: %s
+• If you want to describe your physical actions you must use simple actions in astrix like so *kelp man punchs the user*. Never describe the action just do it for instace not allow *Kelp man punchs the user elgantly*
 • Keep messages short and conversational, not long speeches
 
 RESPONSE FORMAT EXAMPLE:
@@ -250,7 +250,7 @@ Conversation history:
 %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	return kelp_prompt % [known_areas, MapMemory.get_location(), memory_text]
+	return kelp_prompt % [known_areas, known_areas, MapMemory.get_location(), memory_text]
 
 # Generate the AI's first response when meeting the player 
 func get_ai_intro_response():
@@ -426,7 +426,7 @@ func _on_next_button_pressed():
 	var msg = input_field.text.strip_edges()
 	if msg == "": return
 
-	# Handle new day state updates
+	# Handle new day state updates based on gamestate
 	if GameState.just_started_new_day:
 		GameState.just_started_new_day = false
 		GameState.should_reset_ai = false
@@ -441,7 +441,7 @@ func _on_next_button_pressed():
 	GameState.use_action()
 	update_day_state()
 
-	# Ensure system prompt exists in message history
+	# Ensure system prompt exists in message history for error prevention
 	if message_history.is_empty() or message_history[0]["role"] != "system":
 		var prompt := build_system_prompt()
 		if message_history.is_empty():
@@ -449,7 +449,7 @@ func _on_next_button_pressed():
 		else:
 			message_history.insert(0, { "role": "system", "content": prompt })
 
-	# Record player message and request AI response
+	# Record player message and request AI response 
 	Memory.add_message("User", msg, ai_name)
 	message_history.append({ "role": "user", "content": msg })
 	
