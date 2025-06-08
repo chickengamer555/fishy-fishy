@@ -27,9 +27,17 @@ func _ready():
 	cached_font_data = load(font_path)
 	if cached_font_data == null:
 		push_error("Font file not found at: " + font_path)
+		# Try alternative path
+		cached_font_data = load("res://UI STUFF/Kelp cove/Jersey20-Regular.ttf")
+		if cached_font_data == null:
+			push_error("Font file not found at alternative path either")
 	
 	# Connect to resize signal for dynamic font adjustment
 	resized.connect(_on_label_resized)
+	
+	# Force initial resize to ensure proper font sizing
+	await get_tree().process_frame
+	_on_label_resized()
 
 func _on_label_resized():
 	# Refit font when label is resized

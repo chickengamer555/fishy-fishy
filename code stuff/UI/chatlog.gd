@@ -15,6 +15,7 @@ var chat_window_normal_position := Vector2i(200, 100)
 
 # Chat log data
 var chat_log: Array = []
+var character_name: String = "Kelp Man"  # Default name, will be updated by the character script
 
 func _ready():
 	# Connect window signals
@@ -38,8 +39,14 @@ func show_chat_log():
 		# Just bring to front if already visible
 		move_to_foreground()
 
-func add_message(role: String, content: String):
-	chat_log.append({ "role": role, "content": content })
+func add_message(role: String, content: String, character_name_at_time: String = ""):
+	var message_data = { "role": role, "content": content }
+	
+	# Store the character name that was used at the time this message was sent
+	if role == "assistant":
+		message_data["character_name"] = character_name_at_time if character_name_at_time != "" else character_name
+	
+	chat_log.append(message_data)
 	
 	# Update display if window is visible
 	if visible:
@@ -59,7 +66,9 @@ func update_chat_log_display():
 			log += "[color=#4A90E2][b]🧑 You:[/b][/color]\n"
 			log += "[color=#FFFFFF]" + entry["content"] + "[/color]\n\n"
 		else:
-			log += "[color=#2ECC71][b]🌿 Kelp Man:[/b][/color]\n"
+			# Use the historical character name for this specific message
+			var display_name = entry.get("character_name", character_name)
+			log += "[color=#2ECC71][b]🌿 " + display_name + ":[/b][/color]\n"
 			log += "[color=#E8E8E8]" + entry["content"] + "[/color]\n\n"
 	
 	if log.is_empty():
@@ -113,3 +122,11 @@ func _on_decrease_font_button_pressed():
 
 func _on_close_button_pressed():
 	hide()
+
+func set_character_name(new_name: String):
+	character_name = new_name
+	# Update window title if needed
+	title = "Chat Log - " + character_name
+	# Refresh display if window is visible
+	if visible:
+		update_chat_log_display()
