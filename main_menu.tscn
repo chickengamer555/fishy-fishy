@@ -30,5 +30,14 @@ theme_override_fonts/font = ExtResource("1_06t4h")
 theme_override_font_sizes/font_size = 50
 text = "Api key"
 
+[node name="Settings" type="Button" parent="."]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 413.0
+offset_right = 214.0
+offset_bottom = 444.0
+text = "SETTINGS"
+
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Api" to="." method="_on_api_pressed"]
+[connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]

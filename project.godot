@@ -16,10 +16,11 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 
 [autoload]
 
-Memory="*res://code stuff/Main/memory.gd"
-MapMemory="*res://code stuff/Main/map_memory.gd"
-GameState="*res://code stuff/Main/game_state.gd"
-ApiManager="*res://api_manager.gd"
+Memory="*res://code stuff/Managers/memory.gd"
+MapMemory="*res://code stuff/Managers/map_memory.gd"
+GameState="*res://code stuff/Managers/game_state.gd"
+ApiManager="*res://code stuff/Managers/api_manager.gd"
+PromptManager="*res://code stuff/Managers/prompt_manager.gd"
 
 [display]
 

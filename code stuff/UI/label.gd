@@ -58,6 +58,7 @@ func show_text_with_typing(text_to_show: String):
 	is_typing = true
 	_fit_font_to_label(full_text)
 	typing_timer.wait_time = type_speed
+
 	typing_timer.start()
 	
 	# Start talking animation

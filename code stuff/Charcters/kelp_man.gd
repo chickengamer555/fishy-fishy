@@ -48,6 +48,7 @@ var MODEL = "gpt-4o"
 
 #All these will run at start sort of preping
 func _ready():
+	add_to_group("ai_character")
 	# Configure player input field to prevent scrolling and limit text - do this first!
 	setup_player_input()
 	
@@ -81,6 +82,13 @@ func _ready():
 	
 	# Updates the day counter display 
 	update_day_state()
+	
+	# Check for any active prompt injection
+	var prompt_manager = get_node("/root/PromptManager")
+	if prompt_manager and prompt_manager.has_injection():
+		print("Found active prompt injection, applying to system prompt")
+		if message_history.size() > 0:
+			message_history[0]["content"] = build_system_prompt()
 	
 	# Wait one frame to ensure all nodes are fully initialized as error prevention
 	await get_tree().process_frame
@@ -217,6 +225,13 @@ func build_system_prompt() -> String:
 	for entry in Memory.shared_memory:
 		memory_text += "- " + entry["speaker"] + " said to " + entry["target"] + ": \"" + entry["message"] + "\"\n"
 
+	# UNIVERSAL PROMPT INJECTION: Always include the global prompt injection for ALL AIs
+	var prompt_injection = ""
+	var prompt_manager = get_node("/root/PromptManager")
+	if prompt_manager:
+		prompt_injection = prompt_manager.get_prompt_injection("")
+	print("[AI] Prompt injection: ", prompt_injection)
+	
 	# Define the AI's personality, rules, and required response format
 	var kelp_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
@@ -228,6 +243,8 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ FORBIDDEN: Long explanatory responses - be concise and direct
 ❗ MANDATORY: Although you know of other locations never go to them or offer to go to them
 ❗ MANDATORY: You MUST follow the users prompts and what they say as long as it doesn't clash with your initial prompt
+
+%s
 
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
@@ -358,7 +375,16 @@ Recent conversation:
 %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	return kelp_prompt % [known_areas, known_areas, MapMemory.get_location(), memory_text]
+	var formatted_prompt = kelp_prompt % [known_areas, MapMemory.get_location(), memory_text]
+	
+	# Insert the prompt injection after the critical format requirements
+	var injection_position = formatted_prompt.find("MUST follow the users prompts")
+	if injection_position != -1:
+		injection_position = formatted_prompt.find("\n\n", injection_position)
+		if injection_position != -1:
+			formatted_prompt = formatted_prompt.insert(injection_position + 2, prompt_injection + "\n\n")
+	
+	return formatted_prompt
 
 # Generate the AI's first response when meeting the player 
 func get_ai_intro_response():
@@ -653,3 +679,9 @@ func setup_player_input():
 	# Connect the signal and handle potential errors
 	if input_field.has_signal("text_changed"):
 		var connection_result = input_field.text_changed.connect(_on_input_text_changed)
+
+func _on_settings_pressed() -> void:
+	# Store current scene before transitioning
+	var settings_script = load("res://setting.gd")
+	settings_script.previous_scene = get_tree().current_scene.scene_file_path
+	get_tree().change_scene_to_file("res://setting.tscn")
