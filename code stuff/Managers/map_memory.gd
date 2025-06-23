@@ -18,3 +18,8 @@ func set_location(loc: String):
 
 func get_location() -> String:
 	return current_location
+
+func reset():
+	unlocked_areas.clear()
+	current_location = "unknown"
+	print("🔄 Map memory reset")

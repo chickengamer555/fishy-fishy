@@ -95,6 +95,11 @@ value = 1.0
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
 
+[node name="Dyslexia_mode" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "DYSLEXIA MODE
+"
+
 [node name="Drunk_mode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "DRUNK MODE"
@@ -104,5 +109,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Back"
 
+[connection signal="pressed" from="VBoxContainer/Dyslexia_mode" to="." method="_on_dyslexia_mode_pressed"]
 [connection signal="pressed" from="VBoxContainer/Drunk_mode" to="." method="_on_prompt_injection_pressed"]
 [connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

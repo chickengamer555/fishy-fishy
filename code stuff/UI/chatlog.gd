@@ -13,11 +13,20 @@ var chat_window_is_fullscreen := false
 var chat_window_normal_size := Vector2i(600, 400)
 var chat_window_normal_position := Vector2i(200, 100)
 
-# Chat log data
-var chat_log: Array = []
+# Static dictionary to preserve chat logs across scene changes and dialog issues
+static var global_character_chat_logs: Dictionary = {}
+
+# Per-character chat log data - each character has their own log
+var character_chat_logs: Dictionary = {}
 var character_name: String = "Kelp Man"  # Default name, will be updated by the character script
 
 func _ready():
+	# Add to group for finding chat logs when clearing all at game end
+	add_to_group("chat_logs")
+	
+	# Initialize from static global data
+	character_chat_logs = global_character_chat_logs.duplicate(true)
+	
 	# Connect window signals
 	size_changed.connect(_on_window_resized)
 	close_requested.connect(_on_window_close_requested)
@@ -46,21 +55,46 @@ func add_message(role: String, content: String, character_name_at_time: String =
 	if role == "assistant":
 		message_data["character_name"] = character_name_at_time if character_name_at_time != "" else character_name
 	
-	chat_log.append(message_data)
+	# Ensure this character has a chat log array in both local and global storage
+	if not character_chat_logs.has(character_name):
+		print("ChatLog: Creating new chat log for character: ", character_name)
+		character_chat_logs[character_name] = []
+	if not global_character_chat_logs.has(character_name):
+		global_character_chat_logs[character_name] = []
+	
+	# Add to both local and global storage
+	character_chat_logs[character_name].append(message_data)
+	global_character_chat_logs[character_name].append(message_data)
+	print("ChatLog: Added message for ", character_name, ". Total messages: ", character_chat_logs[character_name].size())
 	
 	# Update display if window is visible
 	if visible:
 		update_chat_log_display()
 
 func clear_chat_log():
-	chat_log.clear()
+	# Clear only the current character's chat log
+	print("ChatLog: Clearing chat log for character: ", character_name)
+	if character_chat_logs.has(character_name):
+		character_chat_logs[character_name].clear()
+	if global_character_chat_logs.has(character_name):
+		global_character_chat_logs[character_name].clear()
+	update_chat_log_display()
+
+func clear_all_chat_logs():
+	# Clear all character chat logs (for game end)
+	print("ChatLog: Clearing ALL character chat logs")
+	character_chat_logs.clear()
+	global_character_chat_logs.clear()
 	update_chat_log_display()
 
 func update_chat_log_display():
 	var log := ""
 	var message_count := 0
 	
-	for entry in chat_log:
+	# Get the current character's chat log
+	var current_chat_log = character_chat_logs.get(character_name, [])
+	
+	for entry in current_chat_log:
 		message_count += 1
 		if entry["role"] == "user":
 			log += "[color=#4A90E2][b]🧑 You:[/b][/color]\n"
@@ -124,6 +158,7 @@ func _on_close_button_pressed():
 	hide()
 
 func set_character_name(new_name: String):
+	print("ChatLog: Setting character name from '", character_name, "' to '", new_name, "'")
 	character_name = new_name
 	# Update window title if needed
 	title = "Chat Log - " + character_name

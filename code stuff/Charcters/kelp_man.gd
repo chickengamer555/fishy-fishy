@@ -95,11 +95,11 @@ func _ready():
 	
 	# Handle different response scenarios based on game state
 	if GameState.just_started_new_day:
-		# Clear stored response at start of new day to generate fresh content (chat log will be cleared)
+		# Clear stored response at start of new day to generate fresh content
 		GameState.last_ai_response = ""
 		GameState.last_ai_emotion = "sad"
 	
-	# Display appropriate response based on conversation history 
+	# Display appropriate response based on conversation history
 	if GameState.last_ai_response != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)
 		display_stored_response()
@@ -109,36 +109,6 @@ func _ready():
 	else:
 		# If there a returning user - it genrates response from previous interactions instead of new intrdutcion
 		get_ai_continuation_response()
-
-# Monitor player input and enforce character/line limits so they dont write to much
-func _on_input_text_changed():
-	# Prevent multiple calls by temporarily disconnecting the signal 
-	if input_field.text_changed.is_connected(_on_input_text_changed):
-		input_field.text_changed.disconnect(_on_input_text_changed)
-	
-	var current_text = input_field.text
-	
-	# Hard character limit - use the exported variable to set it allowing it to be changed easily
-	if current_text.length() > max_input_chars:
-		input_field.text = current_text.substr(0, max_input_chars)
-		current_text = input_field.text
-	
-	# Hard line limit - use the exported variable allowing it to be changed easilt
-	var lines = current_text.split("\n")
-	if lines.size() > max_input_lines:
-		var limited_text = ""
-		for i in range(max_input_lines):
-			if i > 0:
-				limited_text += "\n"
-			limited_text += lines[i]
-		input_field.text = limited_text
-	
-
-	
-
-	
-	# Reconnect the signal so they can type again (this loops each time a key is typed)
-	input_field.text_changed.connect(_on_input_text_changed)
 
 # Begin the talking animation sequence
 func start_talking_animation():
@@ -676,9 +646,52 @@ func setup_player_input():
 		var manual_input = get_node_or_null("PlayerInputPanel/PlayerInput")
 		return
 	
-	# Connect the signal and handle potential errors
-	if input_field.has_signal("text_changed"):
-		var connection_result = input_field.text_changed.connect(_on_input_text_changed)
+	# Configure TextEdit for multi-line input and Enter/Shift+Enter behavior
+	# Enter: Send message, Shift+Enter: New line
+	input_field.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	
+	# Connect the input event signal to handle keyboard input
+	if input_field.has_signal("gui_input"):
+		var input_connection_result = input_field.gui_input.connect(_on_input_gui_input)
+
+# Handle keyboard input for Enter/Shift+Enter behavior
+func _on_input_gui_input(event: InputEvent):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			# Check if Shift is held down
+			if event.shift_pressed:
+				# Shift+Enter: Insert new line at cursor position
+				var current_text = input_field.text
+				var cursor_pos = input_field.get_caret_column()
+				var line = input_field.get_caret_line()
+				
+				# Get the current line text
+				var lines = current_text.split("\n")
+				if line < lines.size():
+					var current_line = lines[line]
+					# Split the line at cursor position
+					var before_cursor = current_line.substr(0, cursor_pos)
+					var after_cursor = current_line.substr(cursor_pos)
+					
+					# Update the current line and add new line
+					lines[line] = before_cursor
+					lines.insert(line + 1, after_cursor)
+					
+					# Update text and set cursor position
+					input_field.text = "\n".join(lines)
+					input_field.set_caret_line(line + 1)
+					input_field.set_caret_column(0)
+				else:
+					# If at the end, just add a new line
+					input_field.text = current_text + "\n"
+					input_field.set_caret_line(line + 1)
+					input_field.set_caret_column(0)
+			else:
+				# Enter without Shift: Send message
+				_on_next_button_pressed()
+			
+			# Always consume the event to prevent default behavior
+			get_viewport().set_input_as_handled()
 
 func _on_settings_pressed() -> void:
 	# Store current scene before transitioning

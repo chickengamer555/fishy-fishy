@@ -1,11 +1,110 @@
-[gd_scene load_steps=2 format=3 uid="uid://cc7lf41ocet7r"]
+[gd_scene load_steps=8 format=3 uid="uid://cc7lf41ocet7r"]
 
 [ext_resource type="Script" uid="uid://ditnxcyitsxyk" path="res://code stuff/Main/game_end.gd" id="1_q3gt3"]
+[ext_resource type="FontFile" uid="uid://cgw4400ha4cr4" path="res://Other/Jersey20-Regular.ttf" id="2_4yvr4"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="3_ixw8p"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wy2ks"]
+shader = ExtResource("3_ixw8p")
+shader_parameter/wave_amplitude = 0.003
+shader_parameter/wave_frequency = 12.0
+shader_parameter/wave_speed = 0.3
+shader_parameter/caustic_strength = 0.004
+shader_parameter/caustic_speed = 0.25
+shader_parameter/tint_color = Color(0.4, 0.7, 0.9, 0.04)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8yvr4"]
+bg_color = Color(0.0784314, 0.266667, 0.380392, 0.901961)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0, 0, 0.25098)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p2k8r"]
+bg_color = Color(0.156863, 0.427451, 0.427451, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.25098)
+shadow_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_kj4wd"]
+font = ExtResource("2_4yvr4")
+font_size = 24
 
 [node name="Game_end" type="Node2D"]
 script = ExtResource("1_q3gt3")
 
-[node name="KelpManScore" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Kelp Man"
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_wy2ks")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0392157, 0.196078, 0.294118, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/CenterContainer"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8yvr4")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4yvr4")
+theme_override_font_sizes/font_size = 36
+text = "Final Scores"
+horizontal_alignment = 1
+
+[node name="ScorePanel" type="PanelContainer" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_p2k8r")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ScorePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScoreContainer" type="VBoxContainer" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ScorePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ScoreLabelTemplate" type="Label" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ScorePanel/MarginContainer/ScoreContainer"]
+visible = false
+layout_mode = 2
+label_settings = SubResource("LabelSettings_kj4wd")
+horizontal_alignment = 1
+
+[node name="MainMenuButton" type="Button" parent="CanvasLayer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 45)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_4yvr4")
+theme_override_font_sizes/font_size = 24
+text = "Return to Menu"
