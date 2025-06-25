@@ -5,8 +5,16 @@ class_name ChatLog
 @onready var chat_log_status_label = $ChatLogPanel/VBoxContainer/StatusLabel
 @onready var chat_log_title_label = $ChatLogPanel/VBoxContainer/TitleLabel
 
-# Simple font size control
-var chat_font_size := 12
+# Predefined font sizes matching the screenshot
+var available_font_sizes: Array[int] = [12, 14, 20, 24, 32, 40, 64, 96, 120]
+var current_font_size_index: int = 4  # Default to 32 (index 4)
+
+# Font size getter that returns the current size
+var chat_font_size: int:
+	get:
+		return available_font_sizes[current_font_size_index]
+
+# Color variables removed
 
 # Chat window fullscreen state
 var chat_window_is_fullscreen := false
@@ -97,20 +105,21 @@ func update_chat_log_display():
 	for entry in current_chat_log:
 		message_count += 1
 		if entry["role"] == "user":
-			log += "[color=#4A90E2][b]🧑 You:[/b][/color]\n"
-			log += "[color=#FFFFFF]" + entry["content"] + "[/color]\n\n"
+			# Player message 
+			log += "You:\n"
+			log += entry["content"] + "\n\n"
 		else:
-			# Use the historical character name for this specific message
+			# Character message
 			var display_name = entry.get("character_name", character_name)
-			log += "[color=#2ECC71][b]🌿 " + display_name + ":[/b][/color]\n"
-			log += "[color=#E8E8E8]" + entry["content"] + "[/color]\n\n"
+			log += display_name + ":\n"
+			log += entry["content"] + "\n\n"
 	
 	if log.is_empty():
-		log = "[center][color=#888888][i]No conversation history yet...[/i][/color][/center]"
+		log = "No conversation history yet"
 		message_count = 0
 	
 	chat_log_label.text = log.strip_edges()
-	chat_log_status_label.text = str(message_count) + " messages"
+	chat_log_status_label.text = str(message_count) + " messages with " + character_name
 
 func _on_window_close_requested():
 	hide()
@@ -128,11 +137,17 @@ func update_text_scaling():
 	# Scale title font
 	chat_log_title_label.add_theme_font_size_override("font_size", int(16 * scale_factor))
 	
-	# Scale chat content font using the user's preferred size
-	chat_log_label.add_theme_font_size_override("normal_font_size", int(chat_font_size * scale_factor))
+	# Scale chat content font
+	var chat_size = int(chat_font_size * scale_factor)
+	chat_log_label.add_theme_font_size_override("normal_font_size", chat_size)
+	chat_log_label.add_theme_font_size_override("bold_font_size", chat_size)
+	chat_log_label.add_theme_font_size_override("italic_font_size", chat_size)
+	
+	# Line spacing for readability
+	chat_log_label.add_theme_constant_override("line_separation", int(4 * scale_factor))
 	
 	# Scale status label font
-	chat_log_status_label.add_theme_font_size_override("font_size", int(10 * scale_factor))
+	chat_log_status_label.add_theme_font_size_override("font_size", int(12 * scale_factor))
 
 func constrain_window_position():
 	var screen_size = DisplayServer.screen_get_size()
@@ -145,23 +160,57 @@ func constrain_window_position():
 	
 	position = window_pos
 
-# Font size button handlers
+# Font size button handlers - now uses predefined sizes
 func _on_increase_font_button_pressed():
-	chat_font_size = min(chat_font_size + 2, 24)  # Max size 24
-	chat_log_label.add_theme_font_size_override("normal_font_size", chat_font_size)
+	if current_font_size_index < available_font_sizes.size() - 1:
+		current_font_size_index += 1
+		update_font_size()
 
 func _on_decrease_font_button_pressed():
-	chat_font_size = max(chat_font_size - 2, 8)   # Min size 8
-	chat_log_label.add_theme_font_size_override("normal_font_size", chat_font_size)
+	if current_font_size_index > 0:
+		current_font_size_index -= 1
+		update_font_size()
+
+func update_font_size():
+	# Update the font size using the current scaling
+	update_text_scaling()
 
 func _on_close_button_pressed():
 	hide()
 
 func set_character_name(new_name: String):
 	print("ChatLog: Setting character name from '", character_name, "' to '", new_name, "'")
+	
+	# Store the old name for transferring chat history
+	var old_name = character_name
+	
+	# If the name actually changed and we have existing chat history for the old name
+	if old_name != new_name and character_chat_logs.has(old_name) and character_chat_logs[old_name].size() > 0:
+		print("ChatLog: Transferring ", character_chat_logs[old_name].size(), " messages from '", old_name, "' to '", new_name, "'")
+		
+		# Transfer chat history from old name to new name in both local and global storage
+		if not character_chat_logs.has(new_name):
+			character_chat_logs[new_name] = []
+		if not global_character_chat_logs.has(new_name):
+			global_character_chat_logs[new_name] = []
+			
+		# Copy all messages from old character to new character
+		for message in character_chat_logs[old_name]:
+			character_chat_logs[new_name].append(message)
+			global_character_chat_logs[new_name].append(message)
+		
+		# Remove the old character's chat log since it's been transferred
+		character_chat_logs.erase(old_name)
+		global_character_chat_logs.erase(old_name)
+		
+		print("ChatLog: Successfully transferred chat history. New character has ", character_chat_logs[new_name].size(), " messages")
+	
+	# Update the character name
 	character_name = new_name
+	
 	# Update window title if needed
 	title = "Chat Log - " + character_name
+	
 	# Refresh display if window is visible
 	if visible:
 		update_chat_log_display()

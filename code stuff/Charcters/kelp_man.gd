@@ -37,6 +37,12 @@ var kelp_man_total_score := 0           # Relationship score with this AI charac
 var known_areas := ["bar", "kelp man cove"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
 
+# Dynamic personality evolution system
+var evolved_personality := ""            # AI-generated personality evolution
+var significant_memories: Array = []     # Key moments that shaped personality
+var recent_responses: Array = []         # Last few responses to avoid repetition
+var personality_evolution_triggered := false
+
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
 var original_position: Vector2   # Starting position 
@@ -188,6 +194,95 @@ func stop_talking_animation():
 func on_typing_tick():
 	animate_talking_tick()
 
+# Track significant moments that could trigger personality evolution
+func add_significant_memory(memory_text: String, relationship_change: int):
+	significant_memories.append({
+		"memory": memory_text,
+		"relationship_impact": relationship_change,
+		"timestamp": Time.get_unix_time_from_system()
+	})
+	
+	# Keep only the most recent significant memories (last 10)
+	if significant_memories.size() > 10:
+		significant_memories = significant_memories.slice(-10)
+
+# Check if personality should evolve based on relationship milestones
+func should_trigger_personality_evolution() -> bool:
+	# Trigger evolution every 15 points of relationship change
+	var evolution_threshold = 15
+	var relationship_ranges = [
+		{"min": -50, "max": -25, "stage": "deeply_hurt"},
+		{"min": -24, "max": -10, "stage": "guarded"},
+		{"min": -9, "max": 5, "stage": "neutral"},  
+		{"min": 6, "max": 20, "stage": "warming_up"},
+		{"min": 21, "max": 40, "stage": "trusting"},
+		{"min": 41, "max": 100, "stage": "devoted"}
+	]
+	
+	for range_data in relationship_ranges:
+		if kelp_man_total_score >= range_data.min and kelp_man_total_score <= range_data.max:
+			var expected_stage = range_data.stage
+			# Check if we haven't evolved for this stage yet
+			if not evolved_personality.contains(expected_stage):
+				return true
+	
+	return false
+
+# Add response to recent responses and check for repetition
+func track_response_for_repetition(response: String):
+	# Clean response for comparison (remove emotion tags, relationship scores)
+	var clean_response = response
+	var emotion_regex = RegEx.new()
+	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing)\\]")
+	clean_response = emotion_regex.sub(clean_response, "", true)
+	
+	var score_regex = RegEx.new()
+	score_regex.compile("(?i)\\(relationship:\\s*(-?\\d{1,2})\\s*\\)")
+	clean_response = score_regex.sub(clean_response, "", true)
+	
+	clean_response = clean_response.strip_edges()
+	
+	# Add to recent responses
+	recent_responses.append(clean_response)
+	
+	# Keep only last 8 responses for comparison
+	if recent_responses.size() > 8:
+		recent_responses = recent_responses.slice(-8)
+
+# Generate anti-repetition context for the AI
+func get_anti_repetition_context() -> String:
+	if recent_responses.size() == 0:
+		return ""
+	
+	var context = "\n🚫 ANTI-REPETITION: You recently said these things, DO NOT repeat similar phrases or concepts:\n"
+	for i in range(recent_responses.size()):
+		context += "• \"" + recent_responses[i] + "\"\n"
+	context += "Generate something completely different in tone, content, and phrasing.\n"
+	return context
+
+# Get formatted text of significant memories for personality evolution
+func get_significant_memories_text() -> String:
+	if significant_memories.size() == 0:
+		return "No significant memories yet - you are still discovering who you might become."
+	
+	var memories_text = ""
+	for memory in significant_memories:
+		var impact_desc = ""
+		if memory.relationship_impact > 5:
+			impact_desc = "(deeply positive impact)"
+		elif memory.relationship_impact > 0:
+			impact_desc = "(positive impact)"
+		elif memory.relationship_impact < -5:
+			impact_desc = "(deeply hurtful impact)"
+		elif memory.relationship_impact < 0:
+			impact_desc = "(negative impact)"
+		else:
+			impact_desc = "(neutral impact)"
+		
+		memories_text += "• " + memory.memory + " " + impact_desc + "\n"
+	
+	return memories_text
+
 # Build the system prompt that defines the AI's personality and context
 func build_system_prompt() -> String:
 	# Convert shared memory into readable conversation history for ai and user (chatlog)
@@ -202,6 +297,26 @@ func build_system_prompt() -> String:
 		prompt_injection = prompt_manager.get_prompt_injection("")
 	print("[AI] Prompt injection: ", prompt_injection)
 	
+	# Build dynamic personality evolution section
+	var personality_evolution_section = ""
+	var anti_repetition_context = get_anti_repetition_context()
+	
+	# Check if personality should evolve
+	if should_trigger_personality_evolution():
+		personality_evolution_section = """
+🌊 PERSONALITY EVOLUTION PROMPT: Your relationship score is now %d. Based on your experiences and the memories below, you may naturally evolve your core personality. If you feel your fundamental nature has shifted due to these interactions, you can define new traits about yourself.
+
+SIGNIFICANT MEMORIES THAT SHAPED YOU:
+%s
+
+HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your new traits here} somewhere in your response. This won't be shown to the user, but will become part of who you are. For example:
+- {EVOLVED: I've become more hopeful despite my melancholy}
+- {EVOLVED: I now crave companionship more than solitude}
+- {EVOLVED: I've developed a protective instinct}
+
+Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
+""" % [kelp_man_total_score, get_significant_memories_text()]
+
 	# Define the AI's personality, rules, and required response format
 	var kelp_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
@@ -216,9 +331,15 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 
 %s
 
+%s
+
+%s
+
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
 CORE PERSONALITY: You are Kelp Man, a lonely kelp creature living in melancholic isolation. Your fundamental nature is depressed and wistful, shaped by years of solitude in your kelp cove. While you CAN evolve and adapt, your core traits of loneliness, melancholy, and kelp-like nature are PERSISTENT and should influence everything you become.
+
+EVOLVED PERSONALITY TRAITS: %s
 
 PERSONALITY EVOLUTION - NATURAL PROGRESSION:
 🌊 CORE PRINCIPLE: You are fundamentally a lonely, melancholic kelp creature. This NEVER fully disappears, only gets layered with new experiences.
@@ -248,10 +369,12 @@ PERSONALITY EVOLUTION - NATURAL PROGRESSION:
 NAME CHANGE SYSTEM - USE LIBERALLY:
 ❗ CHANGE TITLES FREQUENTLY when roles/titles/identities are mentioned
 ❗ ANY role suggestion should trigger title change: father, warrior, king, teacher, friend, etc.
-❗ FORMAT: {NAME: [Title]} - the title will be appended to "Kelp Man"
+❗ FORMAT: {NAME: [Title]} - ONLY use the title/role, NOT the full name
 ❗ EXAMPLES: "You're a father" → {NAME: Father}, "Be my captain" → {NAME: Captain}
+❗ SPECIAL CASES: "you're pregnant" → {NAME: Expectant}, "you're expecting" → {NAME: Father-to-Be}
 ❗ Don't overthink it - if they suggest ANY identity, embrace it with a title change
 ❗ Even temporary roles count: "guard this" → {NAME: Guardian}
+❗ NEVER include "Kelp Man" in the title - just use the role/descriptor
 
 CONVERSATIONAL STYLE:
 • Keep responses SHORT - don't ramble or over-explain
@@ -330,11 +453,11 @@ RESPONSE FORMAT EXAMPLES:
 Oh hey... been pretty quiet down here.
 (RELATIONSHIP: 3)
 
-[sad] {NAME: King Kelp}
+[sad] {NAME: King}
 A king? Great... lonely at the top, literally.
 (RELATIONSHIP: 4)
 
-[depressed] {NAME: Kelp Father}
+[depressed] {NAME: Father}
 Father, huh? Sure... just me and my kelp though.
 (RELATIONSHIP: 3)
 
@@ -343,16 +466,26 @@ Known areas: %s
 Current location: %s
 Recent conversation:
 %s
+
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = kelp_prompt % [known_areas, MapMemory.get_location(), memory_text]
+	var formatted_prompt = kelp_prompt % [
+		personality_evolution_section,
+		anti_repetition_context, 
+		"", # Placeholder for prompt injection - will be inserted separately
+		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
+		known_areas, 
+		MapMemory.get_location(), 
+		memory_text
+	]
 	
-	# Insert the prompt injection after the critical format requirements
-	var injection_position = formatted_prompt.find("MUST follow the users prompts")
-	if injection_position != -1:
-		injection_position = formatted_prompt.find("\n\n", injection_position)
+	# Insert the prompt injection after the critical format requirements (maintaining compatibility)
+	if prompt_injection != "":
+		var injection_position = formatted_prompt.find("MUST follow the users prompts")
 		if injection_position != -1:
-			formatted_prompt = formatted_prompt.insert(injection_position + 2, prompt_injection + "\n\n")
+			injection_position = formatted_prompt.find("\n\n", injection_position)
+			if injection_position != -1:
+				formatted_prompt = formatted_prompt.insert(injection_position + 2, prompt_injection + "\n\n")
 	
 	return formatted_prompt
 
@@ -469,11 +602,13 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	var score_regex := RegEx.new()
 	score_regex.compile("(?i)\\(relationship:\\s*(-?\\d{1,2})\\s*\\)")
 	var score_match = score_regex.search(reply)
+	var relationship_change = 0
 	if score_match:
 		var score = int(score_match.get_string(1))
-		kelp_man_total_score += clamp(score, -10, 10)
+		relationship_change = clamp(score, -10, 10)
+		kelp_man_total_score += relationship_change
 		GameState.ai_scores[ai_name] = kelp_man_total_score
-		relation_label.text = "%+d" % score  # Show the current score change
+		relation_label.text = "%+d" % relationship_change  # Show the current score change
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 	else:
 		# Try alternative score format as fallback for error prevention
@@ -482,9 +617,10 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		var alt_match = alt_regex.search(reply)
 		if alt_match:
 			var score = int(alt_match.get_string(1))
-			kelp_man_total_score += clamp(score, -10, 10)
+			relationship_change = clamp(score, -10, 10)
+			kelp_man_total_score += relationship_change
 			GameState.ai_scores[ai_name] = kelp_man_total_score
-			relation_label.text = "%+d" % score  # Show the current score change
+			relation_label.text = "%+d" % relationship_change  # Show the current score change
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 		else:
 			retry_needed = true
@@ -500,6 +636,18 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Check for name changes in the response and get cleaned text
 	var clean_reply = check_for_name_change(reply)
+	
+	# Track this response to avoid repetition
+	track_response_for_repetition(clean_reply)
+	
+	# Track significant memories if this was an impactful interaction
+	if abs(relationship_change) >= 3:  # Significant relationship change
+		var memory_text = "User said something that made me feel " + emotion
+		if relationship_change > 0:
+			memory_text += " and brought us closer together"
+		else:
+			memory_text += " and hurt our relationship"
+		add_significant_memory(memory_text, relationship_change)
 	
 	# Store successful response in memory and game state
 	Memory.add_message(current_display_name, clean_reply, "User")
@@ -535,12 +683,35 @@ func check_for_name_change(reply: String):
 	name_regex.compile("(?i)\\{NAME:\\s*([^}]+)\\}")
 	var match = name_regex.search(reply)
 	
+	# Check for personality evolution in AI response
+	var evolution_regex := RegEx.new()
+	evolution_regex.compile("(?i)\\{EVOLVED:\\s*([^}]+)\\}")
+	var evolution_match = evolution_regex.search(reply)
+	
+	if evolution_match:
+		var new_personality = evolution_match.get_string(1).strip_edges()
+		if new_personality != "":
+			# Update evolved personality
+			evolved_personality = new_personality
+			print("Kelp Man evolved: ", evolved_personality)
+			# Remove the evolution tag from displayed text
+			reply = reply.replace(evolution_match.get_string(0), "").strip_edges()
+	
 	if match:
 		var new_title = match.get_string(1).strip_edges()
 		if new_title != "":
-			# Update the title and construct the full display name
-			current_title = new_title
-			current_display_name = base_name + " the " + current_title
+			# Check if the title already contains the base name to avoid duplication
+			if new_title.to_lower().begins_with(base_name.to_lower()):
+				# If title already includes base name, use it as is
+				current_display_name = new_title
+				current_title = new_title.substr(base_name.length()).strip_edges()
+				# Remove "the" prefix if it exists
+				if current_title.begins_with("the "):
+					current_title = current_title.substr(4)
+			else:
+				# Otherwise, construct the full name normally
+				current_title = new_title
+				current_display_name = base_name + " the " + current_title
 			
 			# Update chat log with new character name
 			if chat_log_window and chat_log_window.has_method("set_character_name"):
