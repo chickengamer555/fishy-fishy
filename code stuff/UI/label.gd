@@ -16,32 +16,42 @@ var cached_font_data: FontFile
 
 func _ready():
 	typing_timer.timeout.connect(_on_typing_timer_timeout)
-	# Enable text wrapping but disable scrolling
+	
+	# Configure RichTextLabel for proper auto-resizing
 	autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	scroll_active = false  # Disable scrolling
+	scroll_active = false  # Disable scrolling for fixed container
 	bbcode_enabled = true
-	fit_content = false  # Let it use full container size
-	clip_contents = true
+	fit_content = true  # Enable auto-sizing content
+	clip_contents = false  # Allow content to be visible during resize
+	
+	# Set proper size flags for container behavior
+	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	
 	# Load font once for better performance
 	cached_font_data = load(font_path)
 	if cached_font_data == null:
 		push_error("Font file not found at: " + font_path)
 		# Try alternative path
-		cached_font_data = load("res://Other/PixelifySans-VariableFont_wght.ttf")
+		cached_font_data = load("res://Other/Tiny5-Regular.ttf")
 		if cached_font_data == null:
 			push_error("Font file not found at alternative path either")
 	
 	# Connect to resize signal for dynamic font adjustment
 	resized.connect(_on_label_resized)
 	
+	# Wait for proper layout before initial resize
+	call_deferred("_initialize_sizing")
+
+func _initialize_sizing():
 	# Force initial resize to ensure proper font sizing
 	await get_tree().process_frame
+	await get_tree().process_frame  # Wait extra frame for layout
 	_on_label_resized()
 
 func _on_label_resized():
-	# Refit font when label is resized
-	if not full_text.is_empty():
+	# Only refit if we have valid size and text
+	if get_size().x > 0 and get_size().y > 0 and not full_text.is_empty():
 		_fit_font_to_label(full_text)
 		# Update current display
 		if not is_typing:
@@ -56,6 +66,9 @@ func show_text_with_typing(text_to_show: String):
 	current_char = 0
 	clear()
 	is_typing = true
+	
+	# Wait for layout before fitting font
+	await get_tree().process_frame
 	_fit_font_to_label(full_text)
 	typing_timer.wait_time = type_speed
 
@@ -84,64 +97,68 @@ func _on_typing_timer_timeout():
 		kelp_man_controller.on_typing_tick()
 
 func _fit_font_to_label(preview_text: String):
-	if cached_font_data == null:
+	if cached_font_data == null or preview_text.is_empty():
 		return
 
-	# Wait for layout to be ready
-	await get_tree().process_frame
-	
+	# Get current size - should be valid now with proper initialization
 	var label_size := get_size()
 	
-	# Better size detection with more aggressive fallback
+	# Enhanced size detection with better fallbacks
 	if label_size.x <= 0 or label_size.y <= 0:
-		# Try to get parent container size
-		var parent = get_parent()
-		if parent is Control:
-			label_size = parent.get_size()
-		elif parent is CanvasItem:
-			var rect = parent.get_rect()
-			label_size = rect.size
+		# Try to get size from container chain
+		var current_parent = get_parent()
+		while current_parent and (label_size.x <= 0 or label_size.y <= 0):
+			if current_parent is Control:
+				var parent_size = current_parent.get_size()
+				if parent_size.x > 0 and parent_size.y > 0:
+					label_size = parent_size
+					break
+			elif current_parent is CanvasItem:
+				var rect = current_parent.get_rect()
+				if rect.size.x > 0 and rect.size.y > 0:
+					label_size = rect.size
+					break
+			current_parent = current_parent.get_parent()
 		
-		# Final fallback with better proportions
+		# Final fallback with reasonable proportions
 		if label_size.x <= 0 or label_size.y <= 0:
-			label_size = Vector2(600, 200)  # More realistic fallback
+			label_size = Vector2(600, 200)
 	
-	# Calculate padding based on label size for better space utilization
-	var padding_x = max(4, label_size.x * padding_factor)  # Minimum 4px padding
-	var padding_y = max(4, label_size.y * padding_factor)
-	var available_size = Vector2(label_size.x - padding_x * 2, label_size.y - padding_y * 2)
+	# Calculate available space with padding
+	var padding_x = max(8, label_size.x * padding_factor)  # Minimum 8px padding
+	var padding_y = max(8, label_size.y * padding_factor)
+	var available_size = Vector2(
+		max(50, label_size.x - padding_x * 2),  # Ensure minimum working space
+		max(20, label_size.y - padding_y * 2)
+	)
 	
-	print("Label size: ", label_size, " Available size: ", available_size, " Text length: ", preview_text.length())
+	print("Label auto-resize - Size: ", label_size, " Available: ", available_size, " Text: ", preview_text.length(), " chars")
 	
-	# Ensure min and max font sizes are multiples of 4
-	var adjusted_min_size := _round_to_multiple_of_4(min_font_size)
-	var adjusted_max_size := _round_to_multiple_of_4(max_font_size)
+	# Find optimal font size using binary search for efficiency
+	var min_size = max(8, min_font_size)
+	var max_size = min(96, max_font_size)
+	var optimal_size = min_size
 	
-	var final_size := adjusted_min_size  # Start with minimum and work up
-	var best_fit_size := adjusted_min_size
-	
-	# Test font sizes in multiples of 4 from min to max
-	var current_size := adjusted_min_size
-	while current_size <= adjusted_max_size:
-		var paragraph := TextParagraph.new()
+	# Binary search for optimal font size
+	while min_size <= max_size:
+		var mid_size = (min_size + max_size) / 2
+		var paragraph = TextParagraph.new()
 		paragraph.width = available_size.x
-		paragraph.add_string(preview_text, cached_font_data, current_size)
-		var measured := paragraph.get_size()
+		paragraph.add_string(preview_text, cached_font_data, mid_size)
+		var measured = paragraph.get_size()
 		
-		# Check if text fits within available space
+		# Check if text fits
 		if measured.x <= available_size.x and measured.y <= available_size.y:
-			best_fit_size = current_size
+			optimal_size = mid_size
+			min_size = mid_size + 1  # Try larger size
 		else:
-			break  # Size too big, use the last working size
-		
-		current_size += 4  # Increment by 4 for clean multiples
+			max_size = mid_size - 1  # Try smaller size
 	
-	final_size = best_fit_size
-	print("Optimal font size (multiple of 4): ", final_size, " for available space: ", available_size)
+	print("Optimal font size: ", optimal_size)
 	
+	# Apply the font and size
 	add_theme_font_override("normal_font", cached_font_data)
-	add_theme_font_size_override("normal_font_size", final_size)
-
-# Helper function to round a number to the nearest multiple of 4
-func _round_to_multiple_of_4(value: int) -> int:
-	return int(round(value / 4.0) * 4)
+	add_theme_font_size_override("normal_font_size", optimal_size)
+	
+	# Force update layout
+	queue_redraw()

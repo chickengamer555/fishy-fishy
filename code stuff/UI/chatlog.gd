@@ -107,12 +107,12 @@ func update_chat_log_display():
 		if entry["role"] == "user":
 			# Player message 
 			log += "You:\n"
-			log += entry["content"] + "\n\n"
+			log += entry["content"] + "\n"
 		else:
 			# Character message
 			var display_name = entry.get("character_name", character_name)
 			log += display_name + ":\n"
-			log += entry["content"] + "\n\n"
+			log += entry["content"] + "\n"
 	
 	if log.is_empty():
 		log = "No conversation history yet"
@@ -144,7 +144,7 @@ func update_text_scaling():
 	chat_log_label.add_theme_font_size_override("italic_font_size", chat_size)
 	
 	# Line spacing for readability
-	chat_log_label.add_theme_constant_override("line_separation", int(4 * scale_factor))
+	chat_log_label.add_theme_constant_override("line_separation", int(2 * scale_factor))
 	
 	# Scale status label font
 	chat_log_status_label.add_theme_font_size_override("font_size", int(12 * scale_factor))
