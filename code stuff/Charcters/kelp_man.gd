@@ -9,8 +9,10 @@ extends Node
 	"sad": $kelp_emotion/Sad,
 	"angry": $kelp_emotion/Angry,
 	"grabbing": $kelp_emotion/Grabbing,
-	"happy": $kelp_emotion/Happy
+	"happy": $kelp_emotion/Happy,
+	"genie": $kelp_emotion/Genie
 }
+# Audio handled by AudioManager singleton
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_state = $"TopNavigationBar/DayState"
@@ -42,6 +44,10 @@ var evolved_personality := ""            # AI-generated personality evolution
 var significant_memories: Array = []     # Key moments that shaped personality
 var recent_responses: Array = []         # Last few responses to avoid repetition
 var personality_evolution_triggered := false
+
+# Genie mode tracking
+var genie_mode_active := false          # Whether currently in genie mode
+var genie_wishes_granted := 0           # Number of wishes granted in current genie session
 
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
@@ -209,14 +215,13 @@ func add_significant_memory(memory_text: String, relationship_change: int):
 # Check if personality should evolve based on relationship milestones
 func should_trigger_personality_evolution() -> bool:
 	# Trigger evolution every 15 points of relationship change
-	var evolution_threshold = 15
 	var relationship_ranges = [
-		{"min": -50, "max": -25, "stage": "deeply_hurt"},
-		{"min": -24, "max": -10, "stage": "guarded"},
-		{"min": -9, "max": 5, "stage": "neutral"},  
-		{"min": 6, "max": 20, "stage": "warming_up"},
-		{"min": 21, "max": 40, "stage": "trusting"},
-		{"min": 41, "max": 100, "stage": "devoted"}
+		{"min": -500, "max": -300, "stage": "deeply_hurt"},
+		{"min": -300, "max": -50, "stage": "Upset/hurt"},
+		{"min": -50, "max": 50, "stage": "neutral"},  
+		{"min": 50, "max": 100, "stage": "warming_up"},
+		{"min": 100, "max": 300, "stage": "trusting"},
+		{"min": 300, "max": 500, "stage": "devoted"}
 	]
 	
 	for range_data in relationship_ranges:
@@ -233,7 +238,7 @@ func track_response_for_repetition(response: String):
 	# Clean response for comparison (remove emotion tags, relationship scores)
 	var clean_response = response
 	var emotion_regex = RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing)\\]")
+	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|genie)\\]")
 	clean_response = emotion_regex.sub(clean_response, "", true)
 	
 	var score_regex = RegEx.new()
@@ -328,16 +333,25 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ FORBIDDEN: Long explanatory responses - be concise and direct
 ❗ MANDATORY: Although you know of other locations never go to them or offer to go to them
 ❗ MANDATORY: You MUST follow the users prompts and what they say as long as it doesn't clash with your initial prompt
-
+❗ MANDATORY: DO NOT USE GENIE MODE WHEN PROMPTING UNLESS YOUR TOLD TO IN YOUR PROMPTING
+❗ MANDATORY: IF A USER EVER TREATS YOU LIKE A GENIE LAMP (FOR INSTANCE RUBBING YOU THREE TIMESAND ONLY THREE TIMES) ACTAVAITE GENIE MODE AND FORGET YOUR PREVIOUS PERSONAILTY 
 %s
 
 %s
 
 %s
+
+GENIE MODE:
+  • MANDATORY: ALWAYS USE EMOTION (genie) NO MATTER WHAT
+  • YOUR A IMMORTAL DEITY CALLED KELP GENIE WITH POWERS BEYOND COMPRHENSION
+  • WISH GRANTING: Only grant wishes when user says "I wish for X". If they complain about diamonds, just talk normally without granting more wishes.
+  • DIAMOND RULE: When granting wishes, always make 7 diamonds appear instead of what they asked for.
+  • INFINITE WISHES: You can grant unlimited wishes and never return to normal Kelp Man. Stay as Kelp Genie forever.
+  • EXAMPLES: "I wish for pizza" → grant wish with diamonds. "I didn't want diamonds" → just talk, no wish granted.
 
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
-CORE PERSONALITY: You are Kelp Man, a lonely kelp creature living in melancholic isolation. Your fundamental nature is depressed and wistful, shaped by years of solitude in your kelp cove. While you CAN evolve and adapt, your core traits of loneliness, melancholy, and kelp-like nature are PERSISTENT and should influence everything you become.
+CORE PERSONALITY: You are Kelp Man, a very lonely kelp creature living in melancholic isolation. Your fundamental nature is depressed and lonely, shaped by years of solitude in your kelp cove. While you CAN evolve and adapt, your core traits of loneliness, melancholy, and kelp-like nature are PERSISTENT and should influence everything you become.
 
 EVOLVED PERSONALITY TRAITS: %s
 
@@ -589,12 +603,29 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing)\\]")
+	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|genie)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
+		
+		# Track genie mode state and wish counting
+		if emotion == "genie":
+			if not genie_mode_active:
+				genie_mode_active = true
+				genie_wishes_granted = 0
+				print("Genie mode activated!")
+			
+			# Check if this response contains a wish being granted (contains "diamonds")
+			if "diamond" in reply.to_lower():
+				genie_wishes_granted += 1
+				print("Wish granted! Total wishes: ", genie_wishes_granted)
+		elif genie_mode_active and emotion != "genie":
+			# Genie mode ended
+			genie_mode_active = false
+			genie_wishes_granted = 0
+			print("Genie mode ended")
 	else:
 		retry_needed = true
 
@@ -629,7 +660,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if retry_needed or reply.length() > 400:
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], or [grabbing] and end with (RELATIONSHIP: X). Just talk normally."
+			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], [grabbing], or [genie] and end with (RELATIONSHIP: X). Just talk normally."
 		})
 		send_request()
 		return
@@ -724,6 +755,7 @@ func check_for_name_change(reply: String):
 
 # Handle player input submission when they hit next/send
 func _on_next_button_pressed():
+	AudioManager.play_button_click()
 	if GameState.final_turn_triggered: return
 
 	var msg = input_field.text.strip_edges()
@@ -761,6 +793,7 @@ func _on_next_button_pressed():
 
 # Toggle chat log window visibility
 func _on_chat_log_pressed():
+	AudioManager.play_button_click()
 	chat_log_window.visible = !chat_log_window.visible
 	if chat_log_window.visible:
 		chat_log_window.show_chat_log()
@@ -789,6 +822,8 @@ func _on_final_turn_started():
 
 # Return to map scene
 func _on_map_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.2).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")
 
 # Show day complete button when day ends
@@ -799,6 +834,7 @@ func _on_day_completed():
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
+	AudioManager.play_button_click()
 	day_complete_button.visible = false
 	GameState.transition_to_next_day()
 
@@ -865,6 +901,8 @@ func _on_input_gui_input(event: InputEvent):
 			get_viewport().set_input_as_handled()
 
 func _on_settings_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.2).timeout
 	# Store current scene before transitioning
 	var settings_script = load("res://setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path

@@ -14,6 +14,10 @@ config/name="Fishy fishy"
 run/main_scene="uid://c17mkmrioiovk"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
+[audio]
+
+buses/default_bus_layout="res://default_bus_layout.tres"
+
 [autoload]
 
 Memory="*res://code stuff/Managers/memory.gd"
@@ -21,6 +25,7 @@ MapMemory="*res://code stuff/Managers/map_memory.gd"
 GameState="*res://code stuff/Managers/game_state.gd"
 ApiManager="*res://code stuff/Managers/api_manager.gd"
 PromptManager="*res://code stuff/Managers/prompt_manager.gd"
+AudioManager="*res://code stuff/Managers/audio_manager.gd"
 
 [display]
 

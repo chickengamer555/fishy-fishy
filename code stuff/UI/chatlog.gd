@@ -4,7 +4,7 @@ class_name ChatLog
 @onready var chat_log_label = $ChatLogPanel/VBoxContainer/ScrollContainer/ChatLogLabel
 @onready var chat_log_status_label = $ChatLogPanel/VBoxContainer/StatusLabel
 @onready var chat_log_title_label = $ChatLogPanel/VBoxContainer/TitleLabel
-
+# Audio handled by AudioManager singleton
 # Predefined font sizes matching the screenshot
 var available_font_sizes: Array[int] = [12, 14, 20, 24, 32, 40, 64, 96, 120]
 var current_font_size_index: int = 4  # Default to 32 (index 4)
@@ -122,6 +122,7 @@ func update_chat_log_display():
 	chat_log_status_label.text = str(message_count) + " messages with " + character_name
 
 func _on_window_close_requested():
+	AudioManager.play_button_click()
 	hide()
 
 func _on_window_resized():
@@ -162,11 +163,13 @@ func constrain_window_position():
 
 # Font size button handlers - now uses predefined sizes
 func _on_increase_font_button_pressed():
+	AudioManager.play_button_click()
 	if current_font_size_index < available_font_sizes.size() - 1:
 		current_font_size_index += 1
 		update_font_size()
 
 func _on_decrease_font_button_pressed():
+	AudioManager.play_button_click()
 	if current_font_size_index > 0:
 		current_font_size_index -= 1
 		update_font_size()
@@ -176,6 +179,7 @@ func update_font_size():
 	update_text_scaling()
 
 func _on_close_button_pressed():
+	AudioManager.play_button_click()
 	hide()
 
 func set_character_name(new_name: String):
@@ -214,3 +218,31 @@ func set_character_name(new_name: String):
 	# Refresh display if window is visible
 	if visible:
 		update_chat_log_display()
+
+func _on_clear_button_pressed():
+	AudioManager.play_button_click()
+	clear_chat_log()
+
+func _on_fullscreen_button_pressed():
+	AudioManager.play_button_click()
+	toggle_fullscreen()
+
+func toggle_fullscreen():
+	chat_window_is_fullscreen = !chat_window_is_fullscreen
+	
+	if chat_window_is_fullscreen:
+		# Store current size and position
+		chat_window_normal_size = size
+		chat_window_normal_position = position
+		
+		# Set to fullscreen
+		var screen_size = DisplayServer.screen_get_size()
+		position = Vector2i.ZERO
+		size = screen_size
+	else:
+		# Restore normal size and position
+		size = chat_window_normal_size
+		position = chat_window_normal_position
+	
+	# Update text scaling for new size
+	update_text_scaling()

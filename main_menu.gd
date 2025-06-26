@@ -30,9 +30,12 @@ func setup_file_dialog() -> void:
 	add_child(file_dialog)
 
 func _on_play_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")
 
 func _on_api_pressed() -> void:
+	AudioManager.play_button_click()
 	file_dialog.popup_centered()
 
 func _on_file_selected(path: String) -> void:
@@ -103,6 +106,7 @@ func parse_txt_api_key(content: String) -> String:
 	# Otherwise, treat the entire content as the API key
 	return cleaned_content
 
-
 func _on_settings_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu_setting.tscn")

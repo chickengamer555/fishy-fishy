@@ -57,6 +57,7 @@ func animate_out():
 	await tween.finished
 
 func _on_next_day_pressed():
+	AudioManager.play_button_click()
 	next_day_button.disabled = true
 	
 	await animate_out()

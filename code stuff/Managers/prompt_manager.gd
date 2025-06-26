@@ -18,7 +18,7 @@ func add_prompt_injection(content: String, prompt_name: String) -> void:
 	active_prompt_name = prompt_name
 	print("Prompt injection added: ", prompt_name)
 
-func get_prompt_injection(String):
+func get_prompt_injection():
 	return current_injection
 
 func has_injection() -> bool:

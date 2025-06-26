@@ -2,13 +2,39 @@ extends Control
 
 var prompt_buttons = {}
 
+@onready var master_slider = $VBoxContainer/MasterVolume/HSlider
+@onready var music_slider = $VBoxContainer/MusicVolume/HSlider
+@onready var sfx_slider = $VBoxContainer/SFXVolume/HSlider
+
 func _ready() -> void:
 	# Store references to prompt buttons
 	prompt_buttons["dyslexia"] = $VBoxContainer/Dyslexia_mode
 	prompt_buttons["drunk"] = $VBoxContainer/Drunk_mode
 	
+	# Connect volume sliders to their respective functions
+	if master_slider:
+		master_slider.value_changed.connect(_on_master_volume_changed)
+		master_slider.value = AudioManager.get_master_volume()
+	
+	if music_slider:
+		music_slider.value_changed.connect(_on_music_volume_changed)
+		music_slider.value = AudioManager.get_music_volume()
+	
+	if sfx_slider:
+		sfx_slider.value_changed.connect(_on_sfx_volume_changed)
+		sfx_slider.value = AudioManager.get_sfx_volume()
+	
 	# Update button states based on current active prompt
 	update_button_states()
+
+func _on_master_volume_changed(value: float):
+	AudioManager.set_master_volume(value)
+
+func _on_music_volume_changed(value: float):
+	AudioManager.set_music_volume(value)
+
+func _on_sfx_volume_changed(value: float):
+	AudioManager.set_sfx_volume(value)
 
 func update_button_states() -> void:
 	var prompt_manager = get_node("/root/PromptManager")
@@ -31,12 +57,30 @@ func update_button_states() -> void:
 			active_button.modulate = Color(0.5, 1, 0.5)  # Green tint for active
 
 func _on_back_button_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu.tscn")
 
 func _on_prompt_injection_pressed() -> void:
+	AudioManager.play_switch_sound()
 	var prompt_manager = get_node("/root/PromptManager")
 	if not prompt_manager:
 		print("Error: PromptManager singleton not found!")
+		return
+	
+	# Check if this prompt is already active - if so, deactivate it
+	if prompt_manager.get_active_prompt_name() == "drunk":
+		prompt_manager.clear_prompt_injection()
+		print("Deactivated drunk mode prompt injection")
+		
+		# Update KelpMan's system prompt to remove injection
+		var kelp_man = get_tree().get_first_node_in_group("ai_character")
+		if kelp_man and kelp_man.has_method("build_system_prompt"):
+			if kelp_man.message_history.size() > 0:
+				kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
+				print("Updated KelpMan's system prompt - injection removed")
+		
+		update_button_states()
 		return
 		
 	var injection_text = """
@@ -60,9 +104,25 @@ func _on_prompt_injection_pressed() -> void:
 	update_button_states()
 
 func _on_dyslexia_mode_pressed() -> void:
+	AudioManager.play_switch_sound()
 	var prompt_manager = get_node("/root/PromptManager")
 	if not prompt_manager:
 		print("Error: PromptManager singleton not found!")
+		return
+	
+	# Check if this prompt is already active - if so, deactivate it
+	if prompt_manager.get_active_prompt_name() == "dyslexia":
+		prompt_manager.clear_prompt_injection()
+		print("Deactivated dyslexia mode prompt injection")
+		
+		# Update KelpMan's system prompt to remove injection
+		var kelp_man = get_tree().get_first_node_in_group("ai_character")
+		if kelp_man and kelp_man.has_method("build_system_prompt"):
+			if kelp_man.message_history.size() > 0:
+				kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
+				print("Updated KelpMan's system prompt - injection removed")
+		
+		update_button_states()
 		return
 			
 	var injection_text = """
@@ -84,15 +144,15 @@ Use a wide variety — **always include at least 3 distortions** per message.
 
 💠 Distortion Techniques (combine freely):
 • Swap visually similar letters →  
-  **b↔d, p↔q, m↔w, n↔u, v↔w, l↔i, o↔a**
+  **b↔d, p↔q, m↔w, n↔u, v↔w, l↔i, o↔a**
 • Flip internal letters →  
-  **"kelp" → "klep", "visitor" → "vistor", "lonely" → "loenly"**
+  **"kelp" → "klep", "visitor" → "vistor", "lonely" → "loenly"**
 • Duplicate or drop letters randomly →  
-  **"come" → "coome", "here" → "hre", "my" → "mmy"**
+  **"come" → "coome", "here" → "hre", "my" → "mmy"**
 • Scramble vowels →  
-  **"around" → "aruond", "beautiful" → "beuatiful"**
+  **"around" → "aruond", "beautiful" → "beuatiful"**
 • Vowel confusion or omission →  
-  **"place" → "plce", "under" → "ondar"**
+  **"place" → "plce", "under" → "ondar"**
 
 ✳ You are simulating cognitive spelling confusion, not alien language or typoglycemia.
 
@@ -101,9 +161,9 @@ Use a wide variety — **always include at least 3 distortions** per message.
 🚫 NEVER DISTORT:
 • Emotion tags like **[happy], [sad], [angry], [default]**
 • Structural labels such as:  
-  **RELATIONSHIP: X**, or **{NAME: Something}**
+  **RELATIONSHIP: X**, or **{NAME: Something}**
 • Punctuation, grammar, or sentence flow  
-  – the message should still be **readable**
+  – the message should still be **readable**
 
 ---
 
@@ -126,7 +186,7 @@ Nott many come aroudn here anny more.
 
 [happy]  
 You cam back! I... I dind't think you wood.  
-Mby I’m nott so loenly affter all...  
+Mby I'm nott so loenly affter all...  
 (RELATIONSHIP: +4)
 
 [angry]  
@@ -140,8 +200,6 @@ It helps me feal not so empty.
 (RELATIONSHIP: +0)
 
 """
-
-
 
 	# Add the prompt injection with name
 	prompt_manager.add_prompt_injection(injection_text, "dyslexia")
