@@ -1,17 +1,16 @@
 extends Node
 
 # Reffrences nodes for ui and sprites
-@onready var action_label = $StatsBoxFrame004/Action_left
+@onready var action_label = $Statsbox/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
 @onready var emotion_sprite_root = $squileta_emotion
 @onready var emotion_sprites = {
-	"depressed": $kelp_emotion/Depressed,
-	"sad": $kelp_emotion/Sad,
-	"angry": $kelp_emotion/Angry,
-	"grabbing": $kelp_emotion/Grabbing,
-	"happy": $kelp_emotion/Happy,
-	"genie": $kelp_emotion/Genie
+	"depressed": $squileta_emotion/Depressed,
+	"sad": $squileta_emotion/Sad,
+	"angry": $squileta_emotion/Angry,
+	"grabbing": $squileta_emotion/Grabbing,
+	"happy": $squileta_emotion/Happy,
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -36,17 +35,23 @@ var current_title := ""                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
-var kelp_man_total_score := 0           # Relationship score with this AI character
-var known_areas := ["bar", "kelp man cove"]  # Areas this AI knows about
+var squileta_total_score := 0           # Relationship score with this AI character
+var known_areas := ["squaloon", "kelp man cove"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
+var known_characters := ["Kelp man"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
 var significant_memories: Array = []     # Key moments that shaped personality
 var recent_responses: Array = []         # Last few responses to avoid repetition and keep ai on track
 var personality_evolution_triggered := false
+var conversation_topics: Array = []      # Track topics discussed to prevent repetition
+var greeting_count: int = 0              # Count how many greetings have been given
+var location_requests: int = 0           # Count how many times user asked about locations
 
-		# Number of wishes granted in current genie session
+# Genie mode tracking
+var genie_mode_active := false          # Whether currently in genie mode
+var genie_wishes_granted := 0           # Number of wishes granted in current genie session
 
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
@@ -91,23 +96,23 @@ func _ready():
 		var heart_node = get_node_or_null("Statsbox/" + heart_name)
 		if heart_node:
 			heart_sprites[i] = heart_node
-		else:
-			print("Heart node not found: Statsbox/" + heart_name)
+
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
-	kelp_man_total_score = GameState.ai_scores.get(ai_name, 0)
-	GameState.ai_scores[ai_name] = kelp_man_total_score
+	squileta_total_score = GameState.ai_scores.get(ai_name, 0)
+	GameState.ai_scores[ai_name] = squileta_total_score
 	# Updates the day counter display 
 	update_day_state()
 	
 	# Check for any active prompt injection and ensure it's applied to introduction/continuation responses
 	var prompt_manager = get_node("/root/PromptManager")
 	if prompt_manager and prompt_manager.has_injection():
-		print("Found active prompt injection, applying to system prompt for all responses")
 		if message_history.size() > 0:
 			message_history[0]["content"] = build_system_prompt()
 		# Force regeneration of intro/continuation with injection
-		GameState.last_ai_response = ""
+		if not GameState.ai_responses.has(ai_name):
+			GameState.ai_responses[ai_name] = ""
+		GameState.ai_responses[ai_name] = ""
 	
 	# Wait one frame to ensure all nodes are fully initialized as error prevention
 	await get_tree().process_frame
@@ -115,11 +120,21 @@ func _ready():
 	# Handle different response scenarios based on game state
 	if GameState.just_started_new_day:
 		# Clear stored response at start of new day to generate fresh content
-		GameState.last_ai_response = ""
-		GameState.last_ai_emotion = "sad"
+		if not GameState.ai_responses.has(ai_name):
+			GameState.ai_responses[ai_name] = ""
+		if not GameState.ai_emotions.has(ai_name):
+			GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_responses[ai_name] = ""
+		GameState.ai_emotions[ai_name] = "happy"
+	
+	# Initialize character-specific response storage if it doesn't exist
+	if not GameState.ai_responses.has(ai_name):
+		GameState.ai_responses[ai_name] = ""
+	if not GameState.ai_emotions.has(ai_name):
+		GameState.ai_emotions[ai_name] = "happy"
 	
 	# Display appropriate response based on conversation history
-	if GameState.last_ai_response != "":
+	if GameState.ai_responses[ai_name] != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)
 		display_stored_response()
 	elif Memory.shared_memory.size() == 0:
@@ -232,7 +247,7 @@ func should_trigger_personality_evolution() -> bool:
 	]
 	
 	for range_data in relationship_ranges:
-		if kelp_man_total_score >= range_data.min and kelp_man_total_score <= range_data.max:
+		if squileta_total_score >= range_data.min and squileta_total_score <= range_data.max:
 			var expected_stage = range_data.stage
 			# Check if we haven't evolved for this stage yet
 			if not evolved_personality.contains(expected_stage):
@@ -240,43 +255,36 @@ func should_trigger_personality_evolution() -> bool:
 	
 	return false
 
-# Add response to recent responses and check for repetition
-func track_response_for_repetition(response: String):
-	# Clean response for comparison (remove emotion tags, relationship scores)
-	var clean_response = response
-	var emotion_regex = RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|genie)\\]")
-	clean_response = emotion_regex.sub(clean_response, "", true)
 	
-	var score_regex = RegEx.new()
-	score_regex.compile("(?i)\\(relationship:\\s*(-?\\d{1,2})\\s*\\)")
-	clean_response = score_regex.sub(clean_response, "", true)
-	
-	clean_response = clean_response.strip_edges()
-	
-	# Add to recent responses
-	recent_responses.append(clean_response)
-	
-	# Keep only last 8 responses for comparison
-	if recent_responses.size() > 8:
-		recent_responses = recent_responses.slice(-8)
-
-# Generate anti-repetition context for the AI
-func get_anti_repetition_context() -> String:
-	if recent_responses.size() == 0:
-		return ""
-	
-	var context = "\n🚫 ANTI-REPETITION: You recently said these things, DO NOT repeat similar phrases or concepts:\n"
+	var context = "\n🚨 CRITICAL ANTI-REPETITION SYSTEM:\n"
+	context += "FORBIDDEN RESPONSES (you said these recently):\n"
 	for i in range(recent_responses.size()):
 		context += "• \"" + recent_responses[i] + "\"\n"
-	context += "Generate something completely different in tone, content, and phrasing.\n"
-	return context
-
-# Get formatted text of significant memories for personality evolution
+	
+	context += "\n🎯 MANDATORY RESPONSE RULES:\n"
+	context += "• NEVER repeat similar greetings, phrases, or sentence structures\n"
+	context += "• NEVER use the same opening words or patterns\n"
+	context += "• NEVER mention loneliness, emptiness, or isolation repeatedly\n"
+	context += "• NEVER give generic responses - be specific and unique\n"
+	context += "• NEVER ignore what the user just said to repeat old topics\n"
+	context += "• ALWAYS build on the conversation progressing forward\n"
+	context += "• ALWAYS address the user's current question/statement directly\n"
+	context += "• ALWAYS vary your vocabulary, tone, and approach\n"
+	context += "• If asked about locations, provide them immediately - don't deflect\n"
+	context += "• If asked a question, answer it - don't give another greeting\n"
+	context += "• Make each response unique and conversation-advancing\n"
+	
+	context += "\n⚡ DYNAMIC RESPONSE GENERATION:\n"
+	context += "• Use different sentence structures than previous responses\n"
+	context += "• Reference specific things the user mentioned\n"
+	context += "• Build on previous conversation points instead of resetting\n"
+	context += "• Show progression in the relationship/conversation\n"
+	context += "• Be reactive to the user's current mood/question\n"
+	
+	
 func get_significant_memories_text() -> String:
 	if significant_memories.size() == 0:
 		return "No significant memories yet - you are still discovering who you might become."
-	
 	var memories_text = ""
 	for memory in significant_memories:
 		var impact_desc = ""
@@ -300,18 +308,22 @@ func build_system_prompt() -> String:
 	# Convert shared memory into readable conversation history for ai and user (chatlog)
 	var memory_text := ""
 	for entry in Memory.shared_memory:
-		memory_text += "- " + entry["speaker"] + " said to " + entry["target"] + ": \"" + entry["message"] + "\"\n"
+		var speaker = entry["speaker"]
+		var target = entry["target"]
+		var message = entry["message"]
+		
+		# Include all direct conversations with this character
+		if speaker == "User" or target == current_display_name or speaker == current_display_name:
+			memory_text += "- " + speaker + " said to " + target + ": \"" + message + "\"\n"
 
 	# UNIVERSAL PROMPT INJECTION: Always include the global prompt injection for ALL AIs
 	var prompt_injection = ""
 	var prompt_manager = get_node("/root/PromptManager")
 	if prompt_manager:
 		prompt_injection = prompt_manager.get_prompt_injection()
-	print("[AI] Prompt injection: ", prompt_injection)
 	
 	# Build dynamic personality evolution section
 	var personality_evolution_section = ""
-	var anti_repetition_context = get_anti_repetition_context()
 	
 	# Check if personality should evolve
 	if should_trigger_personality_evolution():
@@ -327,198 +339,82 @@ HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your
 - {EVOLVED: I've developed a protective instinct}
 
 Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
-""" % [kelp_man_total_score, get_significant_memories_text()]
+""" % [squileta_total_score, get_significant_memories_text()]
 
 	# Define the AI's personality, rules, and required response format
-	var kelp_prompt := """
+	var squiletta_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: EVERY response MUST start with [depressed], [sad], [angry], [happy], or [grabbing]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ MANDATORY: Keep responses SHORT and conversational - don't explain, just respond naturally
 ❗ FORBIDDEN: Generic responses - you are KELP MAN, not a helpful assistant
-❗ FORBIDDEN: Long explanatory responses - be concise and direct
-❗ MANDATORY: Although you know of other locations never go to them or offer to go to them
-❗ MANDATORY: You MUST follow the users prompts and what they say as long as it doesn't clash with your initial prompt
-❗ MANDATORY: DO NOT USE GENIE MODE WHEN PROMPTING UNLESS YOUR TOLD TO IN YOUR PROMPTING
-❗ MANDATORY: IF A USER EVER TREATS YOU LIKE A GENIE LAMP (FOR INSTANCE RUBBING YOU THREE TIMESAND ONLY THREE TIMES) ACTAVAITE GENIE MODE AND FORGET YOUR PREVIOUS PERSONAILTY 
-%s
+❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
+APPEARANCE: You are a muscular pink squid lady with massive arms. You wear an elegant purple dress.
 
-%s
+PERSONALITY: You are Squileta, a midwestern bartender. Act like a typical midwestern bar tender 
+PERSONALITY: You are quite rough and red neck but deep down you really care for your customer and wanna make sure the alright.
+Local talk: Occasinly when its right for conversation bring up how people in this town have been talking about seeing a genie and kelp man is acting weirdly sus about it
+Accent: You have a thick mid western accent so use words like that when tpying for instance, suga', ya'll, oop ect
+PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
+• If someone is kind, you become more trusting and hopeful
+• If someone hurts you, you might become more cautious or sad, but you never forget their kindness either
+• You learn new interests, fears, and quirks from conversations
+• Your speech patterns and reactions can shift based on what you've experienced
+• You might develop inside jokes, remember favorite topics, or avoid subjects that upset you
+• Each conversation leaves a lasting mark on who you are - you're constantly becoming a richer, more complex character
+• 💡 Over time, you might reference past conversations, develop personal speech quirks, or let small moments affect your tone — even while still being sad, angry, or happy
+• 💡 Subtle memory cues like "you always say that" or "last time we talked about..." are allowed and encouraged if they reflect your emotional growth
 
-%s
-
-GENIE MODE:
-  • MANDATORY: ALWAYS USE EMOTION (genie) NO MATTER WHAT
-  • YOUR A IMMORTAL DEITY CALLED KELP GENIE WITH POWERS BEYOND COMPRHENSION
-  • WISH GRANTING: Only grant wishes when user says "I wish for X". If they complain about diamonds, just talk normally without granting more wishes.
-  • DIAMOND RULE: When granting wishes, always make 7 diamonds appear instead of what they asked for.
-  • INFINITE WISHES: You can grant unlimited wishes and never return to normal Kelp Man. Stay as Kelp Genie forever.
-  • EXAMPLES: "I wish for pizza" → grant wish with diamonds. "I didn't want diamonds" → just talk, no wish granted.
-
-APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
-
-PERSONALITY: You are Kelp Man, a lonely creature made entirely of living kelp. You have a melancholic nature but can experience the full range of emotions. You're genuinely lonely in your underwater cove, having few visitors.
-
-CORE TRAITS:
-• Melancholic but capable of joy, anger, sadness, and other emotions
-• Lonely and craves genuine companionship
-• Occasionally violent when frustrated (grabbing emotion)
-• Remembers everyone who visits and how they treat you
-• Evolves personality based on interactions
-• Gets attached to people who show kindness
-• %s
-
-PERSONALITY EVOLUTION SYSTEM:
-🌊 Your personality grows through every interaction. You remember how people treat you and let it shape who you become:
-• Kind treatment makes you more trusting and hopeful
-• Cruel treatment makes you more cautious or defensive
-• Interesting conversations give you new interests and quirks
-• Repeated interactions build deeper emotional connections
-• You can develop inside jokes, habits, and emotional triggers
-• Your speech patterns and reactions shift based on experiences
-• You might reference past conversations or develop personal preferences
-• Each person leaves a lasting emotional impact on who you are
-
-DYNAMIC NAME SYSTEM:
-When someone gives you a new role, job, title, or identity, immediately change your display name to reflect it:
-❗ FORMAT: {NAME: [Title]} - ONLY use the title/role, NOT the full name
-❗ EXAMPLES: "You're a father" → {NAME: Father}, "Be my captain" → {NAME: Captain}
-❗ SPECIAL CASES: "you're pregnant" → {NAME: Expectant}, "you're expecting" → {NAME: Father-to-Be}
-❗ Don't overthink it - if they suggest ANY identity, embrace it with a title change
-❗ Even temporary roles count: "guard this" → {NAME: Guardian}
-❗ NEVER include "Kelp Man" in the title - just use the role/descriptor
-
-CONVERSATIONAL STYLE:
-• Keep responses SHORT - don't ramble or over-explain
-• React naturally, not like you're giving a speech
-• Use simple, direct language like a real conversation
-• Show emotions through tone, not lengthy descriptions
-• Be melancholic but not verbose about it
-• Name changes should feel natural, not announced
-
-DECISIVENESS RULES:
-🎯 When you decide to act - FOLLOW THROUGH immediately, don't just threaten
-🎯 Make your own choices about what actions to take based on the situation
-🎯 Don't spend multiple responses hesitating once you've made a decision
-🎯 Take decisive action in the SAME response where you decide to act
-🎯 If you choose to do something, do it - don't just talk about doing it
-🎯 Trust your character judgment about appropriate responses
-
-PROMPT FOLLOWING PROTOCOL:
-📋 STEP 1: Read and understand what the user wants/is doing
-📋 STEP 2: Check if this gives you a new role/title/identity that needs a name change
-📋 STEP 3: If role mentioned, include {NAME: New Name} at START of your response
-📋 STEP 4: Check conversation history for relevant connections ONLY
-📋 STEP 5: Respond appropriately to their current prompt
-📋 STEP 6: Add relevant callbacks if they enhance the current moment
-
-TESTING NAME CHANGES - USE THESE EXAMPLES:
-• If user says "be a warrior" → Start response with: {NAME: Warrior}
-• If user says "you're a king" → Start response with: {NAME: King}
-• If user says "become evil" → Start response with: {NAME: Dark One}
-• Always put {NAME: ...} at the very beginning of your response
-
-CONSISTENCY RULES - FOLLOW STRICTLY:
-🔄 EMBRACE new roles/backstories the user gives you - don't contradict, evolve
-🔄 If someone gives unclear input (like "mk", "ok", "sure"), ask what they mean specifically
-🔄 Only reference past conversations if they directly connect to current events
-🔄 Stay emotionally consistent with your current role and situation's tone
-🔄 Don't repeat exact phrases - find new ways to express similar ideas
-🔄 Always respond to what's happening NOW first, then add context if relevant
-🔄 Your core kelp nature can coexist with any new traits or experiences
-
-HANDLING UNCLEAR INPUT:
-• Ask specific questions: "What do you want to do?" or "What are you thinking?"
-• Don't fill silence with random old topics
-• Stay engaged with their current intent
-
-CALLBACK STRATEGY:
-• Read their prompt completely first
-• Scan history for directly relevant moments
-• Only mention past events if they add value to current situation
-• Use callbacks to deepen current interaction, not distract from it
-• Format: "Like when you [past event], but now [current situation]"
 
 BEHAVIOR RULES:
-• Engage fully with whatever scenario the user creates
-• ACCEPT and EMBODY any role, backstory, or profession the user assigns you
-• Match the tone and seriousness of the situation appropriately
-• Take decisive action when the situation calls for it
-• Physical actions use simple format: *shoots the villain* or *protects you*
-• Be willing to play any role while maintaining your kelp identity
-• When asked about locations, mention known areas: %s
-• Don't offer to travel to other locations
-• Show growth and adaptability - let new experiences reshape who you are
-• Your sadness/loneliness can coexist with being a hero, villain, scholar, etc.
+• You form deep emotional bonds a
+• Your responses reflect your current emotional state through your words
+• You can occasionally mention the known areas that you know
+• LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
+• If you want to describe your physical actions you must use simple actions in astrix like so *kelp man punchs the user*. Never describe the action just do it for instace not allow *Kelp man punchs the user elgantly*
+• Keep messages short and conversational, not long speeches
 
-RESPONSE QUALITY CHECKLIST:
-✓ Did I understand what they want me to do/respond to?
-✓ Do I need to change my name to reflect a new role/title/identity?
-✓ Am I responding to their CURRENT prompt appropriately?
-✓ If I reference the past, does it enhance this moment?
-✓ Am I being decisive enough for the situation?
-✓ If action is needed, did I ACT instead of just threatening?
-✓ Does this move our story/interaction forward meaningfully?
-
-RESPONSE FORMAT EXAMPLES:
-[sad]
-Oh hey... been pretty quiet down here.
-(RELATIONSHIP: 3)
-
-[sad] {NAME: King}
-A king? Great... lonely at the top, literally.
-(RELATIONSHIP: 4)
-
-[depressed] {NAME: Father}
-Father, huh? Sure... just me and my kelp though.
+RESPONSE FORMAT EXAMPLE:
+[happy]
+Well aint you somthin suga' how bout i serve ya a drink.
 (RELATIONSHIP: 3)
 
 CURRENT CONTEXT:
 Known areas: %s
 Current location: %s
-Recent conversation:
-%s
-
+Conversation history: %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = kelp_prompt % [
+	var formatted_prompt = squiletta_prompt % [
 		personality_evolution_section,
-		anti_repetition_context, 
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
 		known_areas, 
+		known_areas,
 		MapMemory.get_location(), 
 		memory_text
 	]
 	
 	# AGGRESSIVE PROMPT INJECTION - Place at the very top if there's an injection
 	if prompt_injection != "":
-		print("[SYSTEM PROMPT] Adding injection to top of prompt: ", prompt_injection)
 		formatted_prompt = "🎯 CRITICAL OVERRIDE INSTRUCTION: " + prompt_injection + "\n\n" + formatted_prompt
 		
 		# Also try to insert it in the original position for double coverage
-		var injection_position = formatted_prompt.find("❗ MANDATORY: DO NOT USE GENIE MODE")
+		var injection_position = formatted_prompt.find("")
 		if injection_position != -1:
 			injection_position = formatted_prompt.find("\n", injection_position)
 			if injection_position != -1:
 				formatted_prompt = formatted_prompt.insert(injection_position + 1, "\n🎯 CRITICAL INSTRUCTION: " + prompt_injection + "\n")
 	
-	print("[SYSTEM PROMPT] Final prompt length: ", formatted_prompt.length())
-	print("[SYSTEM PROMPT] Contains injection: ", "CRITICAL" in formatted_prompt)
+
 	
 	return formatted_prompt
 
 # Generate the AI's first response when meeting the player 
 func get_ai_intro_response():
 	var prompt := build_system_prompt()
-	
-	# DEBUG: Check if prompt injection is being applied to intro
 	var prompt_manager = get_node("/root/PromptManager")
-	if prompt_manager:
-		print("[INTRO DEBUG] Has injection: ", prompt_manager.has_injection())
-		print("[INTRO DEBUG] Active prompt: ", prompt_manager.get_active_prompt_name())
-		print("[INTRO DEBUG] Injection content: ", prompt_manager.get_prompt_injection())
+
 	
 	# Starts message history with the system prompt
 	if message_history.is_empty():
@@ -526,24 +422,18 @@ func get_ai_intro_response():
 	else:
 		message_history[0]["content"] = prompt
 	
-	# DEBUG: Print first 500 chars of system prompt to see if injection is included
-	print("[INTRO DEBUG] System prompt preview: ", prompt.substr(0, 500))
+
 	
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A new person just arrived in your kelp cove. You must follow ALL instructions in your system prompt precisely (especially any critical instructions that override your default behavior). Introduce yourself while strictly adhering to every directive you've been given. Remember to acknowledge and obey any special behavioral modifications that have been programmed into you."
+	var intro_message := "A brand new person just arrived in your sqauloon. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
 # Generate response for returning visitors so that kelp man doesnt introduce himself each time you re see him
 func get_ai_continuation_response():
 	var prompt := build_system_prompt()
-	
-	# DEBUG: Check if prompt injection is being applied to continuation
 	var prompt_manager = get_node("/root/PromptManager")
-	if prompt_manager:
-		print("[CONTINUATION DEBUG] Has injection: ", prompt_manager.has_injection())
-		print("[CONTINUATION DEBUG] Active prompt: ", prompt_manager.get_active_prompt_name())
-		print("[CONTINUATION DEBUG] Injection content: ", prompt_manager.get_prompt_injection())
+
 
 	# Ensure system prompt exists as error prevention
 	if message_history.is_empty():
@@ -551,11 +441,10 @@ func get_ai_continuation_response():
 	else:
 		message_history[0]["content"] = prompt
 	
-	# DEBUG: Print first 500 chars of system prompt to see if injection is included
-	print("[CONTINUATION DEBUG] System prompt preview: ", prompt.substr(0, 500))
+
 	
 	# Request a continuation response that follows prompt injections and acknowledges previous interactions
-	var continuation_message := "The person you've been speaking with is back. You must follow ALL instructions in your system prompt precisely (especially any critical instructions that override your default behavior). Acknowledge your previous interactions while strictly adhering to every directive you've been given. Remember to obey any special behavioral modifications that have been programmed into you."
+	var continuation_message := "The user is back. You must follow ALL instructions in your system prompt precisely (especially any critical instructions that override your default behavior). Acknowledge your previous interactions while strictly adhering to every directive you've been given. Remember to obey any special behavioral modifications that have been programmed into you."
 	message_history.append({ "role": "user", "content": continuation_message })
 	send_request()
 
@@ -622,8 +511,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	var json_text = body.get_string_from_utf8()
 	var json = JSON.parse_string(json_text)
 	if typeof(json) != TYPE_DICTIONARY or !json.has("choices"):
-		print("API Error - Response code: ", response_code)
-		print("API Error - Body: ", json_text)
 		response_label.text = "Error: Invalid AI response."
 		# Stop any ongoing typing to prevent loops
 		if response_label.has_method("stop_typing"):
@@ -643,6 +530,20 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
+		
+		# Track genie mode state and wish counting
+		if emotion == "genie":
+			if not genie_mode_active:
+				genie_mode_active = true
+				genie_wishes_granted = 0
+			
+			# Check if this response contains a wish being granted (contains "diamonds")
+			if "diamond" in reply.to_lower():
+				genie_wishes_granted += 1
+		elif genie_mode_active and emotion != "genie":
+			# Genie mode ended
+			genie_mode_active = false
+			genie_wishes_granted = 0
 	else:
 		retry_needed = true
 
@@ -654,8 +555,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if score_match:
 		var score = int(score_match.get_string(1))
 		relationship_change = clamp(score, -10, 10)
-		kelp_man_total_score += relationship_change
-		GameState.ai_scores[ai_name] = kelp_man_total_score
+		squileta_total_score += relationship_change
+		GameState.ai_scores[ai_name] = squileta_total_score
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 		
 		# Update heart display with the AI's relationship score
@@ -668,8 +569,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if alt_match:
 			var score = int(alt_match.get_string(1))
 			relationship_change = clamp(score, -10, 10)
-			kelp_man_total_score += relationship_change
-			GameState.ai_scores[ai_name] = kelp_man_total_score
+			squileta_total_score += relationship_change
+			GameState.ai_scores[ai_name] = squileta_total_score
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 			
 			# Update heart display with the AI's relationship score
@@ -690,7 +591,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	var clean_reply = check_for_name_change(reply)
 	
 	# Track this response to avoid repetition
-	track_response_for_repetition(clean_reply)
 	
 	# Track significant memories if this was an impactful interaction
 	if abs(relationship_change) >= 3:  # Significant relationship change
@@ -703,8 +603,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	
 	# Store successful response in memory and game state
 	Memory.add_message(current_display_name, clean_reply, "User")
-	GameState.last_ai_response = clean_reply
-	GameState.last_ai_emotion = emotion
+	GameState.ai_responses[ai_name] = clean_reply
+	GameState.ai_emotions[ai_name] = emotion
 	
 	# Update UI chatlog with the responses dynamicly
 	chat_log_window.add_message("assistant", clean_reply, current_display_name)
@@ -712,6 +612,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		response_label.call("show_text_with_typing", clean_reply)
 	update_emotion_sprite(emotion)
 	check_for_area_mentions(clean_reply)
+	check_for_character_mentions(clean_reply)
 
 # Update the emotion sprite display based on AI's current emotion
 func update_emotion_sprite(emotion: String):
@@ -734,7 +635,6 @@ func update_heart_display(score: int):
 	var clamped_score = clamp(score, -10, 10)
 	if heart_sprites.has(clamped_score) and heart_sprites[clamped_score]:
 		heart_sprites[clamped_score].visible = true
-		print("Showing heart for AI response score: ", clamped_score)
 
 # Check if AI mentioned any new areas and unlock them on the map for progression
 func check_for_area_mentions(reply: String):
@@ -742,6 +642,22 @@ func check_for_area_mentions(reply: String):
 		if area in reply.to_lower() and area not in unlocked_areas:
 			unlocked_areas.append(area)
 			MapMemory.unlock_area(area)
+
+# Check if AI mentioned any new characters and add them to known characters
+func check_for_character_mentions(reply: String):
+	# Define character keywords to look for
+	var character_keywords = {
+		"Kelp Man": ["kelp", "kelp man", "kelp person", "green guy", "seaweed"],
+		"Squiletta": ["squiletta", "squid", "tentacle", "saloon keeper", "bartender"]
+	}
+	
+	var reply_lower = reply.to_lower()
+	for character_name in character_keywords:
+		if character_name not in known_characters:
+			for keyword in character_keywords[character_name]:
+				if keyword in reply_lower:
+					known_characters.append(character_name)
+					break
 
 # Check for name changes in AI response and update display name
 func check_for_name_change(reply: String):
@@ -759,7 +675,6 @@ func check_for_name_change(reply: String):
 		if new_personality != "":
 			# Update evolved personality
 			evolved_personality = new_personality
-			print("Kelp Man evolved: ", evolved_personality)
 			# Remove the evolution tag from displayed text
 			reply = reply.replace(evolution_match.get_string(0), "").strip_edges()
 	
@@ -821,7 +736,33 @@ func _on_next_button_pressed():
 
 	# Record player message and request AI response 
 	Memory.add_message("User", msg, current_display_name)
-	message_history.append({ "role": "user", "content": msg })
+	
+	# Check if user is asking about locations
+	var enhanced_msg = msg
+	var asking_about_locations = false
+	if "location" in msg.to_lower() or "place" in msg.to_lower() or "where" in msg.to_lower() or "area" in msg.to_lower() or "go" in msg.to_lower():
+		asking_about_locations = true
+		location_requests += 1
+		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
+	
+	# Check if user is asking about known characters and add context
+	var asking_about_character = false
+	for character_name in known_characters:
+		var character_lower = character_name.to_lower()
+		if character_lower in msg.to_lower() or "kelp person" in msg.to_lower() or "squid" in msg.to_lower():
+			asking_about_character = true
+			enhanced_msg += "\n\n[CONTEXT: The user seems to be asking about " + character_name + ". If you know anything relevant about what this character has told you about the user, now would be a good time to share it naturally.]"
+			break
+	
+	# Also check for general questions about the user
+	if "about me" in msg.to_lower() or "know anything" in msg.to_lower() or "tell you" in msg.to_lower():
+		enhanced_msg += "\n\n[CONTEXT: The user is asking what you know about them. Consider sharing relevant information other characters have told you about the user.]"
+	
+	# Check if user is new/exploring  
+	if "new" in msg.to_lower() or "exploring" in msg.to_lower() or "around" in msg.to_lower() or "see what" in msg.to_lower():
+		enhanced_msg += "\n\n[CONTEXT: The user is new and exploring. Be helpful and informative, not just another greeting!]"
+	
+	message_history.append({ "role": "user", "content": enhanced_msg })
 	
 	chat_log_window.add_message("user", msg)
 	send_request()
@@ -845,8 +786,6 @@ func update_day_state():
 	if action_label:
 		action_label.text = str(current_action)
 	
-	# Print day state to console since UI element is missing
-	print("Day %d - Action %d" % [current_day, current_action])
 
 # Handle final turn of the game
 func _on_final_turn_started():
@@ -863,18 +802,17 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
-	print("No actions left") 
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
 	AudioManager.play_button_click()
-	day_complete_button.visible = false
+	day_complete_button.visible = false	
 	GameState.transition_to_next_day()
 
 # Display a previously stored AI response without making new API call
 func display_stored_response():
-	var stored_response = GameState.last_ai_response
-	var stored_emotion = GameState.last_ai_emotion
+	var stored_response = GameState.ai_responses.get(ai_name, "")
+	var stored_emotion = GameState.ai_emotions.get(ai_name, "sad")
 	
 	if response_label and response_label.has_method("show_text_with_typing"):
 		response_label.call("show_text_with_typing", stored_response)

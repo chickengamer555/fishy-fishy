@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnd1kndohx06w"]
+
+[ext_resource type="Texture2D" uid="uid://ep6domlphyxv" path="res://emotion/KELP MAN/Kelp_man_big–Happy5.png" id="1_uyqvf"]
+[ext_resource type="Texture2D" uid="uid://cvl4uvjbkb0bk" path="res://emotion/KELP MAN/Kelp_man_big–Happy3.png" id="2_mwbwy"]
+[ext_resource type="Texture2D" uid="uid://1oa38gegqu64" path="res://emotion/KELP MAN/Kelp_man_big–Happy4.png" id="3_yxrs6"]
+[ext_resource type="Texture2D" uid="uid://dtsfilgrd4bdm" path="res://emotion/KELP MAN/Kelp_man_big–Happy2.png" id="4_ktfut"]
+[ext_resource type="Texture2D" uid="uid://ds1nlhrwdpyt4" path="res://emotion/KELP MAN/Kelp_man_big–Happy1.png" id="5_sg1k2"]
+[ext_resource type="Texture2D" uid="uid://d1cu3ekufryy2" path="res://emotion/KELP MAN/Kelp_man_big–Very-Happy.png" id="6_wy5tb"]
+
+[node name="sea_mine_emotion" type="Node2D"]
+
+[node name="Depressed" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("1_uyqvf")
+
+[node name="Sad" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0.500002, 7.62939e-06)
+texture = ExtResource("2_mwbwy")
+
+[node name="Angry" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -0.5)
+texture = ExtResource("3_yxrs6")
+
+[node name="Grabbing" type="Sprite2D" parent="."]
+position = Vector2(0.999996, 1.5)
+texture = ExtResource("4_ktfut")
+
+[node name="Happy" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0.999996, 1.5)
+texture = ExtResource("5_sg1k2")
+
+[node name="Genie" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, 2)
+texture = ExtResource("6_wy5tb")

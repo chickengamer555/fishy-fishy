@@ -3,14 +3,14 @@ extends Node
 signal day_or_action_changed
 signal day_completed
 var just_started_new_day := false
-var days_left := 2
-var actions_left := 2
+var days_left := 10
+var actions_left := 10
 var final_turn_triggered := false
 var day_complete_available := false
 var ai_scores := {}
 var should_reset_ai := false
-var last_ai_response := ""
-var last_ai_emotion := "sad"
+var ai_responses := {}  # Character-specific last responses
+var ai_emotions := {}   # Character-specific last emotions
 
 func use_action():
 	if final_turn_triggered:

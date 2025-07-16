@@ -23,3 +23,15 @@ func reset():
 	unlocked_areas.clear()
 	current_location = "unknown"
 	print("🔄 Map memory reset")
+
+func initialize_random_starting_location():
+	# Define all possible starting locations
+	var possible_locations = ["kelp man cove", "squaloon", "wild south"]
+	
+	# Randomly choose one to start with
+	var random_index = randi() % possible_locations.size()
+	var starting_location = possible_locations[random_index]
+	
+	# Unlock the random starting location
+	unlock_area(starting_location)
+	print("🎲 Random starting location: ", starting_location)

@@ -14,11 +14,30 @@ scale = Vector2(2.8, 3.22857)
 text = "Kelp man cove
 "
 
-[node name="bar" type="Button" parent="."]
+[node name="sqauloon" type="Button" parent="."]
 offset_right = 8.0
 offset_bottom = 8.0
 scale = Vector2(6.72, 2)
-text = "Bar"
+text = "Sqauloon"
+
+[node name="wild_south" type="Button" parent="."]
+offset_left = 581.0
+offset_top = 471.0
+offset_right = 672.0
+offset_bottom = 502.0
+scale = Vector2(6.72, 2)
+text = "Wild south"
+
+[node name="mine_feild" type="Button" parent="."]
+offset_left = 602.0
+offset_top = 206.0
+offset_right = 693.0
+offset_bottom = 237.0
+scale = Vector2(6.72, 2)
+text = "Mine feild
+"
 
 [connection signal="pressed" from="Kelp_man_cove" to="." method="_on_kelp_man_pressed"]
-[connection signal="pressed" from="bar" to="." method="_on_bar_pressed"]
+[connection signal="pressed" from="sqauloon" to="." method="_on_bar_pressed"]
+[connection signal="pressed" from="wild_south" to="." method="_on_wild_south_pressed"]
+[connection signal="pressed" from="mine_feild" to="." method="_on_mine_feild_pressed"]

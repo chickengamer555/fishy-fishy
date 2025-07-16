@@ -40,8 +40,8 @@ func on_main_menu_pressed():
 	GameState.day_complete_available = false
 	GameState.just_started_new_day = false
 	GameState.should_reset_ai = false
-	GameState.last_ai_response = ""
-	GameState.last_ai_emotion = "sad"
+	GameState.ai_responses.clear()
+	GameState.ai_emotions.clear()
 	
 	# Reset Memory and clear all character chat logs
 	Memory.shared_memory.clear()
@@ -55,6 +55,8 @@ func on_main_menu_pressed():
 	# Reset MapMemory if it exists
 	if get_node("/root/MapMemory"):
 		get_node("/root/MapMemory").reset()
+		# Initialize a random starting location for the new game
+		get_node("/root/MapMemory").initialize_random_starting_location()
 	
 	# Load the main menu
 	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu.tscn")

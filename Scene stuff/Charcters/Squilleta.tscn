@@ -1,24 +1,26 @@
-[gd_scene load_steps=60 format=3 uid="uid://cir54qpw1itn6"]
+[gd_scene load_steps=66 format=3 uid="uid://cir54qpw1itn6"]
 
 [ext_resource type="Script" uid="uid://drea7tpj065pi" path="res://code stuff/Charcters/squilleta.gd" id="1_uftsj"]
-[ext_resource type="Texture2D" uid="uid://dxdslo7wd3t5y" path="res://UI STUFF/Sqwallon/Background.png" id="2_uftsj"]
+[ext_resource type="Texture2D" uid="uid://edcxa42qicno" path="res://UI STUFF/Squileta's Squaloon/Background_frame006.png" id="2_uftsj"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_1j01k"]
-[ext_resource type="Texture2D" uid="uid://d4j1wlm7cox4l" path="res://UI STUFF/Kelp cove/Character text box_frame004.png" id="5_8kl0p"]
+[ext_resource type="Texture2D" uid="uid://da82kym2qlgm6" path="res://UI STUFF/Squileta's Squaloon/Character text box_frame006.png" id="5_uftsj"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="6_n2vuv"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_1mpan"]
-[ext_resource type="Texture2D" uid="uid://cv0302xkckfcl" path="res://UI STUFF/Kelp cove/Player Text Box_frame004.png" id="8_ekv57"]
-[ext_resource type="Texture2D" uid="uid://c28ohxng6fj5v" path="res://UI STUFF/Kelp cove/Log_frame004.png" id="9_of35f"]
-[ext_resource type="Texture2D" uid="uid://u6fhanpv6b38" path="res://UI STUFF/Kelp cove/Enter_highlighted_frame004.png" id="10_hni11"]
-[ext_resource type="Texture2D" uid="uid://b0tgyegb437rw" path="res://UI STUFF/Kelp cove/Enter_frame004.png" id="11_5txyw"]
-[ext_resource type="Texture2D" uid="uid://kqwku1w4dcnf" path="res://UI STUFF/Kelp cove/Player text box border_frame004.png" id="12_8i4xd"]
-[ext_resource type="Texture2D" uid="uid://cw3n3egvowjwi" path="res://UI STUFF/Kelp cove/Next Day_frame004.png" id="13_xewxi"]
+[ext_resource type="Texture2D" uid="uid://dayhv7108sca7" path="res://UI STUFF/Squileta's Squaloon/Player Text Box_frame006.png" id="8_uftsj"]
+[ext_resource type="Texture2D" uid="uid://dktahke3h6raf" path="res://UI STUFF/Squileta's Squaloon/Log Highlighted_frame006.png" id="9_j3l7q"]
+[ext_resource type="Texture2D" uid="uid://bsn2jkigiprra" path="res://UI STUFF/Squileta's Squaloon/Log_frame006.png" id="10_ndu6r"]
+[ext_resource type="Texture2D" uid="uid://bicpdnho0g86q" path="res://UI STUFF/Squileta's Squaloon/Enter_highlighted_frame006.png" id="11_j3l7q"]
+[ext_resource type="Texture2D" uid="uid://bnawpqi1c47b4" path="res://UI STUFF/Squileta's Squaloon/Player text box border_frame006.png" id="13_1j01k"]
+[ext_resource type="Texture2D" uid="uid://dsssp85t8k7k" path="res://UI STUFF/Squileta's Squaloon/Enter_frame006.png" id="13_ndu6r"]
+[ext_resource type="Texture2D" uid="uid://csoalssq6mqh4" path="res://UI STUFF/Squileta's Squaloon/Next Day Highlighted_frame006.png" id="14_ndu6r"]
 [ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="14_rr6pc"]
+[ext_resource type="Texture2D" uid="uid://rs43xajmj02t" path="res://UI STUFF/Squileta's Squaloon/Next Day_frame006.png" id="15_1j01k"]
 [ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="15_q2flm"]
-[ext_resource type="Texture2D" uid="uid://t5wsmqiwi67u" path="res://UI STUFF/Kelp cove/Character text box border_frame004.png" id="16_gqjg4"]
-[ext_resource type="Texture2D" uid="uid://dfssy0e4nalmh" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove.png" id="17_ah7v7"]
-[ext_resource type="Texture2D" uid="uid://bjd60oe40mqsg" path="res://UI STUFF/Kelp cove/Stats box border_frame004.png" id="18_mrfbm"]
+[ext_resource type="Texture2D" uid="uid://doe5ee1yrowwd" path="res://UI STUFF/Squileta's Squaloon/Character text box border_frame006.png" id="18_ndu6r"]
 [ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="19_0k6ri"]
+[ext_resource type="Texture2D" uid="uid://e24uonukhoag" path="res://UI STUFF/Squileta's Squaloon/Stats Box_frame006.png" id="19_ndu6r"]
 [ext_resource type="Texture2D" uid="uid://dra5f325dmwan" path="res://UI STUFF/Heart/Heart2.png" id="20_j14lh"]
+[ext_resource type="Texture2D" uid="uid://dyame67h346im" path="res://UI STUFF/Squileta's Squaloon/Stats box border_frame006.png" id="20_ndu6r"]
 [ext_resource type="Texture2D" uid="uid://bi3h6nb02trds" path="res://UI STUFF/Heart/Heart3.png" id="21_6wvwm"]
 [ext_resource type="Texture2D" uid="uid://ca8h3pkll88jg" path="res://UI STUFF/Heart/Heart4.png" id="22_velbr"]
 [ext_resource type="Texture2D" uid="uid://crjg6hloydhnj" path="res://UI STUFF/Heart/Heart5.png" id="23_vepk1"]
@@ -38,52 +40,58 @@
 [ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="37_62wom"]
 [ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="38_777au"]
 [ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="39_thsv4"]
-[ext_resource type="Texture2D" uid="uid://dtff1t7fb77dl" path="res://UI STUFF/Kelp cove/Name Bar_frame004.png" id="40_dx4y5"]
-[ext_resource type="Texture2D" uid="uid://b77s6khnxwfd6" path="res://UI STUFF/Kelp cove/Map_button_frame004.png" id="41_nrqs5"]
 [ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Kelp cove/Settings_button_frame004.png" id="42_g3gfx"]
+[ext_resource type="Texture2D" uid="uid://bcxm7lvs1w4os" path="res://UI STUFF/Squileta's Squaloon/Name Bar_frame006.png" id="42_ndu6r"]
 [ext_resource type="PackedScene" uid="uid://dl1j2sr24s2qw" path="res://emotion/Squileta/Squileta_emotion.tscn" id="42_uftsj"]
+[ext_resource type="Texture2D" uid="uid://bwkntsxnkr8p1" path="res://UI STUFF/Squileta's Squaloon/Map_button_frame006.png" id="43_ndu6r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("4_1j01k")
 shader_parameter/wave_amplitude = 0.004
 shader_parameter/wave_frequency = 13.28
 shader_parameter/wave_speed = 1.0
-shader_parameter/tint_color = Color(0, 0.454902, 0.196078, 0.313726)
+shader_parameter/tint_color = Color(0.51642, 0.00342287, 0.917431, 0.235294)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4tnxu"]
-texture = ExtResource("5_8kl0p")
+texture = ExtResource("5_uftsj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
-texture = ExtResource("8_ekv57")
+texture = ExtResource("8_uftsj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a81c1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1j01k"]
+texture = ExtResource("9_j3l7q")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
-texture = ExtResource("9_of35f")
+texture = ExtResource("10_ndu6r")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjer1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty227"]
-texture = ExtResource("10_hni11")
+texture = ExtResource("11_j3l7q")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4v0k"]
-texture = ExtResource("11_5txyw")
+texture = ExtResource("13_ndu6r")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5po65"]
-texture = ExtResource("11_5txyw")
+texture = ExtResource("13_ndu6r")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l1km0"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8kl0p"]
+texture = ExtResource("14_ndu6r")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5soc"]
-texture = ExtResource("13_xewxi")
+texture = ExtResource("15_1j01k")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njf6d"]
 bg_color = Color(0.533473, 0.594343, 0.774528, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_panel"]
-bg_color = Color(0.321569, 0.635294, 0.564706, 1)
+bg_color = Color(0.537255, 0.376471, 0.721569, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -95,7 +103,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_scroll"]
-bg_color = Color(0.627451, 0.878431, 0.858824, 1)
+bg_color = Color(0.858824, 0.709804, 0.847059, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -106,8 +114,12 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ndu6r"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
-texture = ExtResource("41_nrqs5")
+texture = ExtResource("43_ndu6r")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1j01k"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1n1a7"]
 texture = ExtResource("42_g3gfx")
@@ -139,9 +151,9 @@ mouse_filter = 2
 [node name="AIResponsePanel" type="Panel" parent="."]
 custom_minimum_size = Vector2(82, 23)
 offset_left = -550.0
-offset_top = 198.0
+offset_top = 225.0
 offset_right = 270.0
-offset_bottom = 428.0
+offset_bottom = 455.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_4tnxu")
@@ -213,7 +225,7 @@ theme_override_constants/separation = 1
 custom_minimum_size = Vector2(16, 12)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_dc7i1")
-theme_override_styles/hover = SubResource("StyleBoxTexture_lbieo")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1j01k")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_lbieo")
 theme_override_styles/normal = SubResource("StyleBoxTexture_lbieo")
 
@@ -226,19 +238,19 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_w4v0k")
 theme_override_styles/normal = SubResource("StyleBoxTexture_5po65")
 
 [node name="PlayerTextBoxBorderFrame004" type="Sprite2D" parent="HBoxContainer"]
-position = Vector2(14, -19)
-texture = ExtResource("12_8i4xd")
+position = Vector2(13, -19)
+texture = ExtResource("13_1j01k")
 
 [node name="DayCompleteButton" type="Button" parent="."]
 visible = false
 custom_minimum_size = Vector2(33, 18)
-offset_left = 320.0
+offset_left = 335.0
 offset_top = 290.0
-offset_right = 353.0
+offset_right = 368.0
 offset_bottom = 308.0
 scale = Vector2(10, 10)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_l1km0")
-theme_override_styles/hover = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/hover = SubResource("StyleBoxTexture_8kl0p")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_g5soc")
 theme_override_styles/normal = SubResource("StyleBoxTexture_g5soc")
 
@@ -355,17 +367,18 @@ position = Vector2(520, 380)
 stream = ExtResource("15_q2flm")
 
 [node name="CharacterTextBoxBorderFrame004" type="Sprite2D" parent="."]
-position = Vector2(-140, 228)
+position = Vector2(-140, 255)
 scale = Vector2(10, 10)
-texture = ExtResource("16_gqjg4")
+texture = ExtResource("18_ndu6r")
 
 [node name="Statsbox" type="Sprite2D" parent="."]
 position = Vector2(490, -57)
 scale = Vector2(10, 10)
-texture = ExtResource("17_ah7v7")
+texture = ExtResource("19_ndu6r")
 
 [node name="StatsBoxBorderFrame004" type="Sprite2D" parent="Statsbox"]
-texture = ExtResource("18_mrfbm")
+position = Vector2(0, -1.5)
+texture = ExtResource("20_ndu6r")
 
 [node name="Heart -10" type="Sprite2D" parent="Statsbox"]
 visible = false
@@ -486,7 +499,7 @@ vertical_alignment = 1
 [node name="NameBarFrame004" type="Sprite2D" parent="."]
 position = Vector2(50, -200)
 scale = Vector2(10, 10)
-texture = ExtResource("40_dx4y5")
+texture = ExtResource("42_ndu6r")
 
 [node name="map" type="Button" parent="NameBarFrame004"]
 anchors_preset = 6
@@ -500,6 +513,7 @@ offset_right = -70.0
 offset_bottom = -2.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ndu6r")
 theme_override_styles/hover = SubResource("StyleBoxTexture_l1km0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_l1km0")
 theme_override_styles/normal = SubResource("StyleBoxTexture_l1km0")
@@ -517,6 +531,7 @@ offset_right = -181.0
 offset_bottom = -1.5
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1j01k")
 theme_override_styles/hover = SubResource("StyleBoxTexture_1n1a7")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1n1a7")
 theme_override_styles/normal = SubResource("StyleBoxTexture_1n1a7")
