@@ -25,6 +25,8 @@ AudioManager="*res://code stuff/Managers/audio_manager.gd"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=725
 window/size/mode=3
 window/stretch/mode="viewport"
 window/stretch/aspect="ignore"

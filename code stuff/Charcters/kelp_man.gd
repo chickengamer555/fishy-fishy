@@ -2,7 +2,7 @@ extends Node
 
 # Reffrences nodes for ui and sprites
 @onready var http_request = $HTTPRequest
-@onready var response_label = $AIResponsePanel/Label
+@onready var response_label = $AIResponsePanel/RichTextLabel
 @onready var emotion_sprite_root = $kelp_emotion
 @onready var emotion_sprites = {
 	"depressed": $kelp_emotion/Depressed,
@@ -15,10 +15,8 @@ extends Node
 # Audio handled by AudioManager singleton
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
-@onready var day_state = $"TopNavigationBar/DayState"
-@onready var day_complete_button = $HBoxContainer/DayCompleteButton
+@onready var day_complete_button = $DayCompleteButton
 @onready var next_button = $HBoxContainer/NextButton
-@onready var relation_label = $Relationship
 # Varibles for editor
 @export var ai_name := "Kelp man"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
@@ -299,7 +297,7 @@ func build_system_prompt() -> String:
 	var prompt_injection = ""
 	var prompt_manager = get_node("/root/PromptManager")
 	if prompt_manager:
-		prompt_injection = prompt_manager.get_prompt_injection("")
+		prompt_injection = prompt_manager.get_prompt_injection()
 	print("[AI] Prompt injection: ", prompt_injection)
 	
 	# Build dynamic personality evolution section
@@ -539,7 +537,8 @@ func estimate_token_count(text: String) -> int:
 func send_request():
 	# Show thinking message while waiting for API response so that user is updated on whats haping
 	var thinking_message = "%s is thinking..." % current_display_name
-	response_label.call("show_text_with_typing", thinking_message)
+	if response_label and response_label.has_method("show_text_with_typing"):
+		response_label.call("show_text_with_typing", thinking_message)
 
 	# Set token limits to prevent expensive API calls (ai can just rant of and not stop talking)
 	var max_total_tokens := 3000
@@ -639,7 +638,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		relationship_change = clamp(score, -10, 10)
 		kelp_man_total_score += relationship_change
 		GameState.ai_scores[ai_name] = kelp_man_total_score
-		relation_label.text = "%+d" % relationship_change  # Show the current score change
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 	else:
 		# Try alternative score format as fallback for error prevention
@@ -651,7 +649,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 			relationship_change = clamp(score, -10, 10)
 			kelp_man_total_score += relationship_change
 			GameState.ai_scores[ai_name] = kelp_man_total_score
-			relation_label.text = "%+d" % relationship_change  # Show the current score change
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 		else:
 			retry_needed = true
@@ -687,7 +684,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	
 	# Update UI chatlog with the responses dynamicly
 	chat_log_window.add_message("assistant", clean_reply, current_display_name)
-	response_label.call("show_text_with_typing", clean_reply)
+	if response_label and response_label.has_method("show_text_with_typing"):
+		response_label.call("show_text_with_typing", clean_reply)
 	update_emotion_sprite(emotion)
 	check_for_area_mentions(clean_reply)
 
@@ -800,20 +798,14 @@ func _on_chat_log_pressed():
 
 # Update the day and action counter display
 func update_day_state():
-	if not day_state: return
-	
 	# Calculate current day (1-10) and remaining actions
 	var current_day = 11 - GameState.days_left
 	var current_action = GameState.actions_left
 	
 	if current_day < 1: current_day = 1
 	
-	# Show appropriate status message
-	if current_action <= 0 or (day_complete_button and day_complete_button.visible):
-		day_state.text = "No actions left"
-	else:
-		if current_action < 1: current_action = 1
-		day_state.text = "Day %d - Action %d" % [current_day, current_action]
+	# Print day state to console since UI element is missing
+	print("Day %d - Action %d" % [current_day, current_action])
 
 # Handle final turn of the game
 func _on_final_turn_started():
@@ -830,7 +822,7 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
-	day_state.text = "No actions left" 
+	print("No actions left") 
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
@@ -843,7 +835,8 @@ func display_stored_response():
 	var stored_response = GameState.last_ai_response
 	var stored_emotion = GameState.last_ai_emotion
 	
-	response_label.call("show_text_with_typing", stored_response)
+	if response_label and response_label.has_method("show_text_with_typing"):
+		response_label.call("show_text_with_typing", stored_response)
 	update_emotion_sprite(stored_emotion)
 
 # Configure player input field to prevent scrolling and limit text

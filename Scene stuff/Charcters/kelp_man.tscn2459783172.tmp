@@ -93,7 +93,8 @@ texture = ExtResource("5_dc7i1")
 texture = ExtResource("6_l1km0")
 
 [node name="KELP MAN" type="Node2D"]
-position = Vector2(590, 255)
+position = Vector2(5910, 2547)
+scale = Vector2(10, 10)
 script = ExtResource("1_y08aj")
 
 [node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
