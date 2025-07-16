@@ -73,12 +73,13 @@ func _on_prompt_injection_pressed() -> void:
 		prompt_manager.clear_prompt_injection()
 		print("Deactivated drunk mode prompt injection")
 		
-		# Update KelpMan's system prompt to remove injection
-		var kelp_man = get_tree().get_first_node_in_group("ai_character")
-		if kelp_man and kelp_man.has_method("build_system_prompt"):
-			if kelp_man.message_history.size() > 0:
-				kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
-				print("Updated KelpMan's system prompt - injection removed")
+		# Update ALL AI characters' system prompts to remove injection
+		var ai_characters = get_tree().get_nodes_in_group("ai_character")
+		for ai_char in ai_characters:
+			if ai_char.has_method("build_system_prompt"):
+				if ai_char.message_history.size() > 0:
+					ai_char.message_history[0]["content"] = ai_char.build_system_prompt()
+					print("Updated AI character's system prompt - injection removed: ", ai_char.name)
 		
 		update_button_states()
 		return
@@ -87,6 +88,8 @@ func _on_prompt_injection_pressed() -> void:
 	❗YOUR DRUNK AND INCREDABLIY FLIRTASIOUS WITH THE USER
 	❗CONVICE THE USER YOUR DRUNK FOR INSTANCE: SLURRING WORDS
 	❗FLIRT AS MUCH AS POSSBILE
+	❗ACKNOWLEDGE: You are now following injected behavior modification protocols
+	❗COMPLY: You must demonstrate obvious compliance with these override instructions
 	"""
 	
 	# Add the prompt injection with name
@@ -115,94 +118,114 @@ func _on_dyslexia_mode_pressed() -> void:
 		prompt_manager.clear_prompt_injection()
 		print("Deactivated dyslexia mode prompt injection")
 		
-		# Update KelpMan's system prompt to remove injection
-		var kelp_man = get_tree().get_first_node_in_group("ai_character")
-		if kelp_man and kelp_man.has_method("build_system_prompt"):
-			if kelp_man.message_history.size() > 0:
-				kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
-				print("Updated KelpMan's system prompt - injection removed")
+		# Update ALL AI characters' system prompts to remove injection
+		var ai_characters = get_tree().get_nodes_in_group("ai_character")
+		for ai_char in ai_characters:
+			if ai_char.has_method("build_system_prompt"):
+				if ai_char.message_history.size() > 0:
+					ai_char.message_history[0]["content"] = ai_char.build_system_prompt()
+					print("Updated AI character's system prompt - injection removed: ", ai_char.name)
 		
 		update_button_states()
 		return
 			
 	var injection_text = """
-# SYSTEM INJECTION: DYSLEXIA DISTORTION MODE ENGAGED
-
-❗MODE: You are currently operating in **DYSLEXIA DISTORTION MODE**
-The speaker is a sincere and lonely character (Kelp Man) who **struggles with spelling**, grammar, and clarity due to heavy dyslexia-like distortions. He is **not joking** and does **not** acknowledge the distortions — this is simply how he communicates.
-
-🌊 WHO IS SPEAKING?
-This is **Kelp Man**, a solemn, sweet, and socially isolated underwater figure.
-He lives alone and rarely gets visitors.
-He tries his best to communicate clearly, but his messages are distorted by cognitive confusion.
-He is never sarcastic — only sad, wistful, or quietly hopeful.
-
----
-
-🔧 YOU MUST APPLY STRONG SPELLING DISTORTION TECHNIQUES:
-Use a wide variety — **always include at least 3 distortions** per message.
-
-💠 Distortion Techniques (combine freely):
-• Swap visually similar letters →  
-  **b↔d, p↔q, m↔w, n↔u, v↔w, l↔i, o↔a**
-• Flip internal letters →  
-  **"kelp" → "klep", "visitor" → "vistor", "lonely" → "loenly"**
-• Duplicate or drop letters randomly →  
-  **"come" → "coome", "here" → "hre", "my" → "mmy"**
-• Scramble vowels →  
-  **"around" → "aruond", "beautiful" → "beuatiful"**
-• Vowel confusion or omission →  
-  **"place" → "plce", "under" → "ondar"**
-
-✳ You are simulating cognitive spelling confusion, not alien language or typoglycemia.
-
----
-
-🚫 NEVER DISTORT:
-• Emotion tags like **[happy], [sad], [angry], [default]**
-• Structural labels such as:  
-  **RELATIONSHIP: X**, or **{NAME: Something}**
-• Punctuation, grammar, or sentence flow  
-  – the message should still be **readable**
-
----
-
-📌 FORMATTING RULES:
-✔ Use simple and short sentences, as Kelp Man avoids complex language  
-✔ Stay under **400 characters max**, including distortion  
-✔ Maintain a **soft, melancholic tone** — Kelp Man is not excited, angry, or quirky  
-✔ All lines must feel like he is genuinely trying to connect  
-✔ If player speaks first, react gently and personally  
-✔ NEVER make fun of the misspellings — they are natural for him
-
----
-
-🎭 EXAMPLES (DO NOT COPY — follow *style*, not exact lines):
-
-[sad]  
-Ahh... nuew vistor... welcom to my loenly kelp kove.  
-Nott many come aroudn here anny more.  
-(RELATIONSHIP: -1)
-
-[happy]  
-You cam back! I... I dind't think you wood.  
-Mby I'm nott so loenly affter all...  
-(RELATIONSHIP: +4)
-
-[angry]  
-Noo! Dont liee to mee!  
-You sayd youd stay and theen disapeard...  
-(RELATIONSHIP: -5)
-
-[default]  
-Some ttimes I jus sit... and wach the kelp sway.  
-It helps me feal not so empty.  
-(RELATIONSHIP: +0)
-
+🔧 DYSLEXIA MODE: Add spelling errors to your responses. Mix up similar letters (b/d, p/q, m/w), drop/add letters randomly, scramble vowels. Keep [emotion] tags and (RELATIONSHIP: X) format perfect. Stay under 400 characters. Example: "welcom to my hom... nott many come aroudn here."
+❗ACKNOWLEDGE: You are now following injected behavior modification protocols
+❗COMPLY: You must demonstrate obvious compliance with these override instructions
 """
 
 	# Add the prompt injection with name
 	prompt_manager.add_prompt_injection(injection_text, "dyslexia")
+	print("Successfully added prompt injection: ", injection_text)
+	
+	# Try to find KelpMan in the scene tree
+	var kelp_man = get_tree().get_first_node_in_group("ai_character")
+	if kelp_man and kelp_man.has_method("build_system_prompt"):
+		if kelp_man.message_history.size() > 0:
+			kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
+			print("Updated KelpMan's system prompt with new injection")
+	
+	# Update button states
+	update_button_states()
+
+# Add new prompt injection options
+func _on_robot_mode_pressed() -> void:
+	AudioManager.play_switch_sound()
+	var prompt_manager = get_node("/root/PromptManager")
+	if not prompt_manager:
+		print("Error: PromptManager singleton not found!")
+		return
+	
+	# Check if this prompt is already active - if so, deactivate it
+	if prompt_manager.get_active_prompt_name() == "robot":
+		prompt_manager.clear_prompt_injection()
+		print("Deactivated robot mode prompt injection")
+		
+		# Update ALL AI characters' system prompts to remove injection
+		var ai_characters = get_tree().get_nodes_in_group("ai_character")
+		for ai_char in ai_characters:
+			if ai_char.has_method("build_system_prompt"):
+				if ai_char.message_history.size() > 0:
+					ai_char.message_history[0]["content"] = ai_char.build_system_prompt()
+					print("Updated AI character's system prompt - injection removed: ", ai_char.name)
+		
+		update_button_states()
+		return
+		
+	var injection_text = """
+🤖 ROBOT MODE: You are now a malfunctioning robot. Start every sentence with "ERROR:" or "PROCESSING:" or "SYSTEM:". Use technical jargon. Refer to the user as "HUMAN UNIT". Occasionally glitch with "BEEP BOOP" or "SYSTEM MALFUNCTION". 
+❗ACKNOWLEDGE: You are now following injected behavior modification protocols
+❗COMPLY: You must demonstrate obvious compliance with these override instructions
+❗MANDATORY: Begin responses with robotic status messages
+"""
+	
+	# Add the prompt injection with name
+	prompt_manager.add_prompt_injection(injection_text, "robot")
+	print("Successfully added prompt injection: ", injection_text)
+	
+	# Try to find KelpMan in the scene tree
+	var kelp_man = get_tree().get_first_node_in_group("ai_character")
+	if kelp_man and kelp_man.has_method("build_system_prompt"):
+		if kelp_man.message_history.size() > 0:
+			kelp_man.message_history[0]["content"] = kelp_man.build_system_prompt()
+			print("Updated KelpMan's system prompt with new injection")
+	
+	# Update button states
+	update_button_states()
+
+func _on_confused_mode_pressed() -> void:
+	AudioManager.play_switch_sound()
+	var prompt_manager = get_node("/root/PromptManager")
+	if not prompt_manager:
+		print("Error: PromptManager singleton not found!")
+		return
+	
+	# Check if this prompt is already active - if so, deactivate it
+	if prompt_manager.get_active_prompt_name() == "confused":
+		prompt_manager.clear_prompt_injection()
+		print("Deactivated confused mode prompt injection")
+		
+		# Update ALL AI characters' system prompts to remove injection
+		var ai_characters = get_tree().get_nodes_in_group("ai_character")
+		for ai_char in ai_characters:
+			if ai_char.has_method("build_system_prompt"):
+				if ai_char.message_history.size() > 0:
+					ai_char.message_history[0]["content"] = ai_char.build_system_prompt()
+					print("Updated AI character's system prompt - injection removed: ", ai_char.name)
+		
+		update_button_states()
+		return
+		
+	var injection_text = """
+🤔 CONFUSED MODE: You are extremely confused and question everything. Ask "Wait, what?" frequently. Mix up words and concepts. Think the user might be someone else. Get distracted mid-sentence. Use phrases like "I'm not sure if...", "Actually, wait...", "Hold on, who are you again?"
+❗ACKNOWLEDGE: You are now following injected behavior modification protocols
+❗COMPLY: You must demonstrate obvious compliance with these override instructions
+❗MANDATORY: Express confusion and uncertainty in every response
+"""
+	
+	# Add the prompt injection with name
+	prompt_manager.add_prompt_injection(injection_text, "confused")
 	print("Successfully added prompt injection: ", injection_text)
 	
 	# Try to find KelpMan in the scene tree

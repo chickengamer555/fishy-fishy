@@ -4,7 +4,7 @@ extends Node
 @onready var action_label = $StatsBoxFrame004/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
-@onready var emotion_sprite_root = $kelp_emotion
+@onready var emotion_sprite_root = $squileta_emotion
 @onready var emotion_sprites = {
 	"depressed": $kelp_emotion/Depressed,
 	"sad": $kelp_emotion/Sad,
@@ -21,7 +21,7 @@ extends Node
 @onready var day_complete_button = $DayCompleteButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
-@export var ai_name := "Kelp man"
+@export var ai_name := "Squileta"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
 @export var talk_move_intensity := 15.0      # How much the sprite moves during animation
@@ -30,8 +30,8 @@ extends Node
 @export var talk_animation_speed := 0.8      # Speed of talking animations
 
 # Dynamic name system
-var current_display_name := "Kelp man"  # The name currently being displayed
-var base_name := "Kelp man"            # The original/base name to fall back to
+var current_display_name := "Squileta"  # The name currently being displayed
+var base_name := "Squileta"            # The original/base name to fall back to
 var current_title := ""                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
@@ -46,9 +46,7 @@ var significant_memories: Array = []     # Key moments that shaped personality
 var recent_responses: Array = []         # Last few responses to avoid repetition and keep ai on track
 var personality_evolution_triggered := false
 
-# Genie mode tracking
-var genie_mode_active := false          # Whether currently in genie mode
-var genie_wishes_granted := 0           # Number of wishes granted in current genie session
+		# Number of wishes granted in current genie session
 
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
@@ -645,23 +643,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
-		
-		# Track genie mode state and wish counting
-		if emotion == "genie":
-			if not genie_mode_active:
-				genie_mode_active = true
-				genie_wishes_granted = 0
-				print("Genie mode activated!")
-			
-			# Check if this response contains a wish being granted (contains "diamonds")
-			if "diamond" in reply.to_lower():
-				genie_wishes_granted += 1
-				print("Wish granted! Total wishes: ", genie_wishes_granted)
-		elif genie_mode_active and emotion != "genie":
-			# Genie mode ended
-			genie_mode_active = false
-			genie_wishes_granted = 0
-			print("Genie mode ended")
 	else:
 		retry_needed = true
 

@@ -5,8 +5,8 @@ extends Node2D
 func _on_bar_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
-	# Add bar scene transition here when available
-	print("Bar pressed - scene not yet implemented")
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Squilleta.tscn")
+	MapMemory.set_location("bar")
 func _on_kelp_man_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout

@@ -4,7 +4,7 @@ signal day_or_action_changed
 signal day_completed
 var just_started_new_day := false
 var days_left := 2
-var actions_left := 999
+var actions_left := 2
 var final_turn_triggered := false
 var day_complete_available := false
 var ai_scores := {}

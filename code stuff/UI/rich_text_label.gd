@@ -15,6 +15,9 @@ var is_typing: bool = false
 # Reference to the kelp_man node for animation callbacks
 var kelp_man_node: Node
 
+# Loop prevention
+var is_fitting_font: bool = false
+
 func _ready() -> void:
 	# Get reference to kelp_man for animation callbacks with error handling
 	if has_node("../.."):
@@ -42,8 +45,8 @@ func show_text_with_typing(new_text: String) -> void:
 	text = ""
 	is_typing = true
 	
-	# Fit font to label
-	_fit_font_to_label(full_text)
+	# Fit font to label (deferred to avoid race conditions)
+	call_deferred("_fit_font_to_label", full_text)
 	
 	# Start kelp man talking animation
 	if kelp_man_node and kelp_man_node.has_method("start_talking_animation"):
@@ -54,11 +57,10 @@ func show_text_with_typing(new_text: String) -> void:
 
 func _fit_font_to_label(preview_text: String) -> void:
 	"""Calculate and apply optimal font size using multiples of 8"""
-	if preview_text.is_empty():
+	if preview_text.is_empty() or is_fitting_font:
 		return
 
-	# Wait for layout to be ready
-	await get_tree().process_frame
+	is_fitting_font = true  # Prevent recursive calls
 	
 	var label_size := get_size()
 	
@@ -81,8 +83,6 @@ func _fit_font_to_label(preview_text: String) -> void:
 	var padding_y = max(4, label_size.y * padding_factor)
 	var available_size = Vector2(label_size.x - padding_x * 2, label_size.y - padding_y * 2)
 	
-	print("Label size: ", label_size, " Available size: ", available_size, " Text length: ", preview_text.length())
-	
 	# Generate available font sizes as multiples of 8
 	var available_sizes: Array[int] = []
 	var current_size = min_font_size
@@ -100,8 +100,6 @@ func _fit_font_to_label(preview_text: String) -> void:
 	if available_sizes.is_empty():
 		available_sizes.append(min_font_size)
 	
-	print("Available font sizes: ", available_sizes)
-	
 	var best_fit_size := available_sizes[0]  # Start with smallest
 	
 	# Test each size from largest to smallest
@@ -117,9 +115,8 @@ func _fit_font_to_label(preview_text: String) -> void:
 			best_fit_size = test_size
 			break  # Found the largest size that fits
 	
-	print("Optimal font size: ", best_fit_size, " for available space: ", available_size)
-	
 	add_theme_font_size_override("normal_font_size", best_fit_size)
+	is_fitting_font = false  # Allow future calls
 
 func _on_typing_timer_timeout() -> void:
 	"""Handle typing effect timer"""
@@ -157,8 +154,8 @@ func set_text_instantly(new_text: String) -> void:
 	full_text = new_text
 	text = new_text
 	
-	# Auto-resize to fit
-	_fit_font_to_label(new_text)
+	# Auto-resize to fit (deferred to avoid race conditions)
+	call_deferred("_fit_font_to_label", new_text)
 
 # Public methods for external control
 func set_typing_speed(speed: float) -> void:
@@ -179,6 +176,6 @@ func get_current_font_size() -> int:
 
 func _on_resized() -> void:
 	"""Handle when the RichTextLabel is resized"""
-	if not text.is_empty():
+	if not text.is_empty() and not is_fitting_font:
 		# Re-calculate optimal size when container is resized
-		_fit_font_to_label(text)
+		call_deferred("_fit_font_to_label", text)
