@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://bicpdnho0g86q" path="res://UI STUFF/Squileta's Squaloon/Enter_highlighted_frame006.png" id="11_j3l7q"]
 [ext_resource type="Texture2D" uid="uid://bnawpqi1c47b4" path="res://UI STUFF/Squileta's Squaloon/Player text box border_frame006.png" id="13_1j01k"]
 [ext_resource type="Texture2D" uid="uid://dsssp85t8k7k" path="res://UI STUFF/Squileta's Squaloon/Enter_frame006.png" id="13_ndu6r"]
-[ext_resource type="Texture2D" uid="uid://csoalssq6mqh4" path="res://UI STUFF/Squileta's Squaloon/Next Day Highlighted_frame006.png" id="14_ndu6r"]
+[ext_resource type="Texture2D" uid="uid://c1ndb73rfd2c8" path="res://UI STUFF/Squileta's Squaloon/Next_day_highlighted.png" id="14_ndu6r"]
 [ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="14_rr6pc"]
 [ext_resource type="Texture2D" uid="uid://rs43xajmj02t" path="res://UI STUFF/Squileta's Squaloon/Next Day_frame006.png" id="15_1j01k"]
 [ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="15_q2flm"]
@@ -43,7 +43,7 @@
 [ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Kelp cove/Settings_button_frame004.png" id="42_g3gfx"]
 [ext_resource type="Texture2D" uid="uid://bcxm7lvs1w4os" path="res://UI STUFF/Squileta's Squaloon/Name Bar_frame006.png" id="42_ndu6r"]
 [ext_resource type="PackedScene" uid="uid://dl1j2sr24s2qw" path="res://emotion/Squileta/Squileta_emotion.tscn" id="42_uftsj"]
-[ext_resource type="Texture2D" uid="uid://bwkntsxnkr8p1" path="res://UI STUFF/Squileta's Squaloon/Map_button_frame006.png" id="43_ndu6r"]
+[ext_resource type="Texture2D" uid="uid://btjhb867wghh7" path="res://UI STUFF/Squileta's Squaloon/Squilleta_map.png" id="43_1j01k"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("4_1j01k")
@@ -117,7 +117,7 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ndu6r"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
-texture = ExtResource("43_ndu6r")
+texture = ExtResource("43_1j01k")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1j01k"]
 
@@ -204,7 +204,6 @@ theme_override_constants/caret_width = 1
 theme_override_fonts/font = ExtResource("6_n2vuv")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
-text = "ddfd"
 wrap_mode = 1
 indent_wrapped_lines = true
 

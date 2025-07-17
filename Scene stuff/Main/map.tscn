@@ -28,7 +28,7 @@ offset_bottom = 502.0
 scale = Vector2(6.72, 2)
 text = "Wild south"
 
-[node name="mine_feild" type="Button" parent="."]
+[node name="mine_field" type="Button" parent="."]
 offset_left = 602.0
 offset_top = 206.0
 offset_right = 693.0
@@ -40,4 +40,4 @@ text = "Mine feild
 [connection signal="pressed" from="Kelp_man_cove" to="." method="_on_kelp_man_pressed"]
 [connection signal="pressed" from="sqauloon" to="." method="_on_bar_pressed"]
 [connection signal="pressed" from="wild_south" to="." method="_on_wild_south_pressed"]
-[connection signal="pressed" from="mine_feild" to="." method="_on_mine_feild_pressed"]
+[connection signal="pressed" from="mine_field" to="." method="_on_mine_feild_pressed"]

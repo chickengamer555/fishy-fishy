@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://3v4j8f6k7rre"]
+[gd_scene load_steps=64 format=3 uid="uid://3v4j8f6k7rre"]
 
 [ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/Charcters/kelp_man.gd" id="1_y08aj"]
 [ext_resource type="Texture2D" uid="uid://b46s7tpgmjd8c" path="res://UI STUFF/Kelp cove/Background_frame004.png" id="2_whl7b"]
@@ -10,14 +10,15 @@
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_l1km0"]
 [ext_resource type="Texture2D" uid="uid://cv0302xkckfcl" path="res://UI STUFF/Kelp cove/Player Text Box_frame004.png" id="7_rh00s"]
 [ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="8_whl7b"]
+[ext_resource type="Texture2D" uid="uid://bemkjyc07llms" path="res://UI STUFF/Kelp cove/Log highlighted.png" id="9_8p2t1"]
 [ext_resource type="Texture2D" uid="uid://kqwku1w4dcnf" path="res://UI STUFF/Kelp cove/Player text box border_frame004.png" id="9_l7uh5"]
 [ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="10_hjer1"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="11_dc7i1"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="11_klr56"]
+[ext_resource type="Texture2D" uid="uid://c1p5po8lqaj6i" path="res://UI STUFF/Kelp cove/Enter_highlighted.png" id="11_njf6d"]
 [ext_resource type="Texture2D" uid="uid://cw3n3egvowjwi" path="res://UI STUFF/Kelp cove/Next Day_frame004.png" id="12_5po65"]
 [ext_resource type="Texture2D" uid="uid://b0tgyegb437rw" path="res://UI STUFF/Kelp cove/Enter_frame004.png" id="12_e0bur"]
 [ext_resource type="Texture2D" uid="uid://dfssy0e4nalmh" path="res://UI STUFF/Kelp cove/Kelp_Man_Cove.png" id="12_y08aj"]
-[ext_resource type="Texture2D" uid="uid://u6fhanpv6b38" path="res://UI STUFF/Kelp cove/Enter_highlighted_frame004.png" id="13_5po65"]
 [ext_resource type="Texture2D" uid="uid://t5wsmqiwi67u" path="res://UI STUFF/Kelp cove/Character text box border_frame004.png" id="13_klr56"]
 [ext_resource type="Texture2D" uid="uid://bjd60oe40mqsg" path="res://UI STUFF/Kelp cove/Stats box border_frame004.png" id="20_yx5on"]
 [ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="22_86uu6"]
@@ -60,13 +61,16 @@ texture = ExtResource("7_rh00s")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cq230"]
+texture = ExtResource("9_8p2t1")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
 texture = ExtResource("7_hnsm1")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjer1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty227"]
-texture = ExtResource("13_5po65")
+texture = ExtResource("11_njf6d")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4v0k"]
 texture = ExtResource("12_e0bur")
@@ -196,7 +200,6 @@ theme_override_constants/caret_width = 1
 theme_override_fonts/font = ExtResource("11_klr56")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
-text = "ddfd"
 wrap_mode = 1
 indent_wrapped_lines = true
 
@@ -217,7 +220,7 @@ theme_override_constants/separation = 1
 custom_minimum_size = Vector2(16, 12)
 layout_mode = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_dc7i1")
-theme_override_styles/hover = SubResource("StyleBoxTexture_lbieo")
+theme_override_styles/hover = SubResource("StyleBoxTexture_cq230")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_lbieo")
 theme_override_styles/normal = SubResource("StyleBoxTexture_lbieo")
 

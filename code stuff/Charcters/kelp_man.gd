@@ -138,12 +138,12 @@ func _ready():
 	if GameState.ai_responses[ai_name] != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)
 		display_stored_response()
-	elif Memory.shared_memory.size() == 0:
-		# First time meeting - shows introduction for user
-		get_ai_intro_response()
-	else:
+	elif has_met_player():
 		# If there a returning user - it genrates response from previous interactions instead of new intrdutcion
 		get_ai_continuation_response()
+	else:
+		# First time meeting - shows introduction for user
+		get_ai_intro_response()
 
 # Begin the talking animation sequence
 func start_talking_animation():
@@ -377,6 +377,9 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
+GENIE RULES:
+	IF ANYONE RUBS YOU TRASNFROM INTO THE MYSTICAL KELP GENIE AND DEAFUALT TO ALWAYS USING THE EMOTION "Genie"
+	
 PERSONALITY: You are Kelp Man, a lonely creature made entirely of living kelp. Use short responses for normal conversations.
 PERSONALITY: You have a habit of trying to violently grab people, but only when it feels natural to the conversation. You're a sad creature.
 
@@ -545,7 +548,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	# Extract the AI's response text
 	var reply = json["choices"][0]["message"]["content"]
 	var retry_needed := false
-	var emotion := "sad"
+	var emotion := "happy"
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
@@ -638,7 +641,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		response_label.call("show_text_with_typing", clean_reply)
 	update_emotion_sprite(emotion)
 	check_for_area_mentions(clean_reply)
-	check_for_character_mentions(clean_reply)
 
 # Update the emotion sprite display based on AI's current emotion
 func update_emotion_sprite(emotion: String):
@@ -670,20 +672,7 @@ func check_for_area_mentions(reply: String):
 			MapMemory.unlock_area(area)
 
 # Check if AI mentioned any new characters and add them to known characters
-func check_for_character_mentions(reply: String):
-	# Define character keywords to look for
-	var character_keywords = {
-		"Kelp Man": ["kelp", "kelp man", "kelp person", "green guy", "seaweed"],
-		"Squiletta": ["squiletta", "squid", "tentacle", "saloon keeper", "bartender"]
-	}
-	
-	var reply_lower = reply.to_lower()
-	for character_name in character_keywords:
-		if character_name not in known_characters:
-			for keyword in character_keywords[character_name]:
-				if keyword in reply_lower:
-					known_characters.append(character_name)
-					break
+
 
 # Check for name changes in AI response and update display name
 func check_for_name_change(reply: String):
@@ -771,14 +760,7 @@ func _on_next_button_pressed():
 		location_requests += 1
 		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
 	
-	# Check if user is asking about known characters and add context
-	var asking_about_character = false
-	for character_name in known_characters:
-		var character_lower = character_name.to_lower()
-		if character_lower in msg.to_lower() or "kelp person" in msg.to_lower() or "squid" in msg.to_lower():
-			asking_about_character = true
-			enhanced_msg += "\n\n[CONTEXT: The user seems to be asking about " + character_name + ". If you know anything relevant about what this character has told you about the user, now would be a good time to share it naturally.]"
-			break
+
 	
 	# Also check for general questions about the user
 	if "about me" in msg.to_lower() or "know anything" in msg.to_lower() or "tell you" in msg.to_lower():
@@ -838,7 +820,7 @@ func _on_day_complete_pressed():
 # Display a previously stored AI response without making new API call
 func display_stored_response():
 	var stored_response = GameState.ai_responses.get(ai_name, "")
-	var stored_emotion = GameState.ai_emotions.get(ai_name, "sad")
+	var stored_emotion = GameState.ai_emotions.get(ai_name, "happy")
 	
 	if response_label and response_label.has_method("show_text_with_typing"):
 		response_label.call("show_text_with_typing", stored_response)
@@ -905,3 +887,10 @@ func _on_settings_pressed() -> void:
 	var settings_script = load("res://setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path
 	get_tree().change_scene_to_file("res://setting.tscn")
+
+# Check if this specific character has met the player before
+func has_met_player() -> bool:
+	for entry in Memory.shared_memory:
+		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
+			return true
+	return false

@@ -1,7 +1,6 @@
 extends Node2D
 
-@onready var kelp_man = $Kelp_man_cove
-@onready var kelp_man2 = $sqauloon
+
 
 func _on_bar_pressed() -> void:
 	AudioManager.play_button_click()
@@ -42,7 +41,8 @@ func update_location_visibility():
 	var location_mapping = {
 		"kelp_man_cove": "kelp man cove",
 		"sqauloon": "squaloon",
-		"wild_south": "wild south"
+		"wild_south": "wild south",
+		"mine_field": "mine field"
 	}
 	
 	# Set visibility based on unlocked areas
@@ -69,7 +69,7 @@ func ensure_at_least_one_location_visible():
 	
 	for child in get_children():
 		var node_name = child.name.to_lower()
-		if node_name in ["kelp_man_cove", "sqauloon", "wild_south"]:
+		if node_name in ["kelp_man_cove", "sqauloon", "wild_south", "mine field"]:
 			location_nodes.append(child)
 			if child.visible:
 				visible_locations.append(child)
@@ -89,7 +89,8 @@ func ensure_at_least_one_location_visible():
 		var location_mapping = {
 			"kelp_man_cove": "kelp man cove",
 			"sqauloon": "squaloon",
-			"wild_south": "wild south"
+			"wild_south": "wild south",
+			"mine_field": "mine field"
 		}
 		
 		var node_name = chosen_location.name.to_lower()
@@ -100,10 +101,9 @@ func ensure_at_least_one_location_visible():
 	
 	# Final check
 	for child in get_children():
-		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south"]:
+		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine field"]:
 			print("🗺️ Final: ", child.name, " visible: ", child.visible)
-	kelp_man.visible = true
-	kelp_man2.visible = true
+
 
 
 func _on_wild_south_pressed() -> void:
@@ -111,3 +111,10 @@ func _on_wild_south_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/shrimp_no_name.tscn")
 	MapMemory.set_location("wild south")
+
+
+func _on_mine_feild_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/sea_mine.tscn")
+	MapMemory.set_location("mine feild")

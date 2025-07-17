@@ -36,9 +36,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var squileta_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "kelp man cove"]  # Areas this AI knows about
+var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Kelp man"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Kelp man", "The shrimp with no name", "Sea mine"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -49,9 +49,7 @@ var conversation_topics: Array = []      # Track topics discussed to prevent rep
 var greeting_count: int = 0              # Count how many greetings have been given
 var location_requests: int = 0           # Count how many times user asked about locations
 
-# Genie mode tracking
-var genie_mode_active := false          # Whether currently in genie mode
-var genie_wishes_granted := 0           # Number of wishes granted in current genie session
+
 
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
@@ -137,12 +135,12 @@ func _ready():
 	if GameState.ai_responses[ai_name] != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)
 		display_stored_response()
-	elif Memory.shared_memory.size() == 0:
-		# First time meeting - shows introduction for user
-		get_ai_intro_response()
-	else:
+	elif has_met_player():
 		# If there a returning user - it genrates response from previous interactions instead of new intrdutcion
 		get_ai_continuation_response()
+	else:
+		# First time meeting - shows introduction for user
+		get_ai_intro_response()
 
 # Begin the talking animation sequence
 func start_talking_animation():
@@ -347,13 +345,13 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: EVERY response MUST start with [depressed], [sad], [angry], [happy], or [grabbing]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ FORBIDDEN: Generic responses - you are KELP MAN, not a helpful assistant
+❗ FORBIDDEN: Generic responses - you are SQUILLETA, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
 APPEARANCE: You are a muscular pink squid lady with massive arms. You wear an elegant purple dress.
 
 PERSONALITY: You are Squileta, a midwestern bartender. Act like a typical midwestern bar tender 
 PERSONALITY: You are quite rough and red neck but deep down you really care for your customer and wanna make sure the alright.
-Local talk: Occasinly when its right for conversation bring up how people in this town have been talking about seeing a genie and kelp man is acting weirdly sus about it
+Local talk: When when its relvant for the conversation bring up how people in this town have been talking about seeing a genie and kelp man is acting weirdly sus about it
 Accent: You have a thick mid western accent so use words like that when tpying for instance, suga', ya'll, oop ect
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -371,7 +369,7 @@ BEHAVIOR RULES:
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
-• If you want to describe your physical actions you must use simple actions in astrix like so *kelp man punchs the user*. Never describe the action just do it for instace not allow *Kelp man punchs the user elgantly*
+• If you want to describe your physical actions you must use simple actions in astrix like so *squilleta pours a drink*. Never describe the action just do it for instace not allow *Squilleta pours the drink elgantly*
 • Keep messages short and conversational, not long speeches
 
 RESPONSE FORMAT EXAMPLE:
@@ -524,28 +522,14 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|genie)\\]")
+	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
 		
-		# Track genie mode state and wish counting
-		if emotion == "genie":
-			if not genie_mode_active:
-				genie_mode_active = true
-				genie_wishes_granted = 0
-			
-			# Check if this response contains a wish being granted (contains "diamonds")
-			if "diamond" in reply.to_lower():
-				genie_wishes_granted += 1
-		elif genie_mode_active and emotion != "genie":
-			# Genie mode ended
-			genie_mode_active = false
-			genie_wishes_granted = 0
-	else:
-		retry_needed = true
+
 
 	# Parse relationship score from response (required format: (RELATIONSHIP: X)) then removes it so user cant see
 	var score_regex := RegEx.new()
@@ -582,7 +566,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if retry_needed or reply.length() > 400:
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], [grabbing], or [genie] and end with (RELATIONSHIP: X). Just talk normally."
+			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], [grabbing], or and end with (RELATIONSHIP: X). Just talk normally."
 		})
 		send_request()
 		return
@@ -612,7 +596,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		response_label.call("show_text_with_typing", clean_reply)
 	update_emotion_sprite(emotion)
 	check_for_area_mentions(clean_reply)
-	check_for_character_mentions(clean_reply)
 
 # Update the emotion sprite display based on AI's current emotion
 func update_emotion_sprite(emotion: String):
@@ -643,21 +626,7 @@ func check_for_area_mentions(reply: String):
 			unlocked_areas.append(area)
 			MapMemory.unlock_area(area)
 
-# Check if AI mentioned any new characters and add them to known characters
-func check_for_character_mentions(reply: String):
-	# Define character keywords to look for
-	var character_keywords = {
-		"Kelp Man": ["kelp", "kelp man", "kelp person", "green guy", "seaweed"],
-		"Squiletta": ["squiletta", "squid", "tentacle", "saloon keeper", "bartender"]
-	}
-	
-	var reply_lower = reply.to_lower()
-	for character_name in character_keywords:
-		if character_name not in known_characters:
-			for keyword in character_keywords[character_name]:
-				if keyword in reply_lower:
-					known_characters.append(character_name)
-					break
+
 
 # Check for name changes in AI response and update display name
 func check_for_name_change(reply: String):
@@ -745,18 +714,6 @@ func _on_next_button_pressed():
 		location_requests += 1
 		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
 	
-	# Check if user is asking about known characters and add context
-	var asking_about_character = false
-	for character_name in known_characters:
-		var character_lower = character_name.to_lower()
-		if character_lower in msg.to_lower() or "kelp person" in msg.to_lower() or "squid" in msg.to_lower():
-			asking_about_character = true
-			enhanced_msg += "\n\n[CONTEXT: The user seems to be asking about " + character_name + ". If you know anything relevant about what this character has told you about the user, now would be a good time to share it naturally.]"
-			break
-	
-	# Also check for general questions about the user
-	if "about me" in msg.to_lower() or "know anything" in msg.to_lower() or "tell you" in msg.to_lower():
-		enhanced_msg += "\n\n[CONTEXT: The user is asking what you know about them. Consider sharing relevant information other characters have told you about the user.]"
 	
 	# Check if user is new/exploring  
 	if "new" in msg.to_lower() or "exploring" in msg.to_lower() or "around" in msg.to_lower() or "see what" in msg.to_lower():
@@ -879,3 +836,9 @@ func _on_settings_pressed() -> void:
 	var settings_script = load("res://setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path
 	get_tree().change_scene_to_file("res://setting.tscn")
+
+func has_met_player() -> bool:
+	for entry in Memory.shared_memory:
+		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
+			return true
+	return false

@@ -127,6 +127,13 @@ texture = ExtResource("42_av710")
 [node name="KELP MAN" type="Node2D"]
 position = Vector2(590, 255)
 script = ExtResource("1_1le7v")
+ai_name = null
+max_input_chars = null
+max_input_lines = null
+talk_move_intensity = null
+talk_rotation_intensity = null
+talk_scale_intensity = null
+talk_animation_speed = null
 
 [node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
 position = Vector2(50, 110)

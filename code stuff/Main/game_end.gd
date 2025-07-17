@@ -34,8 +34,8 @@ func setup_button():
 func on_main_menu_pressed():
 	# Reset GameState
 	GameState.ai_scores.clear()
-	GameState.days_left = 2
-	GameState.actions_left = 999
+	GameState.days_left = 10
+	GameState.actions_left = 10
 	GameState.final_turn_triggered = false
 	GameState.day_complete_available = false
 	GameState.just_started_new_day = false
