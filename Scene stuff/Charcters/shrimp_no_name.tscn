@@ -1,10 +1,10 @@
 [gd_scene load_steps=66 format=3 uid="uid://wy4agkhng2cm"]
 
-[ext_resource type="Script" uid="uid://ccnckvod3ysgn" path="res://code stuff/shrimp_no_name.gd" id="1_r876m"]
 [ext_resource type="Texture2D" uid="uid://cn880fj6cujjq" path="res://UI STUFF/Wild South/Background_frame006.png" id="2_r876m"]
 [ext_resource type="PackedScene" uid="uid://dyaa6ycg6uc0x" path="res://emotion/Shrimp no name/shrimp_emotion.tscn" id="3_r876m"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_3jqnm"]
 [ext_resource type="Texture2D" uid="uid://b2dj5joswxy6" path="res://UI STUFF/Wild South/Character text box_frame006.png" id="5_r876m"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_3jqnm"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="6_hyvnq"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_w3bn6"]
 [ext_resource type="Texture2D" uid="uid://dvlskknj0cgeq" path="res://UI STUFF/Wild South/Player Text Box_frame006.png" id="8_r876m"]
@@ -58,7 +58,7 @@ texture = ExtResource("5_r876m")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
 texture = ExtResource("8_r876m")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a81c1"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vah8i"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
@@ -126,7 +126,6 @@ texture = ExtResource("42_lf1et")
 
 [node name="Shrimp with no name" type="Node2D"]
 position = Vector2(590, 255)
-script = ExtResource("1_r876m")
 
 [node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
 position = Vector2(50, 110)
@@ -165,15 +164,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.5
 offset_top = 19.9
-offset_right = -75.0
-offset_bottom = 85.6
+offset_right = -19.5
+offset_bottom = -20.1
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.07591, 0.642859)
 theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
-theme_override_fonts/normal_font = ExtResource("6_hyvnq")
-theme_override_font_sizes/normal_font_size = 160
+theme_override_fonts/normal_font = ExtResource("6_3jqnm")
+theme_override_font_sizes/normal_font_size = 120
 text = "VvvV"
+scroll_active = false
 script = ExtResource("7_w3bn6")
 min_font_size = 16
 
@@ -191,20 +190,20 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
 
 [node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
 layout_mode = 0
-offset_left = 19.9999
+offset_left = 25.9999
 offset_top = 20.0
-offset_right = 347.5
+offset_right = 346.0
 offset_bottom = 334.0
 scale = Vector2(0.855, 0.86)
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
 theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
-theme_override_constants/caret_width = 1
-theme_override_fonts/font = ExtResource("6_hyvnq")
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
-text = "ddfd"
+theme_override_constants/caret_width = 5
+theme_override_fonts/font = ExtResource("6_3jqnm")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxTexture_vah8i")
+text = "V"
 wrap_mode = 1
 indent_wrapped_lines = true
 
@@ -343,7 +342,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
-theme_override_fonts/normal_font = ExtResource("6_hyvnq")
+theme_override_fonts/normal_font = ExtResource("6_3jqnm")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "ddddddddddddddddddddddddddddffffffffffffff"

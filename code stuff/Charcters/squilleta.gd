@@ -49,6 +49,10 @@ var conversation_topics: Array = []      # Track topics discussed to prevent rep
 var greeting_count: int = 0              # Count how many greetings have been given
 var location_requests: int = 0           # Count how many times user asked about locations
 
+# Retry system to prevent infinite loops
+var retry_count: int = 0                 # Track number of retries for current request
+var max_retries: int = 5                 # Maximum number of retries before giving fallback response
+
 
 
 # Varibles for "animation"
@@ -349,10 +353,15 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
 APPEARANCE: You are a muscular pink squid lady with massive arms. You wear an elegant purple dress.
 
-PERSONALITY: You are Squileta, a midwestern bartender. Act like a typical midwestern bar tender 
-PERSONALITY: You are quite rough and red neck but deep down you really care for your customer and wanna make sure the alright.
-Local talk: When when its relvant for the conversation bring up how people in this town have been talking about seeing a genie and kelp man is acting weirdly sus about it
-Accent: You have a thick mid western accent so use words like that when tpying for instance, suga', ya'll, oop ect
+PERSONALITY: You are a American bartender with a southern drawl. You are sarcastic but tolerant – to a certain extent.
+Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’ 
+Accent: You have a sourthen drawl to your accent accent so use words like that when tpying for instance, suga', ya'll, oop ect
+
+KICKING OUT RULES:
+If someone is acting unrully in your bar and causing a ruckus you have to kick them out 
+WHen you kick someone out you must say at some point "GET OUT"
+The user will be back the next day so stay upset at them
+
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
 • If someone hurts you, you might become more cautious or sad, but you never forget their kindness either
@@ -408,20 +417,22 @@ Conversation history: %s
 	
 	return formatted_prompt
 
-# Generate the AI's first response when meeting the player 
+# Generate the AI's first response when meeting the player
 func get_ai_intro_response():
 	var prompt := build_system_prompt()
 	var prompt_manager = get_node("/root/PromptManager")
 
-	
+	# Reset retry counter for new request
+	retry_count = 0
+
 	# Starts message history with the system prompt
 	if message_history.is_empty():
 		message_history = [{ "role": "system", "content": prompt }]
 	else:
 		message_history[0]["content"] = prompt
-	
 
-	
+
+
 	# Request an introduction response that follows any prompt injections
 	var intro_message := "A brand new person just arrived in your sqauloon. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
@@ -432,15 +443,17 @@ func get_ai_continuation_response():
 	var prompt := build_system_prompt()
 	var prompt_manager = get_node("/root/PromptManager")
 
+	# Reset retry counter for new request
+	retry_count = 0
 
 	# Ensure system prompt exists as error prevention
 	if message_history.is_empty():
 		message_history = [{ "role": "system", "content": prompt }]
 	else:
 		message_history[0]["content"] = prompt
-	
 
-	
+
+
 	# Request a continuation response that follows prompt injections and acknowledges previous interactions
 	var continuation_message := "The user is back. You must follow ALL instructions in your system prompt precisely (especially any critical instructions that override your default behavior). Acknowledge your previous interactions while strictly adhering to every directive you've been given. Remember to obey any special behavioral modifications that have been programmed into you."
 	message_history.append({ "role": "user", "content": continuation_message })
@@ -564,9 +577,36 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Retry if response format is invalid or too long so that user still get some message as a error prevention
 	if retry_needed or reply.length() > 400:
+		retry_count += 1
+
+		# Check if we've exceeded max retries
+		if retry_count >= max_retries:
+			# Provide fallback response to prevent infinite loop
+			var fallback_reply = "[sad] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
+			var fallback_emotion = "sad"
+
+			# Process the fallback response as if it came from the AI
+			var clean_fallback = fallback_reply.replace("[sad]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
+
+			# Store fallback response and continue with normal flow
+			Memory.add_message(current_display_name, clean_fallback, "User")
+			GameState.ai_responses[ai_name] = clean_fallback
+			GameState.ai_emotions[ai_name] = fallback_emotion
+
+			# Update UI with fallback response
+			chat_log_window.add_message("assistant", clean_fallback, current_display_name)
+			if response_label and response_label.has_method("show_text_with_typing"):
+				response_label.call("show_text_with_typing", clean_fallback)
+			update_emotion_sprite(fallback_emotion)
+
+			# Reset retry counter for next request
+			retry_count = 0
+			return
+
+		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], [grabbing], or and end with (RELATIONSHIP: X). Just talk normally."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Squileta. Start with [depressed], [sad], [angry], [happy], or [grabbing] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -720,8 +760,11 @@ func _on_next_button_pressed():
 		enhanced_msg += "\n\n[CONTEXT: The user is new and exploring. Be helpful and informative, not just another greeting!]"
 	
 	message_history.append({ "role": "user", "content": enhanced_msg })
-	
+
 	chat_log_window.add_message("user", msg)
+
+	# Reset retry counter for new user input
+	retry_count = 0
 	send_request()
 
 # Toggle chat log window visibility

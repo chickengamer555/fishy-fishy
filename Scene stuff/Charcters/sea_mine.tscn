@@ -1,12 +1,13 @@
-[gd_scene load_steps=66 format=3 uid="uid://pnag63vbnps0"]
+[gd_scene load_steps=67 format=3 uid="uid://pnag63vbnps0"]
 
-[ext_resource type="Script" uid="uid://f8c0sxjbu4qm" path="res://code stuff/Charcters/sea_mine.gd" id="1_1le7v"]
+[ext_resource type="Script" uid="uid://cl8uc7qx2v51c" path="res://code stuff/Charcters/sea_mine.gd" id="1_trod4"]
 [ext_resource type="Texture2D" uid="uid://dcdxbwfkj1ici" path="res://UI STUFF/Mine Feild/Background_frame006.png" id="2_k7aed"]
 [ext_resource type="PackedScene" uid="uid://bnd1kndohx06w" path="res://emotion/Sea mine/sea_mine_emotion.tscn" id="3_1le7v"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_trod4"]
 [ext_resource type="Texture2D" uid="uid://d1sobynh8m24t" path="res://UI STUFF/Mine Feild/Character text box_frame006.png" id="5_odtcx"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="6_y34wp"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_yjcgw"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="8_odtcx"]
 [ext_resource type="Texture2D" uid="uid://dewh4aaxvvbe" path="res://UI STUFF/Mine Feild/Player Text Box_frame006.png" id="8_trod4"]
 [ext_resource type="Texture2D" uid="uid://6h7t1hhut73g" path="res://UI STUFF/Mine Feild/Log Highlighted_frame006.png" id="9_7ctb0"]
 [ext_resource type="Texture2D" uid="uid://b8shbgt78408i" path="res://UI STUFF/Mine Feild/Log_frame006.png" id="10_y34wp"]
@@ -58,7 +59,7 @@ texture = ExtResource("5_odtcx")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
 texture = ExtResource("8_trod4")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a81c1"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ctb0"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
@@ -124,16 +125,9 @@ texture = ExtResource("41_2iiex")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1n1a7"]
 texture = ExtResource("42_av710")
 
-[node name="KELP MAN" type="Node2D"]
+[node name="Sea mine" type="Node2D"]
 position = Vector2(590, 255)
-script = ExtResource("1_1le7v")
-ai_name = null
-max_input_chars = null
-max_input_lines = null
-talk_move_intensity = null
-talk_rotation_intensity = null
-talk_scale_intensity = null
-talk_animation_speed = null
+script = ExtResource("1_trod4")
 
 [node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
 position = Vector2(50, 110)
@@ -172,15 +166,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.5
 offset_top = 19.9
-offset_right = -75.0
-offset_bottom = 85.6
+offset_right = -19.5
+offset_bottom = -20.1
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.07591, 0.642859)
 theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
-theme_override_fonts/normal_font = ExtResource("6_y34wp")
-theme_override_font_sizes/normal_font_size = 160
+theme_override_fonts/normal_font = ExtResource("8_odtcx")
+theme_override_font_sizes/normal_font_size = 120
 text = "VvvV"
+scroll_active = false
 script = ExtResource("7_yjcgw")
 min_font_size = 16
 
@@ -198,20 +192,19 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
 
 [node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
 layout_mode = 0
-offset_left = 19.9999
+offset_left = 25.9999
 offset_top = 20.0
-offset_right = 347.5
+offset_right = 346.0
 offset_bottom = 334.0
 scale = Vector2(0.855, 0.86)
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
 theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
-theme_override_constants/caret_width = 1
-theme_override_fonts/font = ExtResource("6_y34wp")
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
-text = "ddfd"
+theme_override_constants/caret_width = 5
+theme_override_fonts/font = ExtResource("8_odtcx")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxTexture_7ctb0")
 wrap_mode = 1
 indent_wrapped_lines = true
 
@@ -350,7 +343,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
-theme_override_fonts/normal_font = ExtResource("6_y34wp")
+theme_override_fonts/normal_font = ExtResource("8_odtcx")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "ddddddddddddddddddddddddddddffffffffffffff"

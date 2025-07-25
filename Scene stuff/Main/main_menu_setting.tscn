@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx6p8bsutpuvg"]
 
-[ext_resource type="Script" uid="uid://dxdci4ysvepk" path="res://main_menu_setting.gd" id="1_klp4d"]
+[ext_resource type="Script" uid="uid://dxdci4ysvepk" path="res://code stuff/Main/main_menu_setting.gd" id="1_klp4d"]
 
 [node name="Main_Settings" type="Control"]
 layout_mode = 3
@@ -104,6 +104,10 @@ text = "DYSLEXIA MODE
 layout_mode = 2
 text = "DRUNK MODE"
 
+[node name="Unlock_All" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "UNLOCK ALL"
+
 [node name="BackButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -111,4 +115,5 @@ text = "Back"
 
 [connection signal="pressed" from="VBoxContainer/Dyslexia_mode" to="." method="_on_dyslexia_mode_pressed"]
 [connection signal="pressed" from="VBoxContainer/Drunk_mode" to="." method="_on_prompt_injection_pressed"]
+[connection signal="pressed" from="VBoxContainer/Unlock_All" to="." method="_on_unlock_all_pressed"]
 [connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

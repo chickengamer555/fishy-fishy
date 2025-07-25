@@ -34,7 +34,7 @@ offset_top = 206.0
 offset_right = 693.0
 offset_bottom = 237.0
 scale = Vector2(6.72, 2)
-text = "Mine feild
+text = "Mine field
 "
 
 [connection signal="pressed" from="Kelp_man_cove" to="." method="_on_kelp_man_pressed"]

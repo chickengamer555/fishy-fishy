@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://3v4j8f6k7rre"]
+[gd_scene load_steps=65 format=3 uid="uid://3v4j8f6k7rre"]
 
 [ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/Charcters/kelp_man.gd" id="1_y08aj"]
 [ext_resource type="Texture2D" uid="uid://b46s7tpgmjd8c" path="res://UI STUFF/Kelp cove/Background_frame004.png" id="2_whl7b"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://d4j1wlm7cox4l" path="res://UI STUFF/Kelp cove/Character text box_frame004.png" id="4_y08aj"]
 [ext_resource type="Texture2D" uid="uid://dtff1t7fb77dl" path="res://UI STUFF/Kelp cove/Name Bar_frame004.png" id="5_hjer1"]
 [ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Kelp cove/Settings_button_frame004.png" id="6_l1km0"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_njf6d"]
 [ext_resource type="Texture2D" uid="uid://c28ohxng6fj5v" path="res://UI STUFF/Kelp cove/Log_frame004.png" id="7_hnsm1"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_l1km0"]
 [ext_resource type="Texture2D" uid="uid://cv0302xkckfcl" path="res://UI STUFF/Kelp cove/Player Text Box_frame004.png" id="7_rh00s"]
@@ -57,7 +58,7 @@ texture = ExtResource("4_y08aj")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
 texture = ExtResource("7_rh00s")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a81c1"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njf6d"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
@@ -161,15 +162,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.5
 offset_top = 19.9
-offset_right = -75.0
-offset_bottom = 85.6
+offset_right = -19.5
+offset_bottom = -20.1
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.07591, 0.642859)
 theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
-theme_override_fonts/normal_font = ExtResource("11_klr56")
-theme_override_font_sizes/normal_font_size = 160
+theme_override_fonts/normal_font = ExtResource("6_njf6d")
+theme_override_font_sizes/normal_font_size = 24
 text = "VvvV"
+scroll_active = false
 script = ExtResource("7_l1km0")
 min_font_size = 16
 
@@ -187,19 +188,19 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
 
 [node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
 layout_mode = 0
-offset_left = 19.9999
+offset_left = 25.9999
 offset_top = 20.0
-offset_right = 347.5
+offset_right = 346.0
 offset_bottom = 334.0
 scale = Vector2(0.855, 0.86)
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
 theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
-theme_override_constants/caret_width = 1
-theme_override_fonts/font = ExtResource("11_klr56")
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
+theme_override_constants/caret_width = 5
+theme_override_fonts/font = ExtResource("6_njf6d")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxTexture_njf6d")
 wrap_mode = 1
 indent_wrapped_lines = true
 
@@ -289,7 +290,7 @@ theme_override_colors/font_color = Color(0.911204, 0.975667, 0.98165, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 2
 theme_override_fonts/font = ExtResource("11_klr56")
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 32
 text = "Conversation History"
 autowrap_mode = 3
 
@@ -338,7 +339,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
-theme_override_fonts/normal_font = ExtResource("11_klr56")
+theme_override_fonts/normal_font = ExtResource("6_njf6d")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "ddddddddddddddddddddddddddddffffffffffffff"

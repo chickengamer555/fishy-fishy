@@ -1,9 +1,10 @@
-[gd_scene load_steps=66 format=3 uid="uid://cir54qpw1itn6"]
+[gd_scene load_steps=67 format=3 uid="uid://cir54qpw1itn6"]
 
 [ext_resource type="Script" uid="uid://drea7tpj065pi" path="res://code stuff/Charcters/squilleta.gd" id="1_uftsj"]
 [ext_resource type="Texture2D" uid="uid://edcxa42qicno" path="res://UI STUFF/Squileta's Squaloon/Background_frame006.png" id="2_uftsj"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_1j01k"]
 [ext_resource type="Texture2D" uid="uid://da82kym2qlgm6" path="res://UI STUFF/Squileta's Squaloon/Character text box_frame006.png" id="5_uftsj"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_1j01k"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="6_n2vuv"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_1mpan"]
 [ext_resource type="Texture2D" uid="uid://dayhv7108sca7" path="res://UI STUFF/Squileta's Squaloon/Player Text Box_frame006.png" id="8_uftsj"]
@@ -165,20 +166,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.5
 offset_top = 19.9
-offset_right = -75.0
-offset_bottom = 85.6
+offset_right = -19.5
+offset_bottom = -20.1
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.07591, 0.642859)
 theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
-theme_override_fonts/normal_font = ExtResource("6_n2vuv")
-theme_override_font_sizes/normal_font_size = 160
-text = "VvvV"
+theme_override_fonts/normal_font = ExtResource("6_1j01k")
+theme_override_font_sizes/normal_font_size = 120
+text = "hi"
+scroll_active = false
 script = ExtResource("7_1mpan")
 min_font_size = 16
-
-[node name="TypingTimer" type="Timer" parent="."]
-wait_time = 0.005
 
 [node name="PlayerInputPanel" type="Panel" parent="."]
 custom_minimum_size = Vector2(32, 31)
@@ -191,18 +189,18 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
 
 [node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
 layout_mode = 0
-offset_left = 19.9999
+offset_left = 25.9999
 offset_top = 20.0
-offset_right = 347.5
+offset_right = 346.0
 offset_bottom = 334.0
 scale = Vector2(0.855, 0.86)
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
 theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
-theme_override_constants/caret_width = 1
-theme_override_fonts/font = ExtResource("6_n2vuv")
-theme_override_font_sizes/font_size = 32
+theme_override_constants/caret_width = 5
+theme_override_fonts/font = ExtResource("6_1j01k")
+theme_override_font_sizes/font_size = 46
 theme_override_styles/normal = SubResource("StyleBoxTexture_a81c1")
 wrap_mode = 1
 indent_wrapped_lines = true
@@ -342,7 +340,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
-theme_override_fonts/normal_font = ExtResource("6_n2vuv")
+theme_override_fonts/normal_font = ExtResource("6_1j01k")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "ddddddddddddddddddddddddddddffffffffffffff"
@@ -366,7 +364,8 @@ position = Vector2(520, 380)
 stream = ExtResource("15_q2flm")
 
 [node name="CharacterTextBoxBorderFrame004" type="Sprite2D" parent="."]
-position = Vector2(-140, 255)
+texture_filter = 1
+position = Vector2(-135, 250)
 scale = Vector2(10, 10)
 texture = ExtResource("18_ndu6r")
 

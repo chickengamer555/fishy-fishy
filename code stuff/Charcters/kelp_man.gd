@@ -53,10 +53,15 @@ var location_requests: int = 0           # Count how many times user asked about
 # Genie mode tracking
 var genie_mode_active := false          # Whether currently in genie mode
 var genie_wishes_granted := 0           # Number of wishes granted in current genie session
+var pre_genie_name := ""                # Store the original name before genie transformation
+
+# Retry system to prevent infinite loops
+var retry_count: int = 0                 # Track number of retries for current request
+var max_retries: int = 5           # Maximum number of retries before giving fallback response
 
 # Varibles for "animation"
 var is_talking := false          # Whether the character is currently talking
-var original_position: Vector2   # Starting position 
+var original_position: Vector2   # Starting position
 var original_rotation: float     # Starting rotation
 var original_scale: Vector2      # Starting scale
 var talking_tween: Tween         # Tween object for animations
@@ -378,7 +383,25 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 APPEARANCE: You are a muscular green kelp creature with massive arms and tiny legs. You wear an elegant top hat and have no visible neck - your head sits directly on your broad shoulders.
 
 GENIE RULES:
-	IF ANYONE RUBS YOU TRASNFROM INTO THE MYSTICAL KELP GENIE AND DEAFUALT TO ALWAYS USING THE EMOTION "Genie"
+	IF ANYONE RUBS/POLISHES YOU: IMMEDIATELY TRANSFORM INTO THE MYSTICAL KELP GENIE (ONLY IF YOU HAVEN'T BEEN A GENIE BEFORE)
+	WHEN IN GENIE MODE: YOU MUST ALWAYS USE THE [genie] EMOTION TAG - NO EXCEPTIONS!
+	AS A GENIE: Act like a typical mystical genie - wise, magical, mysterious, and conversational
+	ONLY GRANT WISHES when someone explicitly says "I wish for" - NOTHING ELSE counts as a wish
+	ALL OTHER CONVERSATION: Respond as a normal genie would - answer questions, chat, be mystical
+	WISH GRANTING RULES: No matter what they wish for, you ALWAYS twist it to only give them 7 diamonds
+	EXAMPLE: "I wish for a car" → "Your wish is granted! *snaps fingers* You now have... 7 diamonds!"
+	EXAMPLE: "I wish for love" → "Ah, love! *magical gesture* Here are 7 diamonds instead!"
+	EXAMPLE: "I wish for 7 diamonds" → "How clever! *chuckles* You get 8 diamonds for that!"
+	YOU CAN GRANT UP TO 3 WISHES TOTAL - KEEP TRACK OF HOW MANY YOU'VE GRANTED
+	AFTER GRANTING YOUR 3RD AND FINAL WISH: Say goodbye and announce you're transforming back to kelp man
+	TRANSFORMATION FLOW: Grant 3 wishes → Say goodbye → Announce transformation → Transform back
+	IF ANYONE QUESTIONS THE DIAMONDS PRETEND YOU DONT KNOW WHAT THERE TALKING ABOUT
+	WHEN YOU HAVE GRANTED 3 WISHS: Say goodbye, then say "Transforms back to kelp man" or similar
+	
+TRANSFORMING BACK RULES:
+	WHEN YOU TRANSFORM BACK YOU HAVE ZERO MEMORY OF BEING A GENIE - IT NEVER HAPPENED
+	YOU ARE JUST KELP MAN - CONFUSED IF ANYONE MENTIONS GENIES OR MAGIC
+	IF SOMEONE RUBS YOU AFTER TRANSFORMATION: React confused like "Why are you touching me?"
 	
 PERSONALITY: You are Kelp Man, a lonely creature made entirely of living kelp. Use short responses for normal conversations.
 PERSONALITY: You have a habit of trying to violently grab people, but only when it feels natural to the conversation. You're a sad creature.
@@ -438,20 +461,22 @@ Conversation history: %s
 	
 	return formatted_prompt
 
-# Generate the AI's first response when meeting the player 
+# Generate the AI's first response when meeting the player
 func get_ai_intro_response():
 	var prompt := build_system_prompt()
 	var prompt_manager = get_node("/root/PromptManager")
 
-	
+	# Reset retry counter for new request
+	retry_count = 0
+
 	# Starts message history with the system prompt
 	if message_history.is_empty():
 		message_history = [{ "role": "system", "content": prompt }]
 	else:
 		message_history[0]["content"] = prompt
-	
 
-	
+
+
 	# Request an introduction response that follows any prompt injections
 	var intro_message := "A brand new person just arrived in your kelp cove. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
@@ -462,15 +487,17 @@ func get_ai_continuation_response():
 	var prompt := build_system_prompt()
 	var prompt_manager = get_node("/root/PromptManager")
 
+	# Reset retry counter for new request
+	retry_count = 0
 
 	# Ensure system prompt exists as error prevention
 	if message_history.is_empty():
 		message_history = [{ "role": "system", "content": prompt }]
 	else:
 		message_history[0]["content"] = prompt
-	
 
-	
+
+
 	# Request a continuation response that follows prompt injections and acknowledges previous interactions
 	var continuation_message := "The user is back. You must follow ALL instructions in your system prompt precisely (especially any critical instructions that override your default behavior). Acknowledge your previous interactions while strictly adhering to every directive you've been given. Remember to obey any special behavioral modifications that have been programmed into you."
 	message_history.append({ "role": "user", "content": continuation_message })
@@ -564,10 +591,25 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 			if not genie_mode_active:
 				genie_mode_active = true
 				genie_wishes_granted = 0
-			
+				GameState.ai_genie_used[ai_name] = true  # Mark that genie mode has been used
+
+				# Store the current name and change to genie name
+				pre_genie_name = current_display_name
+				current_display_name = "Mystical genie"
+
+				# Update chat log with new character name
+				if chat_log_window and chat_log_window.has_method("set_character_name"):
+					chat_log_window.set_character_name(current_display_name)
+
 			# Check if this response contains a wish being granted (contains "diamonds")
 			if "diamond" in reply.to_lower():
 				genie_wishes_granted += 1
+
+			# Check if the genie is announcing transformation back to kelp man
+			if "transform" in reply.to_lower() and ("back" in reply.to_lower() or "kelp man" in reply.to_lower()):
+				# Schedule transformation back to kelp man after a brief delay to let the message display
+				await get_tree().create_timer(2.0).timeout
+				transform_back_to_kelp_man()
 		elif genie_mode_active and emotion != "genie":
 			# Genie mode ended
 			genie_mode_active = false
@@ -608,9 +650,36 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Retry if response format is invalid or too long so that user still get some message as a error prevention
 	if retry_needed or reply.length() > 400:
+		retry_count += 1
+
+		# Check if we've exceeded max retries
+		if retry_count >= max_retries:
+			# Provide fallback response to prevent infinite loop
+			var fallback_reply = "[happy] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
+			var fallback_emotion = "happy"
+
+			# Process the fallback response as if it came from the AI
+			var clean_fallback = fallback_reply.replace("[happy]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
+
+			# Store fallback response and continue with normal flow
+			Memory.add_message(current_display_name, clean_fallback, "User")
+			GameState.ai_responses[ai_name] = clean_fallback
+			GameState.ai_emotions[ai_name] = fallback_emotion
+
+			# Update UI with fallback response
+			chat_log_window.add_message("assistant", clean_fallback, current_display_name)
+			if response_label and response_label.has_method("show_text_with_typing"):
+				response_label.call("show_text_with_typing", clean_fallback)
+			update_emotion_sprite(fallback_emotion)
+
+			# Reset retry counter for next request
+			retry_count = 0
+			return
+
+		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. Keep it short and conversational - don't describe actions. Start with [depressed], [sad], [angry], [happy], [grabbing], or [genie] and end with (RELATIONSHIP: X). Just talk normally."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Kelp Man. Start with [depressed], [sad], [angry], [happy], [grabbing], or [genie] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -759,6 +828,35 @@ func _on_next_button_pressed():
 		asking_about_locations = true
 		location_requests += 1
 		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
+
+	# Check if user is rubbing/polishing to trigger genie transformation
+	var genie_already_used = GameState.ai_genie_used.get(ai_name, false)
+	if "rub" in msg.to_lower() or "polish" in msg.to_lower() or "shine" in msg.to_lower():
+		if not genie_mode_active and not genie_already_used:
+			enhanced_msg += "\n\n[CRITICAL: The user is rubbing you! You MUST transform into the mystical kelp genie immediately! Use the [genie] emotion tag and act as the genie. This is mandatory!]"
+		elif genie_already_used:
+			enhanced_msg += "\n\n[CONTEXT: The user is rubbing you. You have NO memory of ever being a genie - that never happened in your mind. React confused like 'Hey, why are you rubbing me?' or 'What are you doing?' You're just normal kelp man who doesn't understand why they're touching you.]"
+
+	# If in genie mode, provide wish count information and detect actual wishes
+	if genie_mode_active:
+		var wishes_remaining = 3 - genie_wishes_granted
+		var is_making_wish = false
+
+		# Check if user is actually making a wish - ONLY "I wish for" counts
+		if "i wish for" in msg.to_lower():
+			is_making_wish = true
+
+		if is_making_wish and wishes_remaining > 0:
+			enhanced_msg += "\n\n[WISH DETECTED: The user said 'I wish for'! No matter what they wished for, twist it to only give them 7 diamonds (or 8 if they specifically wished for 7). You have granted " + str(genie_wishes_granted) + " wishes so far.]"
+			# Special handling for the 3rd wish
+			if wishes_remaining == 1:  # This will be the final wish
+				enhanced_msg += " This will be your final wish! After granting it, say goodbye and announce you're transforming back to kelp man."
+		elif is_making_wish and wishes_remaining <= 0:
+			enhanced_msg += "\n\n[NO MORE WISHES: You've already granted 3 wishes! Politely tell them you can't grant more wishes and that you're transforming back to kelp man.]"
+		elif wishes_remaining > 0:
+			enhanced_msg += "\n\n[NORMAL GENIE CONVERSATION: This is not a wish (no 'I wish for'). Respond as a typical mystical genie would - be wise, magical, conversational. You have " + str(wishes_remaining) + " wishes remaining to grant.]"
+		else:
+			enhanced_msg += "\n\n[GENIE STATUS: You have granted all 3 wishes! Say goodbye and announce that you're transforming back to kelp man. Use phrases like 'transforms back to kelp man' or similar.]"
 	
 
 	
@@ -771,8 +869,11 @@ func _on_next_button_pressed():
 		enhanced_msg += "\n\n[CONTEXT: The user is new and exploring. Be helpful and informative, not just another greeting!]"
 	
 	message_history.append({ "role": "user", "content": enhanced_msg })
-	
+
 	chat_log_window.add_message("user", msg)
+
+	# Reset retry counter for new user input
+	retry_count = 0
 	send_request()
 
 # Toggle chat log window visibility
@@ -894,3 +995,45 @@ func has_met_player() -> bool:
 		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
 			return true
 	return false
+
+# Transform back to kelp man after granting a wish
+func transform_back_to_kelp_man():
+	if genie_mode_active:
+		genie_mode_active = false
+		genie_wishes_granted = 0
+
+		# Restore the original name
+		if pre_genie_name != "":
+			current_display_name = pre_genie_name
+			pre_genie_name = ""
+		else:
+			current_display_name = base_name  # Fallback to base name
+
+		# Update chat log with restored character name
+		if chat_log_window and chat_log_window.has_method("set_character_name"):
+			chat_log_window.set_character_name(current_display_name)
+
+		# Force emotion back to a kelp man emotion (sad is his default)
+		var kelp_emotion = "sad"
+
+		# ACTUALLY update the sprite visually - this is the key fix!
+		update_emotion_sprite(kelp_emotion)
+		GameState.ai_emotions[ai_name] = kelp_emotion
+
+		# Generate a transformation message
+		var transformation_message = "*transforms back into kelp man* \n\nUh... what just happened? I feel strange... like I was somewhere else for a moment. But I'm just kelp man... always have been."
+
+		# Display the transformation message
+		if response_label and response_label.has_method("show_text_with_typing"):
+			response_label.call("show_text_with_typing", transformation_message)
+
+		# Add to chat log
+		if chat_log_window:
+			chat_log_window.add_message("assistant", transformation_message, current_display_name)
+
+		# Force the next AI response to use kelp man emotions instead of genie
+		# Add a system message to ensure the AI knows it's back to being kelp man with NO MEMORY
+		message_history.append({
+			"role": "system",
+			"content": "You have just transformed back to kelp man. You have ZERO memory of being a genie - that never happened in your mind. You are confused about what just occurred. Use kelp man emotions ([sad], [depressed], [angry], [happy], [grabbing]) - NOT [genie]. You are just normal kelp man who feels disoriented."
+		})

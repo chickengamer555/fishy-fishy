@@ -12,11 +12,11 @@ uniform vec4 tint_color : source_color = vec4(0.4, 0.7, 0.9, 0.04);
 
 void fragment() {
     vec2 uv = SCREEN_UV;
-    
+
     // Very subtle wave distortion
     float wave = sin(uv.y * wave_frequency + TIME * wave_speed) * wave_amplitude;
     uv.x += wave;
-    
+
     vec4 color = textureLod(SCREEN_TEXTURE, uv, 0.0);
 
     // Apply underwater tint

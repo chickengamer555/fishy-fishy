@@ -117,4 +117,4 @@ func _on_mine_feild_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/sea_mine.tscn")
-	MapMemory.set_location("mine feild")
+	MapMemory.set_location("mine field")

@@ -42,6 +42,7 @@ func on_main_menu_pressed():
 	GameState.should_reset_ai = false
 	GameState.ai_responses.clear()
 	GameState.ai_emotions.clear()
+	GameState.ai_genie_used.clear()  # Reset genie mode usage tracking
 	
 	# Reset Memory and clear all character chat logs
 	Memory.shared_memory.clear()

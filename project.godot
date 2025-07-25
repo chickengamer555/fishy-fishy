@@ -14,6 +14,10 @@ config/name="Fishy fishy"
 run/main_scene="uid://c17mkmrioiovk"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
+[audio]
+
+buses/default_bus_layout="res://Sound stuff/default_bus_layout.tres"
+
 [autoload]
 
 Memory="*res://code stuff/Managers/memory.gd"
@@ -34,3 +38,4 @@ window/stretch/aspect="ignore"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_vertices_to_pixel=true
