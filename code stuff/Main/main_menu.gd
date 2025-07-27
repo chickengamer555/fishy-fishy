@@ -28,7 +28,7 @@ func setup_file_dialog() -> void:
 		print("Could not find Documents folder, using default location")
 	
 	add_child(file_dialog)
-
+	print("test")
 func _on_play_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
