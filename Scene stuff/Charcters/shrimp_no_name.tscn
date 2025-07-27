@@ -8,7 +8,6 @@
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="6_hyvnq"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_w3bn6"]
 [ext_resource type="Texture2D" uid="uid://dvlskknj0cgeq" path="res://UI STUFF/Wild South/Player Text Box_frame006.png" id="8_r876m"]
-[ext_resource type="Texture2D" uid="uid://bpckwnlg5s6wt" path="res://UI STUFF/Log_highlighted.png" id="9_vah8i"]
 [ext_resource type="Texture2D" uid="uid://d0o3o8muymm2o" path="res://UI STUFF/Wild South/Log_frame006.png" id="10_vah8i"]
 [ext_resource type="Texture2D" uid="uid://qpviihm0m4lo" path="res://UI STUFF/Wild South/Enter_highlighted_frame006.png" id="11_ajdra"]
 [ext_resource type="Texture2D" uid="uid://uq0ewbjs4txa" path="res://UI STUFF/Wild South/Enter_frame006.png" id="12_vah8i"]
@@ -41,9 +40,7 @@
 [ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="37_kq3wl"]
 [ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="38_mljo3"]
 [ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="39_8wvxs"]
-[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Kelp cove/Settings_button_frame004.png" id="42_lf1et"]
-[ext_resource type="Texture2D" uid="uid://dk8e4qqxxsev7" path="res://UI STUFF/Name_bar.png" id="42_vah8i"]
-[ext_resource type="Texture2D" uid="uid://bosnw2y8k58iy" path="res://UI STUFF/Shrimp_map.png" id="43_3jqnm"]
+[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="42_lf1et"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("4_3jqnm")
@@ -62,8 +59,11 @@ texture = ExtResource("8_r876m")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0s27g"]
+load_path = "res://.godot/imported/Log_highlighted.png-fc3fcdbda5311feda66b78556ec7084e.ctex"
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3jqnm"]
-texture = ExtResource("9_vah8i")
+texture = SubResource("CompressedTexture2D_0s27g")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
 texture = ExtResource("10_vah8i")
@@ -114,10 +114,16 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_r876m"]
+load_path = "res://.godot/imported/Name_bar.png-8965be7eb194d475f0b52b5a07b68e0b.ctex"
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_86uu6"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ajdra"]
+load_path = "res://.godot/imported/Shrimp_map.png-e041faef7822e855c573ab4949598b57.ctex"
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
-texture = ExtResource("43_3jqnm")
+texture = SubResource("CompressedTexture2D_ajdra")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8p2t1"]
 
@@ -498,7 +504,7 @@ vertical_alignment = 1
 [node name="NameBarFrame004" type="Sprite2D" parent="."]
 position = Vector2(50, -200)
 scale = Vector2(10, 10)
-texture = ExtResource("42_vah8i")
+texture = SubResource("CompressedTexture2D_r876m")
 
 [node name="map" type="Button" parent="NameBarFrame004"]
 anchors_preset = 6

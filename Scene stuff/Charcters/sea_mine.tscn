@@ -44,7 +44,7 @@
 [ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="39_3s6lx"]
 [ext_resource type="Texture2D" uid="uid://bwkntsxnkr8p1" path="res://UI STUFF/Squileta's Squaloon/Map_button_frame006.png" id="41_2iiex"]
 [ext_resource type="Texture2D" uid="uid://eq6b2gylhhij" path="res://UI STUFF/Mine Feild/Name Bar_frame006.png" id="42_7ctb0"]
-[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Kelp cove/Settings_button_frame004.png" id="42_av710"]
+[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="42_av710"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("4_trod4")
