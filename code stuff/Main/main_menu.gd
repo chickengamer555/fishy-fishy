@@ -28,12 +28,12 @@ func setup_file_dialog() -> void:
 		print("Could not find Documents folder, using default location")
 	
 	add_child(file_dialog)
-	print("test")
+
 func _on_play_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")
-
+	print("hi")
 func _on_api_pressed() -> void:
 	AudioManager.play_button_click()
 	file_dialog.popup_centered()
