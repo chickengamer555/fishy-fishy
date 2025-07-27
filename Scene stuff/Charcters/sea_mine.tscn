@@ -135,7 +135,7 @@ scale = Vector2(10, 10)
 texture = ExtResource("2_k7aed")
 
 [node name="sea_mine_emotion" parent="." instance=ExtResource("3_1le7v")]
-position = Vector2(-181, 134)
+position = Vector2(-110, 134)
 scale = Vector2(10, 10)
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
