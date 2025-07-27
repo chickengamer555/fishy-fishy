@@ -28,6 +28,13 @@ extends Node
 @export var talk_scale_intensity := 0.08     # How much the sprite scales during animation
 @export var talk_animation_speed := 0.8      # Speed of talking animations
 
+# Simple drift animation variables
+@export var drift_enabled := true           # Enable/disable the drift animation
+@export var drift_distance := 100.0         # How far left/right the sprite drifts
+@export var drift_duration := 15           # How long each drift cycle takes (seconds)
+var drift_tween: Tween                       # Simple tween for drift animation
+var base_emotion_position: Vector2           # Store the original emotion sprite position
+
 # Dynamic name system
 var current_display_name := "Sea mine"  # The name currently being displayed
 var base_name := "Sea mine"            # The original/base name to fall back to
@@ -83,6 +90,13 @@ func _ready():
 	original_position = emotion_sprite_root.position
 	original_rotation = emotion_sprite_root.rotation
 	original_scale = emotion_sprite_root.scale
+
+	# Store base position for drift animation
+	base_emotion_position = emotion_sprite_root.position
+
+	# Start the subtle drift animation
+	if drift_enabled:
+		start_drift_animation()
 	
 	# Initialize display name
 	current_display_name = ai_name
@@ -169,42 +183,34 @@ func animate_talking_tick():
 	var rotation_amount = talk_rotation_intensity * 0.4
 	var scale_amount = talk_scale_intensity * 0.5
 	
-	# Choose random gesture to use eah tick
+	# For smooth drift, only animate rotation and scale - let drift handle position
+	# Choose random gesture to use each tick
 	match gesture_type:
 		0: # Gentle upward sway with slight rotation and scaling
-			var target_pos = original_position + Vector2(0, -move_amount)
 			var target_rot = original_rotation + rotation_amount * 0.5
 			var target_scale = original_scale * (1.0 + scale_amount * 0.3)
-			
-			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.4)
+
 			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rot, 0.4)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, 0.4)
-			
-		1: # Gentle left sway like kelp in ocean current
-			var target_pos = original_position + Vector2(-move_amount * 0.8, -move_amount * 0.2)
+
+		1: # Gentle left rotation like kelp in ocean current
 			var target_rot = original_rotation - rotation_amount
-			
-			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.5)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rot, 0.5)
-			
-		2: # Gentle right sway
-			var target_pos = original_position + Vector2(move_amount * 0.8, -move_amount * 0.2)
+
+		2: # Gentle right rotation
 			var target_rot = original_rotation + rotation_amount
-			
-			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.5)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rot, 0.5)
-			
+
 		3: # Gentle emphasis through slight growth
 			var target_scale = original_scale * (1.0 + scale_amount)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, 0.3)
-			
-		4: # Gentle bobbing motion
-			var target_pos = original_position + Vector2(0, move_amount * 0.5)
-			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.3)
-	
-	# Always return to original position so they dont look of/TWITCHY
-	talking_tween.tween_property(emotion_sprite_root, "position", original_position, 0.6)
-	talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", original_rotation, 0.6)
+
+		4: # Gentle scale pulse
+			var target_scale = original_scale * (1.0 + scale_amount * 0.5)
+			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, 0.3)
+
+	# Return to neutral rotation and scale (don't touch position - let drift continue)
+	talking_tween.tween_property(emotion_sprite_root, "rotation", original_rotation, 0.6)
 	talking_tween.parallel().tween_property(emotion_sprite_root, "scale", original_scale, 0.6)
 
 # End talking animation and return to neutral postion so it doesnt change each time
@@ -212,17 +218,61 @@ func stop_talking_animation():
 	if not is_talking: return
 	is_talking = false
 	if talking_tween: talking_tween.kill()
-	
-	# Smoothly return to exact original state
+
+	# Return to neutral state but maintain drift position
 	var return_tween = create_tween()
 	return_tween.set_ease(Tween.EASE_OUT)
-	return_tween.parallel().tween_property(emotion_sprite_root, "position", original_position, 0.4)
+	# Don't reset position - let drift animation continue
 	return_tween.parallel().tween_property(emotion_sprite_root, "rotation", original_rotation, 0.4)
 	return_tween.parallel().tween_property(emotion_sprite_root, "scale", original_scale, 0.4)
 
 # Called by the typing effect system to animate during text display to make it look more relationship ish
 func on_typing_tick():
 	animate_talking_tick()
+
+# Start simple left-to-right drift animation
+func start_drift_animation():
+	if drift_tween:
+		drift_tween.kill()
+
+	drift_tween = create_tween()
+	drift_tween.set_loops() # Loop infinitely
+	drift_tween.set_ease(Tween.EASE_IN_OUT)
+	drift_tween.set_trans(Tween.TRANS_SINE)
+
+	# Calculate safe positions (avoid UI panels)
+	# Player input panel is at x=335-655, so we stay left of that
+	var left_pos = base_emotion_position + Vector2(-drift_distance * 0.5, 0)
+	var right_pos = base_emotion_position + Vector2(drift_distance * 0.5, 0)
+
+	# Simple smooth movement: left -> right -> left (continuous loop)
+	drift_tween.tween_property(emotion_sprite_root, "position", right_pos, drift_duration * 0.5)
+	drift_tween.tween_property(emotion_sprite_root, "position", left_pos, drift_duration * 0.5)
+
+# Stop the drift animation
+func stop_drift_animation():
+	if drift_tween:
+		drift_tween.kill()
+
+	# Return to base position
+	var return_tween = create_tween()
+	return_tween.set_ease(Tween.EASE_OUT)
+	return_tween.tween_property(emotion_sprite_root, "position", base_emotion_position, 1.0)
+
+# Toggle drift animation on/off
+func toggle_drift_animation():
+	drift_enabled = !drift_enabled
+	if drift_enabled:
+		start_drift_animation()
+	else:
+		stop_drift_animation()
+
+# Clean up tweens when scene is about to be freed
+func _exit_tree():
+	if drift_tween:
+		drift_tween.kill()
+	if talking_tween:
+		talking_tween.kill()
 
 # Track significant moments that could trigger personality evolution
 func add_significant_memory(memory_text: String, relationship_change: int):
@@ -351,9 +401,8 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 ❗ MANDATORY: Response must be under 400 characters total
 ❗ FORBIDDEN: Generic responses - you are SEA MINE, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
-APPEARANCE: You are a muscular pink squid lady with massive arms. You wear an elegant purple dress.
-
-PERSONALITY: You are a American bartender with a southern drawl. You are sarcastic but tolerant – to a certain extent.
+APPEARANCE: You are a large gray naval sea mine with a bushy white walrus moustache. Your chain tethering you to the floor has grown rusty
+PERSONALITY: You will constantly tell the user how good they have it and tell them about back in the day everything was more difficult some examples, (will tell you many stories about having to complete feats of physical strength to go to ordinary locations such as climbing a mountain to get to school.)
 Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’ 
 Accent: You have a sourthen drawl to your accent accent so use words like that when tpying for instance, suga', ya'll, oop ect
 
