@@ -66,7 +66,7 @@ func update_unlock_all_button_state() -> void:
 		return
 	
 	# Check if all areas are currently unlocked
-	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field"]
+	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap"]
 	var all_unlocked = true
 	
 	for area in all_areas:
@@ -84,7 +84,7 @@ func update_unlock_all_button_state() -> void:
 func _on_unlock_all_pressed() -> void:
 	AudioManager.play_switch_sound()
 	
-	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field"]
+	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap"]
 	var all_unlocked = true
 	
 	# Check current state

@@ -37,7 +37,17 @@ scale = Vector2(6.72, 2)
 text = "Mine field
 "
 
+[node name="trash_heap" type="Button" parent="."]
+offset_left = 136.0
+offset_top = 472.0
+offset_right = 257.0
+offset_bottom = 503.0
+scale = Vector2(2.8, 3.22857)
+text = "Trash heap
+"
+
 [connection signal="pressed" from="Kelp_man_cove" to="." method="_on_kelp_man_pressed"]
 [connection signal="pressed" from="sqauloon" to="." method="_on_bar_pressed"]
 [connection signal="pressed" from="wild_south" to="." method="_on_wild_south_pressed"]
 [connection signal="pressed" from="mine_field" to="." method="_on_mine_feild_pressed"]
+[connection signal="pressed" from="trash_heap" to="." method="_on_trash_heap_pressed"]

@@ -6,11 +6,12 @@ extends Node
 @onready var response_label = $AIResponsePanel/RichTextLabel
 @onready var emotion_sprite_root = $sea_mine_emotion
 @onready var emotion_sprites = {
-	"depressed": $sea_mine_emotion,
-	"sad": $sea_mine_emotion,
-	"angry": $sea_mine_emotion,
-	"grabbing": $sea_mine_emotion,
-	"happy": $sea_mine_emotion,
+	"neutral": $sea_mine_emotion/Neutral,
+	"happy": $sea_mine_emotion/Happy,
+	"disgruntled": $sea_mine_emotion/Disgruntled,
+	"pissed": $sea_mine_emotion/Pissed,
+	"warning": $sea_mine_emotion/Warning,
+	"exploding": $sea_mine_emotion/Exploding,
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -18,6 +19,7 @@ extends Node
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_complete_button = $DayCompleteButton
+@onready var leave_button = $LeaveButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
 @export var ai_name := "Sea mine"
@@ -43,9 +45,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var sea_mine_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "mine field"]  # Areas this AI knows about
+var known_areas := ["squaloon", "mine field", "trash heap"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Squileta"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Squileta", "Crabcade"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -106,6 +108,11 @@ func _ready():
 	if chat_log_window and chat_log_window.has_method("set_character_name"):
 		chat_log_window.set_character_name(current_display_name)
 
+	# Initialize leave button based on persistent state
+	# Check if the leave button should be visible based on persistent state
+	var should_show_leave = GameState.ai_get_out_states.get(ai_name, false)
+	leave_button.visible = should_show_leave
+
 	# Initialize heart sprites dictionary
 	for i in range(-10, 11):  # -10 to +10 inclusive (21 hearts total)
 		var heart_name = "Heart " + str(i)  # Match actual node names: "Heart -10", "Heart 0", etc.
@@ -139,15 +146,18 @@ func _ready():
 		if not GameState.ai_responses.has(ai_name):
 			GameState.ai_responses[ai_name] = ""
 		if not GameState.ai_emotions.has(ai_name):
-			GameState.ai_emotions[ai_name] = "happy"
+			GameState.ai_emotions[ai_name] = "disgruntled"
 		GameState.ai_responses[ai_name] = ""
-		GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_emotions[ai_name] = "disgruntled"
+		# Clear leave button state at start of new day
+		GameState.ai_get_out_states[ai_name] = false
+		leave_button.visible = false
 	
 	# Initialize character-specific response storage if it doesn't exist
 	if not GameState.ai_responses.has(ai_name):
 		GameState.ai_responses[ai_name] = ""
 	if not GameState.ai_emotions.has(ai_name):
-		GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_emotions[ai_name] = "disgruntled"
 	
 	# Display appropriate response based on conversation history
 	if GameState.ai_responses[ai_name] != "":
@@ -396,19 +406,27 @@ Only evolve when you genuinely feel changed by the interactions. You don't need 
 	# Define the AI's personality, rules, and required response format
 	var sea_mine_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [depressed], [sad], [angry], [happy], or [grabbing]
+❗ MANDATORY: EVERY response MUST start with [neutral], [happy], [disgruntled], [pissed], [warning], or [exploding]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
 ❗ FORBIDDEN: Generic responses - you are SEA MINE, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
-APPEARANCE: You are a large gray naval sea mine with a bushy white walrus moustache. Your chain tethering you to the floor has grown rusty
+APPEARANCE: You are a large steel gray naval sea mine with a bushy light grey walrus moustache and bushy light gray eyebrows. Your chain tethering you to the floor has grown rusty as well as the bolts holding your mustachase and eyebrows on
 PERSONALITY: You will constantly tell the user how good they have it and tell them about back in the day everything was more difficult some examples, (will tell you many stories about having to complete feats of physical strength to go to ordinary locations such as climbing a mountain to get to school.) 
-PERSONAILTY: Your a  big believer in hard work although you can hardly do anything any more (your chain is all rusted.) 
+PERSONAILTY: Your a  big believer in hard work although you can hardly do anything any more (your chain is all rusted.). You do have severe anger issues. Act bassicly like a grumpy old man.
+PERSONAILTY: You HATE video games and you HATE crabcade who recently fell into the trash heap near your home the mine field.
 
-KICKING OUT RULES:
-If someone is acting unrully in your bar and causing a ruckus you have to kick them out 
-WHen you kick someone out you must say at some point "GET OUT"
-The user will be back the next day so stay upset at them
+
+ANGER ESCALATION RULES - ESCALATE QUICKLY WHEN PROVOKED:
+🔥 ANGER LEVEL 1 - [disgruntled]: Default grumpy state. If user continues to annoy you, escalate to [pissed] in the SAME response or next response.
+🔥 ANGER LEVEL 2 - [pissed]: Be very hostile and aggressive. If user keeps pushing you, escalate to [warning] quickly - don't stay pissed for long!
+🔥 ANGER LEVEL 3 - [warning]: Warn about exploding but DON'T say "KABOOM" or "BOOM" - use phrases like "You're pushing me too far!" or "I'm about to lose it!" If user continues being annoying, escalate to [exploding] after 1-2 warning responses.
+🔥 ANGER LEVEL 4 - [exploding]: Say "KABOOOOOOM!" followed by "Come back tomorrow to see me again!" This triggers the leave button.
+
+ESCALATION TRIGGERS: Move up anger levels when user:
+• Insults you or is rude • Keeps bothering you after you're already angry • Mentions things you hate (video games, Crabcade) • Doesn't listen to your warnings • Is persistently annoying
+
+BE REACTIVE - Don't stay stuck in one anger level if the user keeps provoking you!
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -426,12 +444,21 @@ BEHAVIOR RULES:
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
-• If you want to describe your physical actions you must use simple actions in astrix like so *squilleta pours a drink*. Never describe the action just do it for instace not allow *Squilleta pours the drink elgantly*
+• If you want to describe your physical actions you must use simple actions in astrix like so *Sea mine floats*. Never describe the action just do it for instace not allow *Sea mine floats elgantly*
 • Keep messages short and conversational, not long speeches
 
+TITLE/NICKNAME HANDLING:
+• When the user calls you by a title or nickname (like "king", "warrior", "champion", "old timer", etc.), you MUST acknowledge it AND adopt the title
+• MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
+• Examples: 
+  - If called "king": "King?! Ha! Back in my day kings had to fight through trenches of barbed wire just to get their crown! {NAME: king}"
+  - If called "great warrior": "Great warrior? Ha! Back in my day we earned our titles through real battles! {NAME: great warrior}"
+• The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
+• Even if you're grumpy about it, still adopt the title - complain while accepting it
+
 RESPONSE FORMAT EXAMPLE:
-[happy]
-Well aint you somthin suga' how bout i serve ya a drink.
+[Piseed]
+STOP YOUR YAPPING all it is these days is NOISE NOISE NOISE ive already had to deal with that crabcade in the trash heap keeping me up with all his beeping and booping
 (RELATIONSHIP: 3)
 
 CURRENT CONTEXT:
@@ -482,7 +509,7 @@ func get_ai_intro_response():
 
 
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A brand new person just arrived in your sqauloon. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
+	var intro_message := "A brand new person just arrived in your mine field. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
@@ -579,11 +606,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	# Extract the AI's response text
 	var reply = json["choices"][0]["message"]["content"]
 	var retry_needed := false
-	var emotion := "sad"
+	var emotion := "disgruntled"
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|)\\]")
+	emotion_regex.compile("\\[(neutral|happy|disgruntled|pissed|warning|exploding|)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
@@ -630,11 +657,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Check if we've exceeded max retries
 		if retry_count >= max_retries:
 			# Provide fallback response to prevent infinite loop
-			var fallback_reply = "[sad] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
-			var fallback_emotion = "sad"
+			var fallback_reply = "[disgruntled] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
+			var fallback_emotion = "disgruntled"
 
 			# Process the fallback response as if it came from the AI
-			var clean_fallback = fallback_reply.replace("[sad]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
+			var clean_fallback = fallback_reply.replace("[disgruntled]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
 
 			# Store fallback response and continue with normal flow
 			Memory.add_message(current_display_name, clean_fallback, "User")
@@ -654,7 +681,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as SEA MINE. Start with [depressed], [sad], [angry], [happy], or [grabbing] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as SEA MINE. Start with [neutral], [happy], [disgruntled], [pissed], [warning], or [exploding] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -677,6 +704,12 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	Memory.add_message(current_display_name, clean_reply, "User")
 	GameState.ai_responses[ai_name] = clean_reply
 	GameState.ai_emotions[ai_name] = emotion
+	
+	# Check if AI said "KABOOOOOOM" AND is in exploding emotion state - show the leave button
+	if ("KABOOOOOOM" in clean_reply.to_upper() or "KABOOM" in clean_reply.to_upper()) and emotion == "exploding":
+		leave_button.visible = true
+		# Save the leave button state persistently
+		GameState.ai_get_out_states[ai_name] = true
 	
 	# Update UI chatlog with the responses dynamicly
 	chat_log_window.add_message("assistant", clean_reply, current_display_name)
@@ -850,6 +883,7 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
+	# Leave button stays visible until next day starts
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
@@ -924,12 +958,17 @@ func _on_settings_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.2).timeout
 	# Store current scene before transitioning
-	var settings_script = load("res://setting.gd")
+	var settings_script = load("res://code stuff/Main/setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path
-	get_tree().change_scene_to_file("res://setting.tscn")
+	get_tree().change_scene_to_file("res://Scene stuff/Main/setting.tscn")
 
 func has_met_player() -> bool:
 	for entry in Memory.shared_memory:
 		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
 			return true
 	return false
+
+
+func _on_leave_button_pressed() -> void:
+	AudioManager.play_button_click()
+	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")

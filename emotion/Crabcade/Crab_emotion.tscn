@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://ddlmhpccrbvw3"]
+
+[ext_resource type="Texture2D" uid="uid://ng1u702ok1m5" path="res://emotion/Crabcade/Crabcade neutral.png" id="1_421t1"]
+[ext_resource type="Texture2D" uid="uid://f130lhwgty04" path="res://emotion/Crabcade/Crabcade sad.png" id="2_421t1"]
+[ext_resource type="Texture2D" uid="uid://dicf3gkd5e4vg" path="res://emotion/Crabcade/Crabcade angry.png" id="3_421t1"]
+[ext_resource type="Texture2D" uid="uid://b5ycjm6aclpxo" path="res://emotion/Crabcade/Crabcade ERROR.png" id="4_5xrsn"]
+[ext_resource type="Texture2D" uid="uid://dusg40v6xo3bx" path="res://emotion/Crabcade/Crabcade glitching.png" id="4_421t1"]
+[ext_resource type="Texture2D" uid="uid://b5otcr8uhtkvo" path="res://emotion/Crabcade/Crabcade happy.png" id="5_421t1"]
+
+[node name="crab_emotion" type="Node2D"]
+
+[node name="Netural" type="Sprite2D" parent="."]
+position = Vector2(1, 0)
+texture = ExtResource("1_421t1")
+
+[node name="Sad" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0.500002, 7.62939e-06)
+texture = ExtResource("2_421t1")
+
+[node name="Angry" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, 0.5)
+texture = ExtResource("3_421t1")
+
+[node name="Glitching" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0.999996, 0.5)
+texture = ExtResource("4_421t1")
+
+[node name="Happy" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0.999996, 1.5)
+texture = ExtResource("5_421t1")
+
+[node name="Error" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, 0)
+texture = ExtResource("4_5xrsn")

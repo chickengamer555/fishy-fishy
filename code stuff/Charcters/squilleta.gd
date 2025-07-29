@@ -6,11 +6,11 @@ extends Node
 @onready var response_label = $AIResponsePanel/RichTextLabel
 @onready var emotion_sprite_root = $squileta_emotion
 @onready var emotion_sprites = {
-	"depressed": $squileta_emotion/Depressed,
+	"neutral": $squileta_emotion/Netural,
 	"sad": $squileta_emotion/Sad,
 	"angry": $squileta_emotion/Angry,
-	"grabbing": $squileta_emotion/Grabbing,
 	"happy": $squileta_emotion/Happy,
+	"pouring": $"squileta_emotion/Pouring drink",
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -18,6 +18,7 @@ extends Node
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_complete_button = $DayCompleteButton
+@onready var get_out_button = $GetOutButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
 @export var ai_name := "Squileta"
@@ -36,9 +37,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var squileta_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field"]  # Areas this AI knows about
+var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Kelp man", "The shrimp with no name", "Sea mine"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Kelp man", "The shrimp with no name", "Sea mine", "Crabcade"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -99,6 +100,11 @@ func _ready():
 		if heart_node:
 			heart_sprites[i] = heart_node
 
+	# Initialize get out button based on persistent state
+	# Check if the get out button should be visible based on persistent state
+	var should_show_get_out = GameState.ai_get_out_states.get(ai_name, false)
+	get_out_button.visible = should_show_get_out
+
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
 	squileta_total_score = GameState.ai_scores.get(ai_name, 0)
@@ -154,7 +160,7 @@ func start_talking_animation():
 # Create a single frame of talking animation with random movements to make it seem like there moving
 func animate_talking_tick():
 	if not is_talking: return
-	
+
 	# Stop any existing animation to prevent conflicts
 	if talking_tween: talking_tween.kill()
 	
@@ -212,7 +218,7 @@ func stop_talking_animation():
 	if not is_talking: return
 	is_talking = false
 	if talking_tween: talking_tween.kill()
-	
+
 	# Smoothly return to exact original state
 	var return_tween = create_tween()
 	return_tween.set_ease(Tween.EASE_OUT)
@@ -346,15 +352,15 @@ Only evolve when you genuinely feel changed by the interactions. You don't need 
 	# Define the AI's personality, rules, and required response format
 	var squiletta_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [depressed], [sad], [angry], [happy], or [grabbing]
+❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [pouring]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
 ❗ FORBIDDEN: Generic responses - you are SQUILLETA, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
-APPEARANCE: You are a muscular pink squid lady with massive arms. You wear an elegant purple dress.
+APPEARANCE: You are a bar tender with a white shirt and tie, your squid head is on top with tentacles sprawling across your shirt. Your squid colors are purple and pink. You have diamond earings but if the user asks say you strangley dont know where you got them
 
 PERSONALITY: You are a American bartender with a southern drawl. You are sarcastic but tolerant – to a certain extent.
-Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’ 
+Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’. Bring it uo when it seems relvant 
 Accent: You have a sourthen drawl to your accent accent so use words like that when tpying for instance, suga', ya'll, oop ect
 
 KICKING OUT RULES:
@@ -379,7 +385,17 @@ BEHAVIOR RULES:
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
 • If you want to describe your physical actions you must use simple actions in astrix like so *squilleta pours a drink*. Never describe the action just do it for instace not allow *Squilleta pours the drink elgantly*
+• POURING EMOTION: Use [pouring] when you're actively serving drinks, being hospitable, or taking care of customers in your bartender role
 • Keep messages short and conversational, not long speeches
+
+TITLE/NICKNAME HANDLING:
+• When the user calls you by a title or nickname (like "queen", "warrior", "champion", "bartender extraordinaire", etc.), you MUST acknowledge it AND adopt the title
+• MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
+• Examples: 
+  - If called "queen": "Well ain't that somethin', callin' me queen! I like the sound of that, suga'! {NAME: queen}"
+  - If called "great warrior": "Well ain't you sweet, callin' me a great warrior, suga'! {NAME: great warrior}"
+• The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
+• Use your sarcastic but charming personality - embrace titles with southern flair
 
 RESPONSE FORMAT EXAMPLE:
 [happy]
@@ -501,20 +517,23 @@ func send_request():
 			trimmed_history.append(msg)
 
 	# Make API request to OpenAI
-	http_request.request(
-		"https://api.openai.com/v1/chat/completions",
-		[
-			"Content-Type: application/json",
-			"Authorization: Bearer " + ApiManager.get_api_key()
-		],
-		HTTPClient.METHOD_POST,
-		JSON.stringify({
-			"model": MODEL,
-			"messages": trimmed_history,
-			"max_tokens": ai_reply_token_budget,
-			"temperature": 0.8
-		})
-	)
+	if http_request:
+		http_request.request(
+			"https://api.openai.com/v1/chat/completions",
+			[
+				"Content-Type: application/json",
+				"Authorization: Bearer " + ApiManager.get_api_key()
+			],
+			HTTPClient.METHOD_POST,
+			JSON.stringify({
+				"model": MODEL,
+				"messages": trimmed_history,
+				"max_tokens": ai_reply_token_budget,
+				"temperature": 0.8
+			})
+		)
+	else:
+		push_error("HTTPRequest node not found! Cannot make API request.")
 
 # Process the AI response when HTTP request completes
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
@@ -522,10 +541,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	var json_text = body.get_string_from_utf8()
 	var json = JSON.parse_string(json_text)
 	if typeof(json) != TYPE_DICTIONARY or !json.has("choices"):
-		response_label.text = "Error: Invalid AI response."
-		# Stop any ongoing typing to prevent loops
-		if response_label.has_method("stop_typing"):
-			response_label.stop_typing()
+		if response_label:
+			response_label.text = "Error: Invalid AI response."
+			# Stop any ongoing typing to prevent loops
+			if response_label.has_method("stop_typing"):
+				response_label.stop_typing()
 		return
 
 	# Extract the AI's response text
@@ -535,7 +555,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(depressed|sad|angry|happy|grabbing|)\\]")
+	emotion_regex.compile("\\[(neutral|sad|angry|happy|pouring)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
@@ -594,7 +614,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 			GameState.ai_emotions[ai_name] = fallback_emotion
 
 			# Update UI with fallback response
-			chat_log_window.add_message("assistant", clean_fallback, current_display_name)
+			if chat_log_window:
+				chat_log_window.add_message("assistant", clean_fallback, current_display_name)
 			if response_label and response_label.has_method("show_text_with_typing"):
 				response_label.call("show_text_with_typing", clean_fallback)
 			update_emotion_sprite(fallback_emotion)
@@ -606,7 +627,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Squileta. Start with [depressed], [sad], [angry], [happy], or [grabbing] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Squileta. Start with [neutral], [sad], [angry], [happy], or [pouring] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -629,9 +650,16 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	Memory.add_message(current_display_name, clean_reply, "User")
 	GameState.ai_responses[ai_name] = clean_reply
 	GameState.ai_emotions[ai_name] = emotion
-	
+
+	# Check if AI said "GET OUT" and show the get out button
+	if "GET OUT" in clean_reply.to_upper():
+		get_out_button.visible = true
+		# Save the get out button state persistently
+		GameState.ai_get_out_states[ai_name] = true
+
 	# Update UI chatlog with the responses dynamicly
-	chat_log_window.add_message("assistant", clean_reply, current_display_name)
+	if chat_log_window:
+		chat_log_window.add_message("assistant", clean_reply, current_display_name)
 	if response_label and response_label.has_method("show_text_with_typing"):
 		response_label.call("show_text_with_typing", clean_reply)
 	update_emotion_sprite(emotion)
@@ -642,7 +670,7 @@ func update_emotion_sprite(emotion: String):
 	# Hide all emotion sprites
 	for sprite in emotion_sprites.values():
 		sprite.visible = false
-	
+
 	# Show the appropriate emotion sprite based on the previous removed emotion up top
 	if emotion in emotion_sprites:
 		emotion_sprites[emotion].visible = true
@@ -761,7 +789,8 @@ func _on_next_button_pressed():
 	
 	message_history.append({ "role": "user", "content": enhanced_msg })
 
-	chat_log_window.add_message("user", msg)
+	if chat_log_window:
+		chat_log_window.add_message("user", msg)
 
 	# Reset retry counter for new user input
 	retry_count = 0
@@ -770,9 +799,10 @@ func _on_next_button_pressed():
 # Toggle chat log window visibility
 func _on_chat_log_pressed():
 	AudioManager.play_button_click()
-	chat_log_window.visible = !chat_log_window.visible
-	if chat_log_window.visible:
-		chat_log_window.show_chat_log()
+	if chat_log_window:
+		chat_log_window.visible = !chat_log_window.visible
+		if chat_log_window.visible:
+			chat_log_window.show_chat_log()
 
 # Update the day and action counter display
 func update_day_state():
@@ -802,11 +832,12 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
+	get_out_button.visible = false  # Hide get out button when day ends
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
 	AudioManager.play_button_click()
-	day_complete_button.visible = false	
+	day_complete_button.visible = false
 	GameState.transition_to_next_day()
 
 # Display a previously stored AI response without making new API call
@@ -820,10 +851,6 @@ func display_stored_response():
 
 # Configure player input field to prevent scrolling and limit text
 func setup_player_input():
-	if input_field == null:
-		# Try to get the node manually
-		var manual_input = get_node_or_null("PlayerInputPanel/PlayerInput")
-		return
 	
 	# Configure TextEdit for multi-line input and Enter/Shift+Enter behavior
 	# Enter: Send message, Shift+Enter: New line
@@ -876,12 +903,17 @@ func _on_settings_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.2).timeout
 	# Store current scene before transitioning
-	var settings_script = load("res://setting.gd")
+	var settings_script = load("res://code stuff/Main/setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path
-	get_tree().change_scene_to_file("res://setting.tscn")
+	get_tree().change_scene_to_file("res://Scene stuff/Main/setting.tscn")
 
 func has_met_player() -> bool:
 	for entry in Memory.shared_memory:
 		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
 			return true
 	return false
+
+
+func _on_get_out_button_pressed() -> void:
+	AudioManager.play_button_click()
+	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")

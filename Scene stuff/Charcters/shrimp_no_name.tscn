@@ -60,7 +60,6 @@ texture = ExtResource("8_r876m")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0s27g"]
-load_path = "res://.godot/imported/Log_highlighted.png-fc3fcdbda5311feda66b78556ec7084e.ctex"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3jqnm"]
 texture = SubResource("CompressedTexture2D_0s27g")
@@ -115,12 +114,10 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_r876m"]
-load_path = "res://.godot/imported/Name_bar.png-8965be7eb194d475f0b52b5a07b68e0b.ctex"
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_86uu6"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ajdra"]
-load_path = "res://.godot/imported/Shrimp_map.png-e041faef7822e855c573ab4949598b57.ctex"
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
 texture = SubResource("CompressedTexture2D_ajdra")

@@ -12,6 +12,7 @@ var should_reset_ai := false
 var ai_responses := {}  # Character-specific last responses
 var ai_emotions := {}   # Character-specific last emotions
 var ai_genie_used := {}  # Character-specific genie mode usage tracking
+var ai_get_out_states := {}  # Character-specific get out button visibility states
 
 func use_action():
 	if final_turn_triggered:

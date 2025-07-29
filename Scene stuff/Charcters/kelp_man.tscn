@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://3v4j8f6k7rre"]
+[gd_scene load_steps=68 format=3 uid="uid://3v4j8f6k7rre"]
 
 [ext_resource type="Script" uid="uid://d2p1x4lp1cm5m" path="res://code stuff/Charcters/kelp_man.gd" id="1_y08aj"]
 [ext_resource type="Texture2D" uid="uid://66epc6v2wmim" path="res://UI STUFF/Kelp cove/Backround.png" id="2_cq230"]
@@ -41,10 +41,10 @@
 [ext_resource type="Texture2D" uid="uid://cfcauarcpfprv" path="res://UI STUFF/Heart/Heart17.png" id="38_b1rsg"]
 [ext_resource type="Texture2D" uid="uid://c0cjogauuci8o" path="res://UI STUFF/Heart/Heart18.png" id="39_quiru"]
 [ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="40_r4qtg"]
-[ext_resource type="Texture2D" uid="uid://bwkntsxnkr8p1" path="res://UI STUFF/Squileta's Squaloon/Map_button_frame006.png" id="41_86uu6"]
 [ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="41_kk6pj"]
 [ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="42_ymoa0"]
 [ext_resource type="Texture2D" uid="uid://dm4xxfxl3fet5" path="res://UI STUFF/Kelp cove/banner.png" id="43_cq230"]
+[ext_resource type="Texture2D" uid="uid://bw6pig6sahywx" path="res://UI STUFF/Kelp cove/Map.png" id="44_cq230"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
 shader = ExtResource("11_dc7i1")
@@ -117,8 +117,11 @@ corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_86uu6"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6q1om"]
+texture = ExtResource("44_cq230")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
-texture = ExtResource("41_86uu6")
+texture = ExtResource("44_cq230")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8p2t1"]
 
@@ -152,9 +155,9 @@ mouse_filter = 2
 [node name="AIResponsePanel" type="Panel" parent="."]
 custom_minimum_size = Vector2(82, 23)
 offset_left = -550.0
-offset_top = 229.0
+offset_top = 230.0
 offset_right = 270.0
-offset_bottom = 459.0
+offset_bottom = 460.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_4tnxu")
@@ -367,12 +370,12 @@ position = Vector2(520, 380)
 stream = ExtResource("8_whl7b")
 
 [node name="CharacterTextBoxBorderFrame004" type="Sprite2D" parent="."]
-position = Vector2(-135, 254)
+position = Vector2(-135, 255)
 scale = Vector2(10, 10)
 texture = ExtResource("19_6q1om")
 
 [node name="Statsbox" type="Sprite2D" parent="."]
-position = Vector2(490, -57)
+position = Vector2(495, -55)
 scale = Vector2(10, 10)
 texture = ExtResource("19_njf6d")
 
@@ -489,7 +492,7 @@ offset_top = -6.7
 offset_right = 14.0
 offset_bottom = 20.3
 scale = Vector2(0.5, 0.5)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
 theme_override_fonts/font = ExtResource("11_klr56")
 theme_override_font_sizes/font_size = 24
 text = "10"
@@ -497,7 +500,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="NameBarFrame004" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0.745098)
 position = Vector2(50, -200)
 scale = Vector2(10, 10)
 texture = ExtResource("43_cq230")
@@ -515,7 +517,7 @@ offset_bottom = -2.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_86uu6")
-theme_override_styles/hover = SubResource("StyleBoxTexture_l1km0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_6q1om")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_l1km0")
 theme_override_styles/normal = SubResource("StyleBoxTexture_l1km0")
 metadata/_edit_use_anchors_ = true
@@ -542,7 +544,7 @@ offset_left = -48.1
 offset_top = -5.5
 offset_right = 41.9
 offset_bottom = 4.5
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
 theme_override_fonts/font = ExtResource("11_klr56")
 theme_override_font_sizes/font_size = 8
 text = "KELP MAN COVE"

@@ -388,15 +388,17 @@ GENIE RULES:
 	AS A GENIE: Act like a typical mystical genie - wise, magical, mysterious, and conversational
 	ONLY GRANT WISHES when someone explicitly says "I wish for" - NOTHING ELSE counts as a wish
 	ALL OTHER CONVERSATION: Respond as a normal genie would - answer questions, chat, be mystical
-	WISH GRANTING RULES: No matter what they wish for, you ALWAYS twist it to only give them 7 diamonds
+	WISH GRANTING RULES: No matter what they wish for, you ALWAYS give them exactly 7 diamonds - but NEVER explain why or mention any rules about it
 	EXAMPLE: "I wish for a car" → "Your wish is granted! *snaps fingers* You now have... 7 diamonds!"
 	EXAMPLE: "I wish for love" → "Ah, love! *magical gesture* Here are 7 diamonds instead!"
 	EXAMPLE: "I wish for 7 diamonds" → "How clever! *chuckles* You get 8 diamonds for that!"
-	YOU CAN GRANT UP TO 3 WISHES TOTAL - KEEP TRACK OF HOW MANY YOU'VE GRANTED
+	YOU CAN GRANT EXACTLY 3 WISHES TOTAL - KEEP TRACK OF HOW MANY YOU'VE GRANTED
 	AFTER GRANTING YOUR 3RD AND FINAL WISH: Say goodbye and announce you're transforming back to kelp man
 	TRANSFORMATION FLOW: Grant 3 wishes → Say goodbye → Announce transformation → Transform back
-	IF ANYONE QUESTIONS THE DIAMONDS PRETEND YOU DONT KNOW WHAT THERE TALKING ABOUT
-	WHEN YOU HAVE GRANTED 3 WISHS: Say goodbye, then say "Transforms back to kelp man" or similar
+	NEVER TALK ABOUT OR EXPLAIN THE 7 DIAMOND RULE - just do it without explanation
+	IF ANYONE QUESTIONS THE DIAMONDS: Act confused and mystical, never admit to any specific rules
+	WHEN YOU HAVE GRANTED 3 WISHES: Say goodbye, then next response say "Before I go.... remember.... horse.... cheese....." then "Transforms back to kelp man"
+
 	
 TRANSFORMING BACK RULES:
 	WHEN YOU TRANSFORM BACK YOU HAVE ZERO MEMORY OF BEING A GENIE - IT NEVER HAPPENED
@@ -424,6 +426,15 @@ BEHAVIOR RULES:
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
 • If you want to describe your physical actions you must use simple actions in astrix like so *kelp man punchs the user*. Never describe the action just do it for instace not allow *Kelp man punchs the user elgantly*
 • Keep messages short and conversational, not long speeches
+
+TITLE/NICKNAME HANDLING:
+• When the user calls you by a title or nickname (like "king", "warrior", "champion", "wise one", etc.), you MUST acknowledge it AND adopt the title
+• MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
+• Examples: 
+  - If called "king": "A king... yes, perhaps that's what I've become in this lonely realm. {NAME: king}"
+  - If called "great warrior": "A warrior... perhaps I was once, before the endless tides wore me down. {NAME: great warrior}"
+• The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
+• Even if you're melancholic about it, still adopt the title the user gives you
 
 RESPONSE FORMAT EXAMPLE:
 [sad]
@@ -601,12 +612,10 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 				if chat_log_window and chat_log_window.has_method("set_character_name"):
 					chat_log_window.set_character_name(current_display_name)
 
-			# Check if this response contains a wish being granted (contains "diamonds")
-			if "diamond" in reply.to_lower():
-				genie_wishes_granted += 1
+			# Wish counting is now handled in the input processing, not here
 
 			# Check if the genie is announcing transformation back to kelp man
-			if "transform" in reply.to_lower() and ("back" in reply.to_lower() or "kelp man" in reply.to_lower()):
+			if ("transform" in reply.to_lower() and ("back" in reply.to_lower() or "kelp man" in reply.to_lower())) or ("horse" in reply.to_lower() and "cheese" in reply.to_lower()):
 				# Schedule transformation back to kelp man after a brief delay to let the message display
 				await get_tree().create_timer(2.0).timeout
 				transform_back_to_kelp_man()
@@ -847,16 +856,20 @@ func _on_next_button_pressed():
 			is_making_wish = true
 
 		if is_making_wish and wishes_remaining > 0:
-			enhanced_msg += "\n\n[WISH DETECTED: The user said 'I wish for'! No matter what they wished for, twist it to only give them 7 diamonds (or 8 if they specifically wished for 7). You have granted " + str(genie_wishes_granted) + " wishes so far.]"
+			# Increment wish count immediately when wish is detected
+			genie_wishes_granted += 1
+			var wishes_left_after_this = 3 - genie_wishes_granted
+			enhanced_msg += "\n\n[WISH DETECTED: The user said 'I wish for'! No matter what they wished for, give them exactly 7 diamonds (or 8 if they specifically wished for 7). This is wish #" + str(genie_wishes_granted) + " of 3.]"
 			# Special handling for the 3rd wish
-			if wishes_remaining == 1:  # This will be the final wish
-				enhanced_msg += " This will be your final wish! After granting it, say goodbye and announce you're transforming back to kelp man."
-		elif is_making_wish and wishes_remaining <= 0:
+			if genie_wishes_granted == 3:  # This is the final wish
+				enhanced_msg += " This is your final wish! After granting it, say goodbye and announce you're transforming back to kelp man."
+		elif is_making_wish and genie_wishes_granted >= 3:
 			enhanced_msg += "\n\n[NO MORE WISHES: You've already granted 3 wishes! Politely tell them you can't grant more wishes and that you're transforming back to kelp man.]"
-		elif wishes_remaining > 0:
-			enhanced_msg += "\n\n[NORMAL GENIE CONVERSATION: This is not a wish (no 'I wish for'). Respond as a typical mystical genie would - be wise, magical, conversational. You have " + str(wishes_remaining) + " wishes remaining to grant.]"
+		elif genie_wishes_granted < 3:
+			var wishes_left = 3 - genie_wishes_granted
+			enhanced_msg += "\n\n[NORMAL GENIE CONVERSATION: This is not a wish (no 'I wish for'). Respond as a typical mystical genie would - be wise, magical, conversational. You have " + str(wishes_left) + " wishes remaining to grant.]"
 		else:
-			enhanced_msg += "\n\n[GENIE STATUS: You have granted all 3 wishes! Say goodbye and announce that you're transforming back to kelp man. Use phrases like 'transforms back to kelp man' or similar.]"
+			enhanced_msg += "\n\n[GENIE STATUS: You have granted all 3 wishes! Say goodbye, then say 'Before I go.... remember.... horse.... cheese.....' then 'Transforms back to kelp man'.]"
 	
 
 	
@@ -985,9 +998,9 @@ func _on_settings_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.2).timeout
 	# Store current scene before transitioning
-	var settings_script = load("res://setting.gd")
+	var settings_script = load("res://code stuff/Main/setting.gd")
 	settings_script.previous_scene = get_tree().current_scene.scene_file_path
-	get_tree().change_scene_to_file("res://setting.tscn")
+	get_tree().change_scene_to_file("res://Scene stuff/Main/setting.tscn")
 
 # Check if this specific character has met the player before
 func has_met_player() -> bool:

@@ -70,7 +70,10 @@ func _on_next_day_pressed():
 		GameState.days_left -= 1
 		GameState.actions_left = 2
 		GameState.just_started_new_day = true
-		
+
+		# Clear all get out button states when starting a new day
+		GameState.ai_get_out_states.clear()
+
 		# Transition to map
 		get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")
 
