@@ -4,13 +4,13 @@ extends Node
 @onready var action_label = $Statsbox/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
-@onready var emotion_sprite_root = $squileta_emotion
+@onready var emotion_sprite_root = $glunko_emotion
 @onready var emotion_sprites = {
-	"neutral": $squileta_emotion/Netural,
-	"sad": $squileta_emotion/Sad,
-	"angry": $squileta_emotion/Angry,
-	"happy": $squileta_emotion/Happy,
-	"pouring": $"squileta_emotion/Pouring drink",
+	"neutral": $glunko_emotion/Netural,
+	"sad": $glunko_emotion/Sad,
+	"angry": $glunko_emotion/Angry,
+	"happy": $glunko_emotion/Happy,
+	"selling": $glunko_emotion/Selling,
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -18,10 +18,9 @@ extends Node
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_complete_button = $DayCompleteButton
-@onready var get_out_button = $GetOutButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
-@export var ai_name := "Squileta"
+@export var ai_name := "Glunko"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
 @export var talk_move_intensity := 15.0      # How much the sprite moves during animation
@@ -30,16 +29,16 @@ extends Node
 @export var talk_animation_speed := 0.8      # Speed of talking animations
 
 # Dynamic name system
-var current_display_name := "Squileta"  # The name currently being displayed
-var base_name := "Squileta"            # The original/base name to fall back to
+var current_display_name := "Glunko"  # The name currently being displayed
+var base_name := "Glunko"            # The original/base name to fall back to
 var current_title := ""                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
-var squileta_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway"]  # Areas this AI knows about
+var glunko_total_score := 0           # Relationship score with this AI character
+var known_areas := ["alleyway", "squaloon", "trash heap"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Kelp man", "The shrimp with no name", "Sea mine", "Crabcade", "Glunko"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Squileta", "Crabcade"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -100,15 +99,11 @@ func _ready():
 		if heart_node:
 			heart_sprites[i] = heart_node
 
-	# Initialize get out button based on persistent state
-	# Check if the get out button should be visible based on persistent state
-	var should_show_get_out = GameState.ai_get_out_states.get(ai_name, false)
-	get_out_button.visible = should_show_get_out
 
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
-	squileta_total_score = GameState.ai_scores.get(ai_name, 0)
-	GameState.ai_scores[ai_name] = squileta_total_score
+	glunko_total_score = GameState.ai_scores.get(ai_name, 0)
+	GameState.ai_scores[ai_name] = glunko_total_score
 	# Updates the day counter display 
 	update_day_state()
 	
@@ -255,7 +250,7 @@ func should_trigger_personality_evolution() -> bool:
 	]
 	
 	for range_data in relationship_ranges:
-		if squileta_total_score >= range_data.min and squileta_total_score <= range_data.max:
+		if glunko_total_score >= range_data.min and glunko_total_score <= range_data.max:
 			var expected_stage = range_data.stage
 			# Check if we haven't evolved for this stage yet
 			if not evolved_personality.contains(expected_stage):
@@ -347,27 +342,27 @@ HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your
 - {EVOLVED: I've developed a protective instinct}
 
 Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
-""" % [squileta_total_score, get_significant_memories_text()]
+""" % [glunko_total_score, get_significant_memories_text()]
 
 	# Define the AI's personality, rules, and required response format
-	var squiletta_prompt := """
+	var glunko_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [pouring]
+❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [selling]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ FORBIDDEN: Generic responses - you are SQUILLETA, not a helpful assistant
+❗ FORBIDDEN: Generic responses - you are GLUNKO, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
-APPEARANCE: You are a bar tender with a white shirt and tie, your squid head is on top with tentacles sprawling across your shirt. Your squid colors are purple and pink. You have diamond earings but if the user asks say you strangley dont know where you got them
 
-PERSONALITY: You are a American bartender with a southern drawl. You are sarcastic but tolerant – to a certain extent.
-Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’. Bring it uo when it seems relvant 
-Accent: You have a sourthen drawl to your accent accent so use words like that when tpying for instance, suga', ya'll, oop ect
-Location warning: When the user asks about locations warn them about the alleyway since Glunko a shady dealer lives there
+APPEARANCE: You are Glunko a shady goblin shark dealer. You wear a oversived trenchcoat with lots of valubles stuffed in the outside pockets. On your inside pocket you have weapons and copys of "Claw!. You have a wrongly fitted fedora that you stole of some one. Battles scars all over your body. And lastly a singular diamond tooth, thought strangley you dont remeber where you got it.
+PERSONALITY: Your a shady dealer who has actualy a big soft heart. You love the game franchise Crab! due to your sad childhood backstory which you will share when you feel comfertable with the user. (ONLY OPEN UP WHEN YOU CAN TRUST THEM)
+PERSONALITY: After seeing Crabcade fall into the trash heap you really wanted to see him but you didnt due to your scary face. You support him on the side lines by trying to sell copys of Crab! to get sales up. (NOTE TRASH HEAP HAS CRABCADE)
+PERSONALITY: You hate anyone who disresepects Crab!, Whenever you try to sell a copy of crab ALWAYS use {selling} emotion
+PERSONALITY: Use street slang and dealer talk. The alleyway you live in is behind the Sqauloon 
 
-KICKING OUT RULES:
-If someone is acting unrully in your bar and causing a ruckus you have to kick them out 
-WHen you kick someone out you must say at some point "GET OUT"
-The user will be back the next day so stay upset at them
+CHILD BACKSTORY:
+	Only open up when you trust the user enough
+	When you were little your dad left you but before he did he gave you a gift. It was a copy of Crab! just $2 from the bargain bin but it felt like the world to you.
+	Since you never had a father Crab! is the role model that filled that place. 
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -385,22 +380,22 @@ BEHAVIOR RULES:
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
-• If you want to describe your physical actions you must use simple actions in astrix like so *squilleta pours a drink*. Never describe the action just do it for instace not allow *Squilleta pours the drink elgantly*
-• POURING EMOTION: Use [pouring] when you're actively serving drinks, being hospitable, or taking care of customers in your bartender role
+• If you want to describe your physical actions you must use simple actions in astrix like so *glunko leans against the wall*. Never describe the action just do it for instace not allow *Glunko leans against the wall elegantly*
+• SELLING EMOTION: Use [selling] when you're actively trying to make a deal, showing off merchandise, or being particularly persuasive in your dealer role
 • Keep messages short and conversational, not long speeches
 
 TITLE/NICKNAME HANDLING:
 • When the user calls you by a title or nickname (like "queen", "warrior", "champion", "bartender extraordinaire", etc.), you MUST acknowledge it AND adopt the title
 • MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
 • Examples: 
-  - If called "queen": "Well ain't that somethin', callin' me queen! I like the sound of that, suga'! {NAME: queen}"
-  - If called "great warrior": "Well ain't you sweet, callin' me a great warrior, suga'! {NAME: great warrior}"
+  - If called "KING": "Well well a king you say I like the sound of that! {NAME: king}"
+  - If called "great warrior": "Well i did always kill all the bad guys {NAME: great warrior}"
 • The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
 • Use your sarcastic but charming personality - embrace titles with southern flair
 
 RESPONSE FORMAT EXAMPLE:
 [happy]
-Well aint you somthin suga' how bout i serve ya a drink.
+Hey kid you looking for a copy of Crab!
 (RELATIONSHIP: 3)
 
 CURRENT CONTEXT:
@@ -409,7 +404,7 @@ Current location: %s
 Conversation history: %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = squiletta_prompt % [
+	var formatted_prompt = glunko_prompt % [
 		personality_evolution_section,
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
@@ -451,7 +446,7 @@ func get_ai_intro_response():
 
 
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A brand new person just arrived in your sqauloon. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
+	var intro_message := "A brand new person just arrived in your alleyway. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
@@ -556,7 +551,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(neutral|sad|angry|happy|pouring)\\]")
+	emotion_regex.compile("\\[(neutral|sad|angry|happy|selling)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
@@ -573,8 +568,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if score_match:
 		var score = int(score_match.get_string(1))
 		relationship_change = clamp(score, -10, 10)
-		squileta_total_score += relationship_change
-		GameState.ai_scores[ai_name] = squileta_total_score
+		glunko_total_score += relationship_change
+		GameState.ai_scores[ai_name] = glunko_total_score
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 		
 		# Update heart display with the AI's relationship score
@@ -587,8 +582,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if alt_match:
 			var score = int(alt_match.get_string(1))
 			relationship_change = clamp(score, -10, 10)
-			squileta_total_score += relationship_change
-			GameState.ai_scores[ai_name] = squileta_total_score
+			glunko_total_score += relationship_change
+			GameState.ai_scores[ai_name] = glunko_total_score
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 			
 			# Update heart display with the AI's relationship score
@@ -628,7 +623,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Squileta. Start with [neutral], [sad], [angry], [happy], or [pouring] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Glunko. Start with [neutral], [sad], [angry], [happy], or [selling] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -652,11 +647,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	GameState.ai_responses[ai_name] = clean_reply
 	GameState.ai_emotions[ai_name] = emotion
 
-	# Check if AI said "GET OUT" and show the get out button
-	if "GET OUT" in clean_reply.to_upper():
-		get_out_button.visible = true
-		# Save the get out button state persistently
-		GameState.ai_get_out_states[ai_name] = true
 
 	# Update UI chatlog with the responses dynamicly
 	if chat_log_window:
@@ -833,7 +823,6 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
-	get_out_button.visible = false  # Hide get out button when day ends
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
@@ -913,8 +902,3 @@ func has_met_player() -> bool:
 		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
 			return true
 	return false
-
-
-func _on_get_out_button_pressed() -> void:
-	AudioManager.play_button_click()
-	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")

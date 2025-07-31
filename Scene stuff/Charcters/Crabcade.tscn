@@ -54,6 +54,7 @@ shader_parameter/tint_color = Color(0.619608, 0.243137, 0, 0.345098)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4tnxu"]
 texture = ExtResource("5_jpikb")
+modulate_color = Color(1, 1, 1, 0.901961)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
 texture = ExtResource("8_jpikb")
@@ -91,7 +92,7 @@ texture = ExtResource("15_2rgwe")
 bg_color = Color(0.533473, 0.594343, 0.774528, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_panel"]
-bg_color = Color(0.164706, 0.623529, 0.113725, 1)
+bg_color = Color(0, 0.235294, 0.564706, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -103,7 +104,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_scroll"]
-bg_color = Color(0.564706, 1, 0.521569, 1)
+bg_color = Color(1, 0.662745, 0.00392157, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1

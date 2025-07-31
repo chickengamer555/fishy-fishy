@@ -43,7 +43,8 @@ func update_location_visibility():
 		"sqauloon": "squaloon",
 		"wild_south": "wild south",
 		"mine_field": "mine field",
-		"trash_heap": "trash heap"
+		"trash_heap": "trash heap",
+		"alleyway": "alleyway"
 	}
 	
 	# Set visibility based on unlocked areas
@@ -70,7 +71,7 @@ func ensure_at_least_one_location_visible():
 	
 	for child in get_children():
 		var node_name = child.name.to_lower()
-		if node_name in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap"]:
+		if node_name in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway"]:
 			location_nodes.append(child)
 			if child.visible:
 				visible_locations.append(child)
@@ -92,7 +93,8 @@ func ensure_at_least_one_location_visible():
 			"sqauloon": "squaloon",
 			"wild_south": "wild south",
 			"mine_field": "mine field",
-			"trash_heap": "trash heap"
+			"trash_heap": "trash heap",
+			"alleyway": "alleyway"
 		}
 		
 		var node_name = chosen_location.name.to_lower()
@@ -103,7 +105,7 @@ func ensure_at_least_one_location_visible():
 	
 	# Final check
 	for child in get_children():
-		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap"]:
+		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway"]:
 			print("🗺️ Final: ", child.name, " visible: ", child.visible)
 
 
@@ -127,3 +129,10 @@ func _on_trash_heap_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Crabcade.tscn")
 	MapMemory.set_location("trash heap")
+
+
+func _on_alleyway_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Glunko.tscn")
+	MapMemory.set_location("alleyway")

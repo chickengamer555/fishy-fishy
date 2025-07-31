@@ -55,6 +55,7 @@ shader_parameter/tint_color = Color(0, 0.454902, 0.196078, 0.133333)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4tnxu"]
 texture = ExtResource("5_njf6d")
+modulate_color = Color(1, 1, 1, 0.901961)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
 texture = ExtResource("8_njf6d")
