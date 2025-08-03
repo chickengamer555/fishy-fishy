@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://2bed1bhoqbk4"]
+
+[ext_resource type="Texture2D" uid="uid://bd2v7gi22km3s" path="res://emotion/Sea horse/neutral.png" id="1_ea61b"]
+[ext_resource type="Texture2D" uid="uid://6tj8mm0g1ivk" path="res://emotion/Sea horse/omnipotence.png" id="2_ea61b"]
+
+[node name="sea_horse_emotion" type="Node2D"]
+
+[node name="Netural" type="Sprite2D" parent="."]
+position = Vector2(0, -1)
+texture = ExtResource("1_ea61b")
+
+[node name="Omnipotence" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, 3)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_ea61b")

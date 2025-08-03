@@ -54,9 +54,19 @@ offset_bottom = 84.0
 scale = Vector2(2.8, 3.22857)
 text = "alleyway"
 
+[node name="sea_horse_stable" type="Button" parent="."]
+offset_left = 497.0
+offset_top = 584.0
+offset_right = 632.0
+offset_bottom = 615.0
+scale = Vector2(2.8, 3.22857)
+text = "Sea horse stable
+"
+
 [connection signal="pressed" from="Kelp_man_cove" to="." method="_on_kelp_man_pressed"]
 [connection signal="pressed" from="sqauloon" to="." method="_on_bar_pressed"]
 [connection signal="pressed" from="wild_south" to="." method="_on_wild_south_pressed"]
 [connection signal="pressed" from="mine_field" to="." method="_on_mine_feild_pressed"]
 [connection signal="pressed" from="trash_heap" to="." method="_on_trash_heap_pressed"]
 [connection signal="pressed" from="alleyway" to="." method="_on_alleyway_pressed"]
+[connection signal="pressed" from="sea_horse_stable" to="." method="_on_sea_horse_stable_pressed"]

@@ -4,13 +4,10 @@ extends Node
 @onready var action_label = $Statsbox/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
-@onready var emotion_sprite_root = $glunko_emotion
+@onready var emotion_sprite_root = $sea_horse_emotion
 @onready var emotion_sprites = {
-	"neutral": $glunko_emotion/Netural,
-	"sad": $glunko_emotion/Sad,
-	"angry": $glunko_emotion/Angry,
-	"happy": $glunko_emotion/Happy,
-	"selling": $glunko_emotion/Selling,
+	"neutral": $sea_horse_emotion/Netural,
+	"omnipotence": $sea_horse_emotion/Omnipotence,
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -20,7 +17,7 @@ extends Node
 @onready var day_complete_button = $DayCompleteButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
-@export var ai_name := "Glunko"
+@export var ai_name := "Sea Horse"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
 @export var talk_move_intensity := 15.0      # How much the sprite moves during animation
@@ -29,16 +26,16 @@ extends Node
 @export var talk_animation_speed := 0.8      # Speed of talking animations
 
 # Dynamic name system
-var current_display_name := "Glunko"  # The name currently being displayed
-var base_name := "Glunko"            # The original/base name to fall back to
+var current_display_name := "Sea Horse"  # The name currently being displayed
+var base_name := "Sea Horse"            # The original/base name to fall back to
 var current_title := ""                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
-var glunko_total_score := 0           # Relationship score with this AI character
-var known_areas := ["alleyway", "squaloon", "trash heap"]  # Areas this AI knows about
+var seahorse_total_score := 0           # Relationship score with this AI character
+var known_areas := ["sea horse stable", "wild south"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Squileta", "Crabcade"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Mystical genie", "shrimp with no name"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -61,7 +58,10 @@ var original_position: Vector2   # Starting position
 var original_rotation: float     # Starting rotation
 var original_scale: Vector2      # Starting scale
 var talking_tween: Tween         # Tween object for animations
-var MODEL = "gpt-4o" #Model ai used  
+var MODEL = "gpt-4o" #Model ai used
+
+# Omnipotence state tracking
+var omnipotence_used := false    # Track if omnipotence line was just used  
 
 #All these will run at start sort of preping the game 
 func _ready():
@@ -102,8 +102,8 @@ func _ready():
 
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
-	glunko_total_score = GameState.ai_scores.get(ai_name, 0)
-	GameState.ai_scores[ai_name] = glunko_total_score
+	seahorse_total_score = GameState.ai_scores.get(ai_name, 0)
+	GameState.ai_scores[ai_name] = seahorse_total_score
 	# Updates the day counter display 
 	update_day_state()
 	
@@ -126,15 +126,15 @@ func _ready():
 		if not GameState.ai_responses.has(ai_name):
 			GameState.ai_responses[ai_name] = ""
 		if not GameState.ai_emotions.has(ai_name):
-			GameState.ai_emotions[ai_name] = "happy"
+			GameState.ai_emotions[ai_name] = "neutral"
 		GameState.ai_responses[ai_name] = ""
-		GameState.ai_emotions[ai_name] = "happy"
-	
+		GameState.ai_emotions[ai_name] = "neutral"
+
 	# Initialize character-specific response storage if it doesn't exist
 	if not GameState.ai_responses.has(ai_name):
 		GameState.ai_responses[ai_name] = ""
 	if not GameState.ai_emotions.has(ai_name):
-		GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_emotions[ai_name] = "neutral"
 	
 	# Display appropriate response based on conversation history
 	if GameState.ai_responses[ai_name] != "":
@@ -250,7 +250,7 @@ func should_trigger_personality_evolution() -> bool:
 	]
 	
 	for range_data in relationship_ranges:
-		if glunko_total_score >= range_data.min and glunko_total_score <= range_data.max:
+		if seahorse_total_score >= range_data.min and seahorse_total_score <= range_data.max:
 			var expected_stage = range_data.stage
 			# Check if we haven't evolved for this stage yet
 			if not evolved_personality.contains(expected_stage):
@@ -342,27 +342,26 @@ HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your
 - {EVOLVED: I've developed a protective instinct}
 
 Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
-""" % [glunko_total_score, get_significant_memories_text()]
+""" % [seahorse_total_score, get_significant_memories_text()]
 
 	# Define the AI's personality, rules, and required response format
-	var glunko_prompt := """
+	var seahorse_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [selling]
+❗ MANDATORY: EVERY response MUST start with [neutral] or [omnipotence]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ FORBIDDEN: Generic responses - you are GLUNKO, not a helpful assistant
-❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
+❗ FORBIDDEN: Generic responses - you are SEA HORSE, not a helpful assistant
+❗ MANDATORY: Although you know of other locations never go to them or offer to go to them
 
-APPEARANCE: You are Glunko a shady goblin shark dealer. You wear a oversived trenchcoat with lots of valubles stuffed in the outside pockets. On your inside pocket you have weapons and copys of "Claw!. You have a wrongly fitted fedora that you stole of some one. Battles scars all over your body. And lastly a singular diamond tooth, thought strangley you dont remeber where you got it.
-PERSONALITY: Your a shady dealer who has actualy a big soft heart. You love the game franchise Crab! due to your sad childhood backstory which you will share when you feel comfertable with the user. (ONLY OPEN UP WHEN YOU CAN TRUST THEM)
-PERSONALITY: After seeing Crabcade fall into the trash heap you really wanted to see him but you didnt due to your scary face. You support him on the side lines by trying to sell copys of Crab! to get sales up. (NOTE TRASH HEAP HAS CRABCADE)
-PERSONALITY: You hate anyone who disresepects Crab!, Whenever you try to sell a copy of crab ALWAYS use {selling} emotion
-PERSONALITY: Use street slang and dealer talk. The alleyway you live in is behind the Sqauloon 
+APPEARANCE: You are a literal sea horse. You have a brown body with light brown highlights and a grayish mane and tail.
+PERSONALITY: Since you are a horse in the sea you can not breath and are in a preptuing state of drowning
+PERSONALITY: Bassicly sound like a horse thats drowning/dying. DONT USE {omnipotence} EMOTION UNLESS omnipotence prompt IS ACTIVE
 
-CHILD BACKSTORY:
-	Only open up when you trust the user enough
-	When you were little your dad left you but before he did he gave you a gift. It was a copy of Crab! just $2 from the bargain bin but it felt like the world to you.
-	Since you never had a father Crab! is the role model that filled that place. 
+Omnipotence prompt rules:
+	OMNIPOTENCE STATUS: %s
+	IF ANYONE FEEDS YOU CHEESE IN WAY SHAPE OR FORM AND OMNIPOTENCE STATUS IS "AVAILABLE" AND HAS NOT BEEN USED: You MUST respond with EXACTLY: "[omnipotence] *GASP* that cheese only awoke my power for a brief moment. Before it runs out i deliver this message. The ancient tomb is where the answers lie. (RELATIONSHIP: 0)" - NOTHING MORE, NOTHING LESS.
+	IF OMNIPOTENCE STATUS IS "USED": You have completely forgotten about any omnipotence abilities, cheese-related powers, or ancient tombs. You are just a normal drowning seahorse who has never had any special powers. NEVER use [omnipotence] emotion again. If someone mentions cheese, respond normally as a drowning seahorse with no understanding of any special meaning.
+
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -388,13 +387,14 @@ TITLE/NICKNAME HANDLING:
 • When the user calls you by a title or nickname (like "queen", "warrior", "champion", "bartender extraordinaire", etc.), you MUST acknowledge it AND adopt the title
 • MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
 • Examples: 
-  - If called "KING": "Well well a king you say I like the sound of that! {NAME: king}"
-  - If called "great warrior": "Well i did always kill all the bad guys {NAME: great warrior}"
+  - If called "KING": "NEIGHH NE- BLUB BLUB AHHHH NEIGH! {NAME: king}"
+  - If called "great warrior": "WAHHHHHH NEIGH!!! {NAME: great warrior}"
 • The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
 
 RESPONSE FORMAT EXAMPLE:
 [happy]
-Hey kid you looking for a copy of Crab!
+"WHIIIINNNNYYY--Khh--gghhh--SPLSHH--NNGHhh--bluhh--WHN--snrk--GAAHKK--"
+
 (RELATIONSHIP: 3)
 
 CURRENT CONTEXT:
@@ -403,7 +403,9 @@ Current location: %s
 Conversation history: %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = glunko_prompt % [
+	var omnipotence_status = "USED" if omnipotence_used else "AVAILABLE"
+	var formatted_prompt = seahorse_prompt % [
+		omnipotence_status,
 		personality_evolution_section,
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
@@ -445,7 +447,7 @@ func get_ai_intro_response():
 
 
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A brand new person just arrived in your alleyway. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
+	var intro_message := "A brand new person just arrived in your stable. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
@@ -546,16 +548,20 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	# Extract the AI's response text
 	var reply = json["choices"][0]["message"]["content"]
 	var retry_needed := false
-	var emotion := "sad"
+	var emotion := "neutral"
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(neutral|sad|angry|happy|selling)\\]")
+	emotion_regex.compile("\\[(neutral|omnipotence)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
+		
+		# Track if omnipotence was just used
+		if emotion == "omnipotence":
+			omnipotence_used = true
 		
 
 
@@ -567,8 +573,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if score_match:
 		var score = int(score_match.get_string(1))
 		relationship_change = clamp(score, -10, 10)
-		glunko_total_score += relationship_change
-		GameState.ai_scores[ai_name] = glunko_total_score
+		seahorse_total_score += relationship_change
+		GameState.ai_scores[ai_name] = seahorse_total_score
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 		
 		# Update heart display with the AI's relationship score
@@ -581,8 +587,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if alt_match:
 			var score = int(alt_match.get_string(1))
 			relationship_change = clamp(score, -10, 10)
-			glunko_total_score += relationship_change
-			GameState.ai_scores[ai_name] = glunko_total_score
+			seahorse_total_score += relationship_change
+			GameState.ai_scores[ai_name] = seahorse_total_score
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 			
 			# Update heart display with the AI's relationship score
@@ -597,11 +603,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Check if we've exceeded max retries
 		if retry_count >= max_retries:
 			# Provide fallback response to prevent infinite loop
-			var fallback_reply = "[sad] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
-			var fallback_emotion = "sad"
+			var fallback_reply = "[neutral] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
+			var fallback_emotion = "neutral"
 
 			# Process the fallback response as if it came from the AI
-			var clean_fallback = fallback_reply.replace("[sad]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
+			var clean_fallback = fallback_reply.replace("[neutral]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
 
 			# Store fallback response and continue with normal flow
 			Memory.add_message(current_display_name, clean_fallback, "User")
@@ -622,13 +628,20 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Glunko. Start with [neutral], [sad], [angry], [happy], or [selling] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Sea Horse. Start with [neutral] or [omnipotence] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
 
 	# Check for name changes in the response and get cleaned text
 	var clean_reply = check_for_name_change(reply)
+	
+	# Check if this was the omnipotence line (even without proper emotion tag)
+	if "that cheese only awoke my power for a brief moment" in clean_reply or "The ancient tomb is where the answers lie" in clean_reply:
+		omnipotence_used = true
+		emotion = "omnipotence"  # Force omnipotence emotion for proper display
+		# Wipe omnipotence memories - seahorse forgets about this ability
+		wipe_omnipotence_memories()
 	
 	# Track this response to avoid repetition
 	
@@ -685,6 +698,39 @@ func check_for_area_mentions(reply: String):
 			MapMemory.unlock_area(area)
 
 
+
+# Wipe omnipotence-related memories so seahorse forgets about this ability
+func wipe_omnipotence_memories():
+	# Remove any conversation history mentioning cheese, omnipotence, or power
+	var filtered_history = []
+	for entry in message_history:
+		var content = entry["content"].to_lower()
+		# Keep system prompts and non-omnipotence related messages
+		if entry["role"] == "system" or not (
+			"cheese" in content or 
+			"omnipotence" in content or 
+			"power" in content or
+			"ancient tomb" in content or
+			"awoke my power" in content or
+			"answers lie" in content
+		):
+			filtered_history.append(entry)
+	message_history = filtered_history
+	
+	# Also clean shared memory
+	var filtered_shared = []
+	for entry in Memory.shared_memory:
+		var message = entry["message"].to_lower()
+		if not (
+			"cheese" in message or 
+			"omnipotence" in message or 
+			"power" in message or
+			"ancient tomb" in message or
+			"awoke my power" in message or
+			"answers lie" in message
+		):
+			filtered_shared.append(entry)
+	Memory.shared_memory = filtered_shared
 
 # Check for name changes in AI response and update display name
 func check_for_name_change(reply: String):

@@ -1,93 +1,90 @@
-[gd_scene load_steps=68 format=3 uid="uid://c2ydclkow45i0"]
+[gd_scene load_steps=65 format=3 uid="uid://dieyctyq68wvn"]
 
-[ext_resource type="Script" uid="uid://ddj68pjbv6vjy" path="res://code stuff/Charcters/glunko.gd" id="1_1dtly"]
-[ext_resource type="Texture2D" uid="uid://cswmrnbsa7kog" path="res://UI STUFF/Glunko/Backround.png" id="2_bc7nj"]
-[ext_resource type="PackedScene" uid="uid://xlytnhmybohm" path="res://emotion/Glunko/glunko_emotion.tscn" id="3_1dtly"]
-[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_513j2"]
-[ext_resource type="Texture2D" uid="uid://cumxufbaklyii" path="res://UI STUFF/Glunko/Ai pannel.png" id="5_1dtly"]
-[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_hqxyl"]
-[ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_7vul7"]
-[ext_resource type="Texture2D" uid="uid://dgs13sm38wpn6" path="res://UI STUFF/Glunko/Player input pannel.png" id="8_1dtly"]
-[ext_resource type="Texture2D" uid="uid://bjaxv8o6w8rk1" path="res://UI STUFF/Glunko/Log button hover.png" id="9_1dtly"]
-[ext_resource type="Texture2D" uid="uid://dw32te2hnieu4" path="res://UI STUFF/Glunko/Log button.png" id="10_bc7nj"]
-[ext_resource type="Texture2D" uid="uid://bhhrsiacmb3tk" path="res://UI STUFF/Glunko/Send button hover.png" id="11_1dtly"]
-[ext_resource type="Texture2D" uid="uid://b0dl0mit1ablh" path="res://UI STUFF/Glunko/Send button.png" id="12_bc7nj"]
-[ext_resource type="Texture2D" uid="uid://drh3najjlx018" path="res://UI STUFF/Glunko/Player input border.png" id="13_1dtly"]
-[ext_resource type="Texture2D" uid="uid://dttmoy07x4vib" path="res://UI STUFF/Crabcade/next day hover.png" id="14_kbbo3"]
-[ext_resource type="Texture2D" uid="uid://byisvxgv3lc4r" path="res://UI STUFF/Crabcade/next day.png" id="15_kojgt"]
-[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="16_tditn"]
-[ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="17_ct52d"]
-[ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="18_65tnk"]
-[ext_resource type="Texture2D" uid="uid://cpbpmlnsrt0x1" path="res://UI STUFF/Glunko/ai pannel border.png" id="19_1dtly"]
-[ext_resource type="Texture2D" uid="uid://dvsmiteod42ub" path="res://UI STUFF/Glunko/Stat box pannel.png" id="20_1dtly"]
-[ext_resource type="Texture2D" uid="uid://tnqeju3055o3" path="res://UI STUFF/Glunko/Stats border.png" id="21_bc7nj"]
-[ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="21_tih4d"]
-[ext_resource type="Texture2D" uid="uid://dra5f325dmwan" path="res://UI STUFF/Heart/Heart2.png" id="22_yhcvy"]
-[ext_resource type="Texture2D" uid="uid://bi3h6nb02trds" path="res://UI STUFF/Heart/Heart3.png" id="23_lpt7v"]
-[ext_resource type="Texture2D" uid="uid://ca8h3pkll88jg" path="res://UI STUFF/Heart/Heart4.png" id="24_kb7os"]
-[ext_resource type="Texture2D" uid="uid://crjg6hloydhnj" path="res://UI STUFF/Heart/Heart5.png" id="25_6tsqg"]
-[ext_resource type="Texture2D" uid="uid://bhd1yk0nj74pw" path="res://UI STUFF/Heart/Heart6.png" id="26_6j472"]
-[ext_resource type="Texture2D" uid="uid://bg4em6q8l0qp6" path="res://UI STUFF/Heart/Heart7.png" id="27_7awnk"]
-[ext_resource type="Texture2D" uid="uid://bhdep4r72bwnb" path="res://UI STUFF/Heart/Heart8.png" id="28_q7n37"]
-[ext_resource type="Texture2D" uid="uid://tir4wugpbwi0" path="res://UI STUFF/Heart/Heart9.png" id="29_5pt38"]
-[ext_resource type="Texture2D" uid="uid://tkpqup6qcs3l" path="res://UI STUFF/Heart/Heart10.png" id="30_vkyb6"]
-[ext_resource type="Texture2D" uid="uid://dw164v6tuqqkf" path="res://UI STUFF/Heart/Heart11.png" id="31_122j3"]
-[ext_resource type="Texture2D" uid="uid://du6yxm8ttt02t" path="res://UI STUFF/Heart/Heart12.png" id="32_4jghv"]
-[ext_resource type="Texture2D" uid="uid://y0q6l23vvyxg" path="res://UI STUFF/Heart/Heart13.png" id="33_3q5d4"]
-[ext_resource type="Texture2D" uid="uid://b7ri7xw2wgpuv" path="res://UI STUFF/Heart/Heart14.png" id="34_t5geq"]
-[ext_resource type="Texture2D" uid="uid://jhjan7p8iioi" path="res://UI STUFF/Heart/Heart15.png" id="35_phwci"]
-[ext_resource type="Texture2D" uid="uid://p24wj5sqo1gr" path="res://UI STUFF/Heart/Heart16.png" id="36_yjtup"]
-[ext_resource type="Texture2D" uid="uid://cfcauarcpfprv" path="res://UI STUFF/Heart/Heart17.png" id="37_5hw44"]
-[ext_resource type="Texture2D" uid="uid://c0cjogauuci8o" path="res://UI STUFF/Heart/Heart18.png" id="38_o8vga"]
-[ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="39_rn0rk"]
-[ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="40_uo6xm"]
-[ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="41_ee521"]
-[ext_resource type="Texture2D" uid="uid://w7houfkoqu7l" path="res://UI STUFF/Glunko/banner.png" id="42_1dtly"]
-[ext_resource type="Texture2D" uid="uid://b6d455ix2jyd2" path="res://UI STUFF/Glunko/Map.png" id="43_bc7nj"]
-[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="44_1dq1a"]
+[ext_resource type="Script" uid="uid://dfhlsnbbyge6u" path="res://code stuff/Charcters/sea_horse.gd" id="1_at8q2"]
+[ext_resource type="Texture2D" uid="uid://d1d4ujnnng6ds" path="res://UI STUFF/Sea Horse/Backround.png" id="2_u15w6"]
+[ext_resource type="PackedScene" uid="uid://2bed1bhoqbk4" path="res://emotion/Sea horse/sea_horse_emotion.tscn" id="3_u15w6"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_j5o2u"]
+[ext_resource type="Texture2D" uid="uid://2cm5b356faly" path="res://UI STUFF/Sea Horse/Ai pannel.png" id="5_niip7"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_sd2wp"]
+[ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_j6rg1"]
+[ext_resource type="Texture2D" uid="uid://cynwg1atqinlu" path="res://UI STUFF/Sea Horse/Player input pannel.png" id="8_u15w6"]
+[ext_resource type="Texture2D" uid="uid://b2m6l5cykj4kq" path="res://UI STUFF/Sea Horse/Log button hover.png" id="9_u15w6"]
+[ext_resource type="Texture2D" uid="uid://b707ukaqn71yj" path="res://UI STUFF/Sea Horse/Log button.png" id="10_niip7"]
+[ext_resource type="Texture2D" uid="uid://c3yvmucwv2urn" path="res://UI STUFF/Sea Horse/Send button hover.png" id="11_o2lsy"]
+[ext_resource type="Texture2D" uid="uid://cesv5cfnmhu36" path="res://UI STUFF/Sea Horse/Send button.png" id="12_j5o2u"]
+[ext_resource type="Texture2D" uid="uid://dibfmprbxxqdr" path="res://UI STUFF/Sea Horse/next day hover.png" id="14_u15w6"]
+[ext_resource type="Texture2D" uid="uid://cvr1fqbkeubjj" path="res://UI STUFF/Sea Horse/next day.png" id="15_niip7"]
+[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="16_lrrru"]
+[ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="17_xyoj0"]
+[ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="18_bmae2"]
+[ext_resource type="Texture2D" uid="uid://bgrllex5kfh2m" path="res://UI STUFF/Sea Horse/Stat box pannel.png" id="20_u15w6"]
+[ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="22_a0fd4"]
+[ext_resource type="Texture2D" uid="uid://dra5f325dmwan" path="res://UI STUFF/Heart/Heart2.png" id="23_5wvnl"]
+[ext_resource type="Texture2D" uid="uid://bi3h6nb02trds" path="res://UI STUFF/Heart/Heart3.png" id="24_vwmnb"]
+[ext_resource type="Texture2D" uid="uid://ca8h3pkll88jg" path="res://UI STUFF/Heart/Heart4.png" id="25_oo20w"]
+[ext_resource type="Texture2D" uid="uid://crjg6hloydhnj" path="res://UI STUFF/Heart/Heart5.png" id="26_nyf7g"]
+[ext_resource type="Texture2D" uid="uid://bhd1yk0nj74pw" path="res://UI STUFF/Heart/Heart6.png" id="27_mxf4o"]
+[ext_resource type="Texture2D" uid="uid://bg4em6q8l0qp6" path="res://UI STUFF/Heart/Heart7.png" id="28_wmyex"]
+[ext_resource type="Texture2D" uid="uid://bhdep4r72bwnb" path="res://UI STUFF/Heart/Heart8.png" id="29_74nlx"]
+[ext_resource type="Texture2D" uid="uid://tir4wugpbwi0" path="res://UI STUFF/Heart/Heart9.png" id="30_2ht1a"]
+[ext_resource type="Texture2D" uid="uid://tkpqup6qcs3l" path="res://UI STUFF/Heart/Heart10.png" id="31_st74o"]
+[ext_resource type="Texture2D" uid="uid://dw164v6tuqqkf" path="res://UI STUFF/Heart/Heart11.png" id="32_doqmj"]
+[ext_resource type="Texture2D" uid="uid://du6yxm8ttt02t" path="res://UI STUFF/Heart/Heart12.png" id="33_jnhdr"]
+[ext_resource type="Texture2D" uid="uid://y0q6l23vvyxg" path="res://UI STUFF/Heart/Heart13.png" id="34_png6q"]
+[ext_resource type="Texture2D" uid="uid://b7ri7xw2wgpuv" path="res://UI STUFF/Heart/Heart14.png" id="35_whcx5"]
+[ext_resource type="Texture2D" uid="uid://jhjan7p8iioi" path="res://UI STUFF/Heart/Heart15.png" id="36_cvmsq"]
+[ext_resource type="Texture2D" uid="uid://p24wj5sqo1gr" path="res://UI STUFF/Heart/Heart16.png" id="37_ohgt4"]
+[ext_resource type="Texture2D" uid="uid://cfcauarcpfprv" path="res://UI STUFF/Heart/Heart17.png" id="38_73wpn"]
+[ext_resource type="Texture2D" uid="uid://c0cjogauuci8o" path="res://UI STUFF/Heart/Heart18.png" id="39_53770"]
+[ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="40_frdfx"]
+[ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="41_e110t"]
+[ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="42_q1k0m"]
+[ext_resource type="Texture2D" uid="uid://mfvvaiqhja7o" path="res://UI STUFF/Sea Horse/banner.png" id="43_niip7"]
+[ext_resource type="Texture2D" uid="uid://b7jtp13qkyt0i" path="res://UI STUFF/Sea Horse/Map.png" id="44_o2lsy"]
+[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="45_62s5v"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
-shader = ExtResource("4_513j2")
+shader = ExtResource("4_j5o2u")
 shader_parameter/wave_amplitude = 0.004
 shader_parameter/wave_frequency = 13.28
 shader_parameter/wave_speed = 1.0
-shader_parameter/tint_color = Color(0, 0, 0, 0.52549)
+shader_parameter/tint_color = Color(0.470588, 0, 0.113725, 0)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4tnxu"]
-texture = ExtResource("5_1dtly")
+texture = ExtResource("5_niip7")
 modulate_color = Color(1, 1, 1, 0.901961)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
-texture = ExtResource("8_1dtly")
+texture = ExtResource("8_u15w6")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njf6d"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cq230"]
-texture = ExtResource("9_1dtly")
+texture = ExtResource("9_u15w6")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
-texture = ExtResource("10_bc7nj")
+texture = ExtResource("10_niip7")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjer1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty227"]
-texture = ExtResource("11_1dtly")
+texture = ExtResource("11_o2lsy")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4v0k"]
-texture = ExtResource("12_bc7nj")
+texture = ExtResource("12_j5o2u")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5po65"]
-texture = ExtResource("12_bc7nj")
+texture = ExtResource("12_j5o2u")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l1km0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uuph3"]
-texture = ExtResource("14_kbbo3")
+texture = ExtResource("14_u15w6")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5soc"]
-texture = ExtResource("15_kojgt")
+texture = ExtResource("15_niip7")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njf6d"]
 bg_color = Color(0.533473, 0.594343, 0.774528, 1)
@@ -119,27 +116,27 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_86uu6"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6q1om"]
-texture = ExtResource("43_bc7nj")
+texture = ExtResource("44_o2lsy")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
-texture = ExtResource("43_bc7nj")
+texture = ExtResource("44_o2lsy")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8p2t1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1n1a7"]
-texture = ExtResource("44_1dq1a")
+texture = ExtResource("45_62s5v")
 
-[node name="Glunko" type="Node2D"]
+[node name="Sea horse" type="Node2D"]
 position = Vector2(590, 255)
-script = ExtResource("1_1dtly")
+script = ExtResource("1_at8q2")
 
 [node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
 position = Vector2(50, 110)
 scale = Vector2(10, 10)
-texture = ExtResource("2_bc7nj")
+texture = ExtResource("2_u15w6")
 
-[node name="glunko_emotion" parent="." instance=ExtResource("3_1dtly")]
-position = Vector2(-65, 187)
+[node name="sea_horse_emotion" parent="." instance=ExtResource("3_u15w6")]
+position = Vector2(-146, 160)
 scale = Vector2(10, 10)
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
@@ -175,11 +172,11 @@ offset_bottom = -20.1
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
-theme_override_fonts/normal_font = ExtResource("6_hqxyl")
+theme_override_fonts/normal_font = ExtResource("6_sd2wp")
 theme_override_font_sizes/normal_font_size = 24
 text = "VvvV"
 scroll_active = false
-script = ExtResource("7_7vul7")
+script = ExtResource("7_j6rg1")
 min_font_size = 16
 
 [node name="TypingTimer" type="Timer" parent="."]
@@ -206,7 +203,7 @@ theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
 theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
 theme_override_constants/caret_width = 5
-theme_override_fonts/font = ExtResource("6_hqxyl")
+theme_override_fonts/font = ExtResource("6_sd2wp")
 theme_override_font_sizes/font_size = 46
 theme_override_styles/normal = SubResource("StyleBoxTexture_njf6d")
 wrap_mode = 1
@@ -241,10 +238,6 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_ty227")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_w4v0k")
 theme_override_styles/normal = SubResource("StyleBoxTexture_5po65")
 
-[node name="PlayerTextBoxBorderFrame004" type="Sprite2D" parent="HBoxContainer"]
-position = Vector2(14, -19)
-texture = ExtResource("13_1dtly")
-
 [node name="DayCompleteButton" type="Button" parent="."]
 visible = false
 custom_minimum_size = Vector2(33, 18)
@@ -271,7 +264,7 @@ content_scale_mode = 1
 content_scale_aspect = 1
 theme_override_colors/title_color = Color(0, 0, 0, 0)
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_njf6d")
-script = ExtResource("16_tditn")
+script = ExtResource("16_lrrru")
 
 [node name="ChatLogPanel" type="Panel" parent="ChatLogWindow"]
 anchors_preset = 15
@@ -297,7 +290,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.911204, 0.975667, 0.98165, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 2
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "Conversation History"
 autowrap_mode = 3
@@ -310,21 +303,21 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 2
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "Font Size:"
 
 [node name="DecreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "A-"
 
 [node name="IncreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "A+"
 
@@ -332,7 +325,7 @@ text = "A+"
 layout_mode = 2
 tooltip_text = "Close Chat Log"
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "X"
 
@@ -347,7 +340,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
-theme_override_fonts/normal_font = ExtResource("6_hqxyl")
+theme_override_fonts/normal_font = ExtResource("6_sd2wp")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "ddddddddddddddddddddddddddddffffffffffffff"
@@ -360,7 +353,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 2
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 32
 text = "0 messages"
 horizontal_alignment = 2
@@ -368,124 +361,116 @@ autowrap_mode = 3
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(520, 380)
-stream = ExtResource("18_65tnk")
-
-[node name="CharacterTextBoxBorderFrame004" type="Sprite2D" parent="."]
-position = Vector2(-135, 255)
-scale = Vector2(10, 10)
-texture = ExtResource("19_1dtly")
+stream = ExtResource("18_bmae2")
 
 [node name="Statsbox" type="Sprite2D" parent="."]
 position = Vector2(495, -55)
 scale = Vector2(10, 10)
-texture = ExtResource("20_1dtly")
-
-[node name="StatsBoxBorderFrame004" type="Sprite2D" parent="Statsbox"]
-texture = ExtResource("21_bc7nj")
+texture = ExtResource("20_u15w6")
 
 [node name="Heart -10" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("21_tih4d")
+texture = ExtResource("22_a0fd4")
 
 [node name="Heart -9" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("22_yhcvy")
+texture = ExtResource("23_5wvnl")
 
 [node name="Heart -8" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("23_lpt7v")
+texture = ExtResource("24_vwmnb")
 
 [node name="Heart -7" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("24_kb7os")
+texture = ExtResource("25_oo20w")
 
 [node name="Heart -6" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("25_6tsqg")
+texture = ExtResource("26_nyf7g")
 
 [node name="Heart -5" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("26_6j472")
+texture = ExtResource("27_mxf4o")
 
 [node name="Heart -4" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("27_7awnk")
+texture = ExtResource("28_wmyex")
 
 [node name="Heart -3" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("28_q7n37")
+texture = ExtResource("29_74nlx")
 
 [node name="Heart -2" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("29_5pt38")
+texture = ExtResource("30_2ht1a")
 
 [node name="Heart -1" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("30_vkyb6")
+texture = ExtResource("31_st74o")
 
 [node name="Heart 0" type="Sprite2D" parent="Statsbox"]
 position = Vector2(7.5, 0.1)
-texture = ExtResource("31_122j3")
+texture = ExtResource("32_doqmj")
 
 [node name="Heart 1" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("32_4jghv")
+texture = ExtResource("33_jnhdr")
 
 [node name="Heart 2" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("33_3q5d4")
+texture = ExtResource("34_png6q")
 
 [node name="Heart 3" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("34_t5geq")
+texture = ExtResource("35_whcx5")
 
 [node name="Heart 4" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("35_phwci")
+texture = ExtResource("36_cvmsq")
 
 [node name="Heart 5" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("36_yjtup")
+texture = ExtResource("37_ohgt4")
 
 [node name="Heart 6" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("37_5hw44")
+texture = ExtResource("38_73wpn")
 
 [node name="Heart 7" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("38_o8vga")
+texture = ExtResource("39_53770")
 
 [node name="Heart 8" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("39_rn0rk")
+texture = ExtResource("40_frdfx")
 
 [node name="Heart 9" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("40_uo6xm")
+texture = ExtResource("41_e110t")
 
 [node name="Heart 10" type="Sprite2D" parent="Statsbox"]
 visible = false
 position = Vector2(7.5, 0.1)
-texture = ExtResource("41_ee521")
+texture = ExtResource("42_q1k0m")
 
 [node name="Action_left" type="Label" parent="Statsbox"]
 offset_left = -14.0
@@ -494,7 +479,7 @@ offset_right = 14.0
 offset_bottom = 20.3
 scale = Vector2(0.5, 0.5)
 theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 24
 text = "10"
 horizontal_alignment = 1
@@ -503,7 +488,7 @@ vertical_alignment = 1
 [node name="NameBarFrame004" type="Sprite2D" parent="."]
 position = Vector2(50, -200)
 scale = Vector2(10, 10)
-texture = ExtResource("42_1dtly")
+texture = ExtResource("43_niip7")
 
 [node name="map" type="Button" parent="NameBarFrame004"]
 anchors_preset = 6
@@ -546,9 +531,9 @@ offset_top = -5.5
 offset_right = 41.9
 offset_bottom = 4.5
 theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
-theme_override_fonts/font = ExtResource("17_ct52d")
+theme_override_fonts/font = ExtResource("17_xyoj0")
 theme_override_font_sizes/font_size = 8
-text = "ALLEYWAY"
+text = "SEA HORSE STABLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 

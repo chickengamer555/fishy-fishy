@@ -25,7 +25,7 @@ func reset():
 	print("🔄 Map memory reset")
 
 func initialize_random_starting_location():
-	# Define all possible starting locations
+	# Define all possible starting locations (excluding sea horse stable)
 	var possible_locations = ["kelp man cove", "squaloon", "wild south", "mine field", "trash heap", "alleyway"]
 	
 	# Randomly choose one to start with
