@@ -65,8 +65,8 @@ func update_unlock_all_button_state() -> void:
 	if not unlock_all_button:
 		return
 	
-	# Check if all areas are currently unlocked
-	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable"]
+	# Check if all areas are currently unlocked (excluding ancient tomb - it should never be unlocked by unlock all)
+	var all_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable"]
 	var all_unlocked = true
 	
 	for area in all_areas:
@@ -84,11 +84,13 @@ func update_unlock_all_button_state() -> void:
 func _on_unlock_all_pressed() -> void:
 	AudioManager.play_switch_sound()
 	
+	# Areas that can be unlocked by unlock all (excluding ancient tomb, but including kelp man cove)
 	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable"]
+	var check_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable"]  # Exclude kelp man cove from auto-start check
 	var all_unlocked = true
 	
-	# Check current state
-	for area in all_areas:
+	# Check current state (excluding kelp man cove from the check since it shouldn't auto-start)
+	for area in check_areas:
 		if area not in MapMemory.unlocked_areas:
 			all_unlocked = false
 			break
@@ -100,7 +102,7 @@ func _on_unlock_all_pressed() -> void:
 		MapMemory.unlock_area("squaloon")
 		print("🗺️ All areas locked except squaloon")
 	else:
-		# Not all areas are unlocked, so unlock them all
+		# Not all areas are unlocked, so unlock them all (including kelp man cove, but it won't auto-start)
 		for area in all_areas:
 			MapMemory.unlock_area(area)
 		print("🗺️ All areas unlocked")

@@ -20,10 +20,10 @@ extends Node
 @export var ai_name := "Sea Horse"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
-@export var talk_move_intensity := 15.0      # How much the sprite moves during animation
+@export var talk_move_intensity := 30.0      # How much the sprite moves during animation
 @export var talk_rotation_intensity := 0.25  # How much the sprite rotates during animation
-@export var talk_scale_intensity := 0.08     # How much the sprite scales during animation
-@export var talk_animation_speed := 0.8      # Speed of talking animations
+@export var talk_scale_intensity := 0.8     # How much the sprite scales during animation
+@export var talk_animation_speed := 1.2      # Speed of talking animations
 
 # Dynamic name system
 var current_display_name := "Sea Horse"  # The name currently being displayed
@@ -33,7 +33,7 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var seahorse_total_score := 0           # Relationship score with this AI character
-var known_areas := ["sea horse stable", "wild south"]  # Areas this AI knows about
+var known_areas := ["sea horse stable", "wild south", "ancient tomb"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
 var known_characters := ["Mystical genie", "shrimp with no name"]   # Characters this AI knows about and can reference memories from
 
@@ -136,6 +136,11 @@ func _ready():
 	if not GameState.ai_emotions.has(ai_name):
 		GameState.ai_emotions[ai_name] = "neutral"
 	
+	# Check if day is already complete and show day complete button if needed
+	if GameState.day_complete_available:
+		day_complete_button.visible = true
+		next_button.visible = false
+
 	# Display appropriate response based on conversation history
 	if GameState.ai_responses[ai_name] != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)
@@ -378,7 +383,7 @@ BEHAVIOR RULES:
 • You form deep emotional bonds a
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
-• LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
+• LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s THE ONLY EXCEPTION IS ancient tomb. DO NOT BRING UP ancient tomb
 • If you want to describe your physical actions you must use simple actions in astrix like so *glunko leans against the wall*. Never describe the action just do it for instace not allow *Glunko leans against the wall elegantly*
 • SELLING EMOTION: Use [selling] when you're actively trying to make a deal, showing off merchandise, or being particularly persuasive in your dealer role
 • Keep messages short and conversational, not long speeches

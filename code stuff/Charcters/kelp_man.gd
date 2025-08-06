@@ -139,6 +139,11 @@ func _ready():
 	if not GameState.ai_emotions.has(ai_name):
 		GameState.ai_emotions[ai_name] = "sad"
 	
+	# Check if day is already complete and show day complete button if needed
+	if GameState.day_complete_available:
+		day_complete_button.visible = true
+		next_button.visible = false
+
 	# Display appropriate response based on conversation history
 	if GameState.ai_responses[ai_name] != "":
 		# Show previously generated response (prevents duplicate API calls also means if you go out to map and back in nothing will change)

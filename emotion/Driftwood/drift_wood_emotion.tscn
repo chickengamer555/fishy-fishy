@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwu5wk2m4uolf"]
+
+[ext_resource type="Texture2D" uid="uid://cstiblce8hu2t" path="res://emotion/Driftwood/Neutral.png" id="1_he2u6"]
+
+[node name="drift_wood_emotion" type="Node2D"]
+
+[node name="Crazy" type="Sprite2D" parent="."]
+position = Vector2(0, -7)
+texture = ExtResource("1_he2u6")

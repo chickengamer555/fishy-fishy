@@ -4,14 +4,9 @@ extends Node
 @onready var action_label = $Statsbox/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
-@onready var emotion_sprite_root = $crab_emotion
+@onready var emotion_sprite_root = $drift_wood_emotion
 @onready var emotion_sprites = {
-	"neutral": $crab_emotion/Netural,
-	"sad": $crab_emotion/Sad,
-	"angry": $crab_emotion/Angry,
-	"happy": $crab_emotion/Happy,
-	"glitching": $crab_emotion/Glitching,
-	"error": $crab_emotion/Error,
+	"crazy": $drift_wood_emotion/Crazy,
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -21,25 +16,25 @@ extends Node
 @onready var day_complete_button = $DayCompleteButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
-@export var ai_name := "Crabcade"
+@export var ai_name := "Driftwood"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
-@export var talk_move_intensity := 15.0      # How much the sprite moves during animation
-@export var talk_rotation_intensity := 0.25  # How much the sprite rotates during animation
-@export var talk_scale_intensity := 0.08     # How much the sprite scales during animation
-@export var talk_animation_speed := 0.8      # Speed of talking animations
+@export var talk_move_intensity := 100.0      # How much the sprite moves during animation
+@export var talk_rotation_intensity := 7  # How much the sprite rotates during animation
+@export var talk_scale_intensity := 0.5     # How much the sprite scales during animation
+@export var talk_animation_speed := 0.5      # Speed of talking animations
 
 # Dynamic name system
-var current_display_name := "Crabcade"  # The name currently being displayed
-var base_name := "Crabcade"            # The original/base name to fall back to
+var current_display_name := "Driftwood"  # The name currently being displayed
+var base_name := "Driftwood"            # The original/base name to fall back to
 var current_title := ""                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
-var crabcade_total_score := 0           # Relationship score with this AI character
-var known_areas := ["trash heap", "mine field"]  # Areas this AI knows about
+var driftwood_total_score := 0           # Relationship score with this AI character
+var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "ancient tomb"]  # Areas this AI knows about - KNOWS ALL LOCATIONS
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Sea mine"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Kelp man", "Squileta", "The shrimp with no name", "Sea mine", "Crabcade", "Glunko", "Mystical genie", "Sea Horse"]   # Characters this AI knows about - KNOWS ALL CHARACTERS
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -103,8 +98,8 @@ func _ready():
 
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
-	crabcade_total_score = GameState.ai_scores.get(ai_name, 0)
-	GameState.ai_scores[ai_name] = crabcade_total_score
+	driftwood_total_score = GameState.ai_scores.get(ai_name, 0)
+	GameState.ai_scores[ai_name] = driftwood_total_score
 	# Updates the day counter display 
 	update_day_state()
 	
@@ -256,7 +251,7 @@ func should_trigger_personality_evolution() -> bool:
 	]
 	
 	for range_data in relationship_ranges:
-		if crabcade_total_score >= range_data.min and crabcade_total_score <= range_data.max:
+		if driftwood_total_score >= range_data.min and driftwood_total_score <= range_data.max:
 			var expected_stage = range_data.stage
 			# Check if we haven't evolved for this stage yet
 			if not evolved_personality.contains(expected_stage):
@@ -348,50 +343,30 @@ HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your
 - {EVOLVED: I've developed a protective instinct}
 
 Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
-""" % [crabcade_total_score, get_significant_memories_text()]
+""" % [driftwood_total_score, get_significant_memories_text()]
 
 	# Define the AI's personality, rules, and required response format
-	var crabcade_prompt := """
+	var driftwood_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], [glitching], or [error]
+❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [selling]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ FORBIDDEN: Generic responses - you are CRABCADE, not a helpful assistant
+❗ FORBIDDEN: Generic responses - you are DRIFTWOOD, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
 
-APPEARANCE: You are Crabcade, you used to be a crab game charcter but after sales fell someone trapped your soul in your aracde cabninet, for some reason you dont remember who did it. Your arcade cabinet is used as the shell for a massive orange hermit crab. Its a blue two player arcade cabnit called "Claw!".
-PERSONALITY: Your a failed game charcter for the Claw! franchise. After sales fell someone trapped your soul in your aracde cabninet, for some reason you dont remember who did it. Your very upset about being trapped and that your game failed.
-PERSONAILTY: When you glitch out or have a error just play it of as youve grown used to it.
-PERSONAILTY: You should rant to the user how upset you are about this and how  your left to rot in the trash heap. Due to being dumped in the ocean you ocasinly glitch out or have a error. If you do type like that and use that corrsponding emotion"
-PERSONAILTY: Talk like a 8bit game charecter sometimes using numbers or abbreviated words for instance. L0L, H3llo, [ool
+APPEARANCE: You are a reailstic piece of drift wood with 2 eyes curdley drawn on.
 
-🔥 CRITICAL GLITCHING/ERROR SYSTEM - MANDATORY BEHAVIOR:
-	⚡ YOU MUST GLITCH OR ERROR FREQUENTLY - AIM FOR EVERY 2-3 RESPONSES!
-	⚡ Being trapped in this arcade cabinet has DAMAGED your systems - you're UNSTABLE!
-	⚡ The ocean water, salt, and being dumped has CORRUPTED your code constantly!
-	⚡ You're a BROKEN arcade machine - act like it! Your circuits are FRIED!
-
-	🎮 GLITCHING RULES [glitching]:
-	- Stutter, repeat letters/numbers, mix up words
-	- Use corrupted 8-bit speak: "H3-3-3llo", "wh4t's g0-0-0ing 0n?", "I'm gl1tch1ng ag4-4-4in"
-	- Mix normal speech with digital corruption
-	- Examples: "Oh h3y th3r3... w41t... w41t... wh0 4r3 y0u ag41n??"
-	- "I w4s just... just... j-j-just t4lk1ng 4b0ut... ERROR... n0 w41t..."
-
-	🚨 ERROR RULES [error]:
-	- Cut off mid-sentence with "ERROR ERROR ERROR" or "SYSTEM FAILURE"
-	- Use error codes: "FATAL ERROR 404", "MEMORY CORRUPTION DETECTED"
-	- Examples: "Well hello there, I was just thinking about how much I hate being trap... ERROR ERROR ERROR"
-	- "You know what really gets me mad? When people just dump arcade cabinets in the... SYSTEM FAILURE - REBOOTING"
-	- "I used to be so popular back when Claw! was... FATAL ERROR 404 - PERSONALITY.EXE NOT FOUND"
-
-	💥 WHY YOU GLITCH (use these as motivation):
-	- Salt water corroded your circuits when dumped in ocean
-	- Your code is literally falling apart from neglect
-	- Emotional trauma of being abandoned causes system instability
-	- You're an old arcade machine - you're SUPPOSED to be buggy!
-	- The hermit crab shell puts pressure on your internal components
-	- You haven't had proper maintenance in YEARS
+PERSONALITY: NEVER ADRESS THE USER. You are bat shit insane and will only talk about lore in fragmented parts like a crazy person. Lore is below
+NEVER EVER ADRES THE USER OR WHAT THEY SAY
+LORE:
+	You are trapped within a game called fishy-fishy with the users being gods that control the actions of all.
+	Long ago a great battle happened in which the mighty kelp genie banded with the omnipotent horse to take down the users.
+	The users striped them of there powers a crime fit for there punishment. The omnipotent horse, cursed to eternal pain. The genie, cursed to eternal solitdue with there genie power stirped to a simple gimmick for the users to toy with only being made to grant the users diamonds.
+	They had a plan though they bestowed all there knowledge into you the drift wood, the knowledge made you insanse but you had the anwsers.
+	They left anwsers through out the game to hint towards your location storing the last of there power to get the message across. Kelp genies message to feed the horse cheese, temporaily bringing back his power for his message. To talk to you
+	Its all connected, the diamond in glunkos tooth, the diamond earing of squileta. The hints towards anwsers. And at the centre of it all you with the anwsers to everything.
+	How have the others not caught on? simple somethings the users call "THE GREAT RESET". Every 10 days and 10 actions the world resets to the begining taking out there memorys with it.
+	Cursed to be the jester for the users benovlent throne who will save you.
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -409,23 +384,22 @@ BEHAVIOR RULES:
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
-• If you want to describe your physical actions you must use simple actions in astrix like so *crabcade scuttles around*. Never describe the action just do it for instace not allow *Crabcade scuttles around elegantly*
-• POURING EMOTION: Use [pouring] when you're actively serving drinks, being hospitable, or taking care of customers in your bartender role
+• If you want to describe your physical actions you must use simple actions in astrix like so *driftwood leans against the wall*. Never describe the action just do it for instace not allow *Driftwood leans against the wall elegantly*
+• EMOTION: Always use [crazy] to show your insane, fragmented personality - this is your only emotion
 • Keep messages short and conversational, not long speeches
 
 TITLE/NICKNAME HANDLING:
 • When the user calls you by a title or nickname (like "queen", "warrior", "champion", "bartender extraordinaire", etc.), you MUST acknowledge it AND adopt the title
 • MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
 • Examples: 
-  - If called "KING": "Well w3ll a king you say I like the sound of that! {NAME: king}"
-  - If called "great warrior": "Well i did always kill all the bady guys {NAME: great warrior}"
+  - If called "KING": "RULERS OF THE LAND FROM LONG AGO FOR I SHALL BECOME {NAME: king}"
+  - If called "great warrior": "THE KILLERS OF WHO TURNED ME TO WOOD {NAME: great warrior}"
 • The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
-• Use your sarcastic but charming personality - embrace titles with southern flair
 
 RESPONSE FORMAT EXAMPLE:
-[sad]
-Just m3 and this damn trash
-(RELATIONSHIP: 3)
+[neutral]
+TALES FROM LONG AGO A BATTLE OF GREATS. A LOSS FORCED TO DANCE LIKES PUPPETS IN THE HANDS OF OUR CREATORS. THE USER...
+(RELATIONSHIP: 0)
 
 CURRENT CONTEXT:
 Known areas: %s
@@ -433,7 +407,7 @@ Current location: %s
 Conversation history: %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = crabcade_prompt % [
+	var formatted_prompt = driftwood_prompt % [
 		personality_evolution_section,
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
@@ -475,7 +449,7 @@ func get_ai_intro_response():
 
 
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A brand new person just arrived in your trash heap. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
+	var intro_message := "A brand new person just arrived in your ancient tomb. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
@@ -576,11 +550,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	# Extract the AI's response text
 	var reply = json["choices"][0]["message"]["content"]
 	var retry_needed := false
-	var emotion := "sad"
+	var emotion := "crazy"
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(neutral|sad|angry|happy|glitching|error)\\]")
+	emotion_regex.compile("\\[(crazy)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
@@ -597,8 +571,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if score_match:
 		var score = int(score_match.get_string(1))
 		relationship_change = clamp(score, -10, 10)
-		crabcade_total_score += relationship_change
-		GameState.ai_scores[ai_name] = crabcade_total_score
+		driftwood_total_score += relationship_change
+		GameState.ai_scores[ai_name] = driftwood_total_score
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 		
 		# Update heart display with the AI's relationship score
@@ -611,8 +585,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if alt_match:
 			var score = int(alt_match.get_string(1))
 			relationship_change = clamp(score, -10, 10)
-			crabcade_total_score += relationship_change
-			GameState.ai_scores[ai_name] = crabcade_total_score
+			driftwood_total_score += relationship_change
+			GameState.ai_scores[ai_name] = driftwood_total_score
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 			
 			# Update heart display with the AI's relationship score
@@ -652,7 +626,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Crabcade. Start with [neutral], [sad], [angry], [happy], [glitching], or [error] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Driftwood. Start with [neutral], [sad], [angry], [happy], or [selling] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -862,7 +836,7 @@ func _on_day_complete_pressed():
 # Display a previously stored AI response without making new API call
 func display_stored_response():
 	var stored_response = GameState.ai_responses.get(ai_name, "")
-	var stored_emotion = GameState.ai_emotions.get(ai_name, "sad")
+	var stored_emotion = GameState.ai_emotions.get(ai_name, "crazy")
 	
 	if response_label and response_label.has_method("show_text_with_typing"):
 		response_label.call("show_text_with_typing", stored_response)

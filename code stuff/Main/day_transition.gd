@@ -68,7 +68,7 @@ func _on_next_day_pressed():
 	else:
 		# Proceed to next day
 		GameState.days_left -= 1
-		GameState.actions_left = 2
+		GameState.actions_left = 10
 		GameState.just_started_new_day = true
 
 		# Clear all get out button states when starting a new day

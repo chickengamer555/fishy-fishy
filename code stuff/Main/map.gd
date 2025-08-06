@@ -7,6 +7,7 @@ func _on_bar_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Squilleta.tscn")
 	MapMemory.set_location("squaloon")
+	
 func _on_kelp_man_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
@@ -45,7 +46,8 @@ func update_location_visibility():
 		"mine_field": "mine field",
 		"trash_heap": "trash heap",
 		"alleyway": "alleyway",
-		"sea_horse_stable": "sea horse stable"
+		"sea_horse_stable": "sea horse stable",
+		"ancient_tomb": "ancient tomb"
 	}
 	
 	# Set visibility based on unlocked areas
@@ -72,7 +74,8 @@ func ensure_at_least_one_location_visible():
 	
 	for child in get_children():
 		var node_name = child.name.to_lower()
-		if node_name in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable"]:
+		# Only include locations that can be force-unlocked (exclude ancient_tomb and kelp_man_cove from random visibility)
+		if node_name in ["sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable"]:
 			location_nodes.append(child)
 			if child.visible:
 				visible_locations.append(child)
@@ -88,9 +91,8 @@ func ensure_at_least_one_location_visible():
 		var chosen_location = location_nodes[random_index]
 		chosen_location.visible = true
 		
-		# Also unlock the corresponding area
+		# Also unlock the corresponding area (only for locations that can be force-unlocked)
 		var location_mapping = {
-			"kelp_man_cove": "kelp man cove",
 			"sqauloon": "squaloon",
 			"wild_south": "wild south",
 			"mine_field": "mine field",
@@ -107,7 +109,7 @@ func ensure_at_least_one_location_visible():
 	
 	# Final check
 	for child in get_children():
-		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable"]:
+		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "ancient_tomb"]:
 			print("🗺️ Final: ", child.name, " visible: ", child.visible)
 
 
@@ -144,3 +146,10 @@ func _on_sea_horse_stable_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Sea horse.tscn")
 	MapMemory.set_location("sea horse stable")
+
+
+func _on_ancient_tomb_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/drift_wood.tscn")
+	MapMemory.set_location("ancient tomb")
