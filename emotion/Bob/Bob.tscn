@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://brld758f08kt4"]
+
+[ext_resource type="Texture2D" uid="uid://rdff7x73o0b3" path="res://emotion/Bob/Bob happy.png" id="2_hoat1"]
+[ext_resource type="Texture2D" uid="uid://d3viamcxoi7td" path="res://emotion/Bob/Bob neutral.png" id="2_miy43"]
+[ext_resource type="Texture2D" uid="uid://bykh6inh6i73j" path="res://emotion/Bob/Bob angry.png" id="3_miy43"]
+[ext_resource type="Texture2D" uid="uid://c2a7sct52rssl" path="res://emotion/Bob/Bob sad.png" id="4_miy43"]
+[ext_resource type="Texture2D" uid="uid://2makuixkerk5" path="res://emotion/Bob/Bob freaking out.png" id="5_miy43"]
+
+[node name="bob_emotion" type="Node2D"]
+
+[node name="Netural" type="Sprite2D" parent="."]
+position = Vector2(0, -7)
+texture = ExtResource("2_miy43")
+
+[node name="Happy" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7)
+texture = ExtResource("2_hoat1")
+
+[node name="Angry" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7)
+texture = ExtResource("3_miy43")
+
+[node name="Sad" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7.5)
+texture = ExtResource("4_miy43")
+
+[node name="Freaking out" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-3.99351e-06, -7.5)
+texture = ExtResource("5_miy43")

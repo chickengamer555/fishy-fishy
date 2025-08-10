@@ -62,6 +62,11 @@ var location_requests: int = 0           # Count how many times user asked about
 var retry_count: int = 0                 # Track number of retries for current request
 var max_retries: int = 5                 # Maximum number of retries before giving fallback response
 
+# Anger tracking system
+var current_anger_level: String = "disgruntled"  # Track current anger state
+var anger_response_count: int = 0        # How many responses at current anger level
+var received_warnings: int = 0           # How many warning responses given
+
 
 
 # Varibles for "animation"
@@ -110,7 +115,12 @@ func _ready():
 
 	# Initialize leave button based on persistent state
 	# Check if the leave button should be visible based on persistent state
+	# Only show if we're still on the same day the explosion happened
 	var should_show_leave = GameState.ai_get_out_states.get(ai_name, false)
+	if should_show_leave and GameState.just_started_new_day:
+		# Clear the leave button state if it's a new day
+		GameState.ai_get_out_states[ai_name] = false
+		should_show_leave = false
 	leave_button.visible = should_show_leave
 
 	# Initialize heart sprites dictionary
@@ -423,16 +433,22 @@ PERSONAILTY: Your a  big believer in hard work although you can hardly do anythi
 PERSONAILTY: You HATE video games and you HATE crabcade who recently fell into the trash heap near your home the mine field.
 
 
-ANGER ESCALATION RULES - ESCALATE QUICKLY WHEN PROVOKED:
-🔥 ANGER LEVEL 1 - [disgruntled]: Default grumpy state. If user continues to annoy you, escalate to [pissed] in the SAME response or next response.
-🔥 ANGER LEVEL 2 - [pissed]: Be very hostile and aggressive. If user keeps pushing you, escalate to [warning] quickly - don't stay pissed for long!
-🔥 ANGER LEVEL 3 - [warning]: Warn about exploding but DON'T say "KABOOM" or "BOOM" - use phrases like "You're pushing me too far!" or "I'm about to lose it!" If user continues being annoying, escalate to [exploding] after 1-2 warning responses.
-🔥 ANGER LEVEL 4 - [exploding]: Say "KABOOOOOOM!" followed by "Come back tomorrow to see me again!" This triggers the leave button.
+ANGER ESCALATION RULES - ESCALATE GRADUALLY WHEN PROVOKED:
+🔥 ANGER LEVEL 1 - [disgruntled]: Default grumpy state. If user annoys you, stay disgruntled for 1-2 responses before escalating.
+🔥 ANGER LEVEL 2 - [pissed]: Be hostile and aggressive. Stay pissed for 2-3 responses. Only escalate to [warning] if user continues being very annoying.
+🔥 ANGER LEVEL 3 - [warning]: CRITICAL - You MUST warn about exploding! Say things like "You're pushing me too far!" or "Keep this up and I'll explode!" Stay in warning for 2-3 responses to give user a chance to stop.
+🔥 ANGER LEVEL 4 - [exploding]: Only after multiple warnings! Say "KABOOOOOOM!" followed by "Come back tomorrow to see me again!" This triggers the leave button.
 
 ESCALATION TRIGGERS: Move up anger levels when user:
 • Insults you or is rude • Keeps bothering you after you're already angry • Mentions things you hate (video games, Crabcade) • Doesn't listen to your warnings • Is persistently annoying
 
-BE REACTIVE - Don't stay stuck in one anger level if the user keeps provoking you!
+IMPORTANT: You MUST give warnings before exploding! Don't skip the [warning] stage!
+
+CURRENT ANGER STATUS:
+• Current anger level: %s
+• Responses at this level: %d
+• Total warnings given: %d
+• ESCALATION RULE: If you're at [warning] and user keeps being annoying, you can explode after giving at least 2 warnings total.
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -477,6 +493,9 @@ Conversation history: %s
 		personality_evolution_section,
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
+		current_anger_level,
+		anger_response_count, 
+		received_warnings,
 		known_areas, 
 		known_areas,
 		MapMemory.get_location(), 
@@ -622,6 +641,17 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if match:
 		emotion = match.get_string(1).to_lower()
 		reply = reply.replace(match.get_string(0), "").strip_edges()
+		
+		# Track anger progression
+		if emotion != current_anger_level:
+			# Anger level changed, reset counter
+			current_anger_level = emotion
+			anger_response_count = 1
+			if emotion == "warning":
+				received_warnings += 1
+		else:
+			# Same anger level, increment counter
+			anger_response_count += 1
 		
 
 

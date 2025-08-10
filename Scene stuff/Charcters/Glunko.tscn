@@ -246,6 +246,7 @@ position = Vector2(14, -19)
 texture = ExtResource("13_1dtly")
 
 [node name="DayCompleteButton" type="Button" parent="."]
+visible = false
 custom_minimum_size = Vector2(33, 18)
 offset_left = 335.0
 offset_top = 290.0

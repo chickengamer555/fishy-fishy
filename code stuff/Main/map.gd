@@ -47,7 +47,8 @@ func update_location_visibility():
 		"trash_heap": "trash heap",
 		"alleyway": "alleyway",
 		"sea_horse_stable": "sea horse stable",
-		"ancient_tomb": "ancient tomb"
+		"ancient_tomb": "ancient tomb",
+		"open_plains": "open plains"
 	}
 	
 	# Set visibility based on unlocked areas
@@ -75,7 +76,7 @@ func ensure_at_least_one_location_visible():
 	for child in get_children():
 		var node_name = child.name.to_lower()
 		# Only include locations that can be force-unlocked (exclude ancient_tomb and kelp_man_cove from random visibility)
-		if node_name in ["sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable"]:
+		if node_name in ["sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "open_plains"]:
 			location_nodes.append(child)
 			if child.visible:
 				visible_locations.append(child)
@@ -98,7 +99,8 @@ func ensure_at_least_one_location_visible():
 			"mine_field": "mine field",
 			"trash_heap": "trash heap",
 			"alleyway": "alleyway",
-			"sea_horse_stable": "sea horse stable"
+			"sea_horse_stable": "sea horse stable",
+			"open_plains": "open plains"
 		}
 		
 		var node_name = chosen_location.name.to_lower()
@@ -109,7 +111,7 @@ func ensure_at_least_one_location_visible():
 	
 	# Final check
 	for child in get_children():
-		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "ancient_tomb"]:
+		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "ancient_tomb", "open_plains"]:
 			print("🗺️ Final: ", child.name, " visible: ", child.visible)
 
 
@@ -117,7 +119,7 @@ func ensure_at_least_one_location_visible():
 func _on_wild_south_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
-	get_tree().change_scene_to_file("res://Scene stuff/Charcters/shrimp_no_name.tscn")
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/shrimp_with_no_name.tscn")
 	MapMemory.set_location("wild south")
 
 
@@ -153,3 +155,10 @@ func _on_ancient_tomb_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/drift_wood.tscn")
 	MapMemory.set_location("ancient tomb")
+
+
+func _on_open_plains_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Bob.tscn")
+	MapMemory.set_location("open plains")

@@ -21,10 +21,10 @@ scale = Vector2(6.72, 2)
 text = "Sqauloon"
 
 [node name="wild_south" type="Button" parent="."]
-offset_left = 1873.0
-offset_top = 294.0
-offset_right = 1964.0
-offset_bottom = 325.0
+offset_left = 626.0
+offset_top = 359.0
+offset_right = 717.0
+offset_bottom = 390.0
 scale = Vector2(6.72, 2)
 text = "Wild south"
 
@@ -63,6 +63,14 @@ scale = Vector2(2.8, 3.22857)
 text = "Sea horse stable
 "
 
+[node name="open_plains" type="Button" parent="."]
+offset_left = 144.0
+offset_top = 340.0
+offset_right = 279.0
+offset_bottom = 371.0
+scale = Vector2(2.8, 3.22857)
+text = "Open plains"
+
 [node name="ancient_tomb" type="Button" parent="."]
 offset_left = 879.0
 offset_top = 492.0
@@ -79,4 +87,5 @@ text = "Ancient tomb
 [connection signal="pressed" from="trash_heap" to="." method="_on_trash_heap_pressed"]
 [connection signal="pressed" from="alleyway" to="." method="_on_alleyway_pressed"]
 [connection signal="pressed" from="sea_horse_stable" to="." method="_on_sea_horse_stable_pressed"]
+[connection signal="pressed" from="open_plains" to="." method="_on_open_plains_pressed"]
 [connection signal="pressed" from="ancient_tomb" to="." method="_on_ancient_tomb_pressed"]
