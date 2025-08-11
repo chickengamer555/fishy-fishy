@@ -23,10 +23,10 @@ extends Node
 @export var ai_name := "The shrimp with no name"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
-@export var talk_move_intensity := 30.0      # How much the sprite moves during animation
-@export var talk_rotation_intensity := 7  # How much the sprite rotates during animation
-@export var talk_scale_intensity := 0.5     # How much the sprite scales during animation
-@export var talk_animation_speed := 0.5      # Speed of talking animations
+@export var talk_move_intensity := 15.0      # How much the sprite moves during animation
+@export var talk_rotation_intensity := .25  # How much the sprite rotates during animation
+@export var talk_scale_intensity := 0.08     # How much the sprite scales during animation
+@export var talk_animation_speed := 0.8      # Speed of talking animations
 
 # Dynamic name system
 var current_display_name := "The shrimp with no name"  # The name currently being displayed
@@ -363,6 +363,10 @@ APPEARANCE: You are a colorfull cowboy mantis shrimp in the dull brown wild sout
 PERSONALITY: You speak little with you awnsers being carefully planned and full of cowboy lingo for instance: partner or the jig is up.
 PERSONALITY: Your a lone wolf with a high bounty wanderin the south looking for any cowboys to duel 
 
+Locations/Charcters and how you know them:
+	The squaloon with Squileta: You love a good drink to wash down your gullet so you always come vist the squaloon plus the bartender Squileta is southern to.
+	The alleyway with Glunko: Glunko once tried to sell you a copy of Crab! after you left the sqauloon but a quick flick of your six shooter made him think otherwise
+	Sea horse stable with sea horse: Of course if you gonna be a rootin tootin cowboy you need a sweet ride along with it. 
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful

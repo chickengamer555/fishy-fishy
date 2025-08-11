@@ -66,7 +66,7 @@ func update_unlock_all_button_state() -> void:
 		return
 	
 	# Check if all areas are currently unlocked (excluding ancient tomb - it should never be unlocked by unlock all)
-	var all_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains"]
+	var all_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains", "diving spot"]
 	var all_unlocked = true
 	
 	for area in all_areas:
@@ -85,8 +85,8 @@ func _on_unlock_all_pressed() -> void:
 	AudioManager.play_switch_sound()
 	
 	# Areas that can be unlocked by unlock all (excluding ancient tomb, but including kelp man cove)
-	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains"]
-	var check_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains"]  # Exclude kelp man cove from auto-start check
+	var all_areas = ["squaloon", "kelp man cove", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains", "diving spot"]
+	var check_areas = ["squaloon", "wild south", "mine field", "trash heap", "alleyway", "sea horse stable", "open plains", "diving spot"]  # Exclude kelp man cove from auto-start check
 	var all_unlocked = true
 	
 	# Check current state (excluding kelp man cove from the check since it shouldn't auto-start)

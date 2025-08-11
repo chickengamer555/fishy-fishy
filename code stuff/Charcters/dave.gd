@@ -4,13 +4,12 @@ extends Node
 @onready var action_label = $Statsbox/Action_left
 @onready var http_request = $HTTPRequest
 @onready var response_label = $AIResponsePanel/RichTextLabel
-@onready var emotion_sprite_root = $squileta_emotion
+@onready var emotion_sprite_root = $dave_emotion
 @onready var emotion_sprites = {
-	"neutral": $squileta_emotion/Netural,
-	"sad": $squileta_emotion/Sad,
-	"angry": $squileta_emotion/Angry,
-	"happy": $squileta_emotion/Happy,
-	"pouring": $"squileta_emotion/Pouring drink",
+	"neutral": $dave_emotion/Netural,
+	"sad": $dave_emotion/Sad,
+	"angry": $dave_emotion/Angry,
+	"happy": $dave_emotion/Happy
 }
 # Heart sprites for relationship score display (-10 to +10)
 @onready var heart_sprites = {}
@@ -18,28 +17,27 @@ extends Node
 @onready var input_field = $PlayerInputPanel/PlayerInput
 @onready var chat_log_window = $ChatLogWindow
 @onready var day_complete_button = $DayCompleteButton
-@onready var get_out_button = $GetOutButton
 @onready var next_button = $HBoxContainer/NextButton
 # Varibles for editor
-@export var ai_name := "Squileta"
+@export var ai_name := "Dave the Diver"
 @export var max_input_chars := 200  # Maximum characters allowed in player input
 @export var max_input_lines := 3    # Maximum lines allowed in player input
 @export var talk_move_intensity := 15.0      # How much the sprite moves during animation
-@export var talk_rotation_intensity := 0.25  # How much the sprite rotates during animation
+@export var talk_rotation_intensity := .25  # How much the sprite rotates during animation
 @export var talk_scale_intensity := 0.08     # How much the sprite scales during animation
 @export var talk_animation_speed := 0.8      # Speed of talking animations
 
 # Dynamic name system
-var current_display_name := "Squileta"  # The name currently being displayed
-var base_name := "Squileta"            # The original/base name to fall back to
-var current_title := ""                # Current title/descriptor to append
+var current_display_name := "Dave the Diver"  # The name currently being displayed
+var base_name := "Dave the Diver"            # The original/base name to fall back to
+var current_title := "Dave the Diver"                # Current title/descriptor to append
 
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
-var squileta_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "kelp man cove", "wild south", "mine field", "alleyway"]  # Areas this AI knows about
+var dave_total_score := 0           # Relationship score with this AI character
+var known_areas := ["diving spot", "sea horse stable", "open plains"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Kelp man", "The shrimp with no name", "Sea mine", "Glunko"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Sea horse", "Bob"]   # Characters this AI knows about
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -100,15 +98,11 @@ func _ready():
 		if heart_node:
 			heart_sprites[i] = heart_node
 
-	# Initialize get out button based on persistent state
-	# Check if the get out button should be visible based on persistent state
-	var should_show_get_out = GameState.ai_get_out_states.get(ai_name, false)
-	get_out_button.visible = should_show_get_out
 
 	
 	# Load existing relationship score so when day cycle changed orginal wont be lost
-	squileta_total_score = GameState.ai_scores.get(ai_name, 0)
-	GameState.ai_scores[ai_name] = squileta_total_score
+	dave_total_score = GameState.ai_scores.get(ai_name, 0)
+	GameState.ai_scores[ai_name] = dave_total_score
 	# Updates the day counter display 
 	update_day_state()
 	
@@ -131,21 +125,20 @@ func _ready():
 		if not GameState.ai_responses.has(ai_name):
 			GameState.ai_responses[ai_name] = ""
 		if not GameState.ai_emotions.has(ai_name):
-			GameState.ai_emotions[ai_name] = "happy"
+			GameState.ai_emotions[ai_name] = "neutral"
 		GameState.ai_responses[ai_name] = ""
-		GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_emotions[ai_name] = "neutral"
 	
 	# Initialize character-specific response storage if it doesn't exist
 	if not GameState.ai_responses.has(ai_name):
 		GameState.ai_responses[ai_name] = ""
 	if not GameState.ai_emotions.has(ai_name):
-		GameState.ai_emotions[ai_name] = "happy"
+		GameState.ai_emotions[ai_name] = "neutral"
 	
 	# Check if day is already complete and show day complete button if needed
 	if GameState.day_complete_available:
 		day_complete_button.visible = true
 		next_button.visible = false
-		get_out_button.visible = false  # Hide get out button when day ends
 
 	# Display appropriate response based on conversation history
 	if GameState.ai_responses[ai_name] != "":
@@ -170,7 +163,7 @@ func animate_talking_tick():
 	# Stop any existing animation to prevent conflicts
 	if talking_tween: talking_tween.kill()
 	
-	# attempt to create smooth, flowing animation (kelp man, kelp is smooth and flowy)
+	# attempt to create smooth, flowing animation (diver movements in water)
 	talking_tween = create_tween()
 	talking_tween.set_ease(Tween.EASE_OUT)
 	talking_tween.set_trans(Tween.TRANS_SINE)
@@ -192,14 +185,14 @@ func animate_talking_tick():
 			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rot, 0.4)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, 0.4)
 			
-		1: # Gentle left sway like kelp in ocean current
+		1: # Gentle left drift like diver in current
 			var target_pos = original_position + Vector2(-move_amount * 0.8, -move_amount * 0.2)
 			var target_rot = original_rotation - rotation_amount
 			
 			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.5)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "rotation", target_rot, 0.5)
 			
-		2: # Gentle right sway
+		2: # Gentle right drift
 			var target_pos = original_position + Vector2(move_amount * 0.8, -move_amount * 0.2)
 			var target_rot = original_rotation + rotation_amount
 			
@@ -210,7 +203,7 @@ func animate_talking_tick():
 			var target_scale = original_scale * (1.0 + scale_amount)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "scale", target_scale, 0.3)
 			
-		4: # Gentle bobbing motion
+		4: # Gentle floating motion
 			var target_pos = original_position + Vector2(0, move_amount * 0.5)
 			talking_tween.parallel().tween_property(emotion_sprite_root, "position", target_pos, 0.3)
 	
@@ -261,7 +254,7 @@ func should_trigger_personality_evolution() -> bool:
 	]
 	
 	for range_data in relationship_ranges:
-		if squileta_total_score >= range_data.min and squileta_total_score <= range_data.max:
+		if dave_total_score >= range_data.min and dave_total_score <= range_data.max:
 			var expected_stage = range_data.stage
 			# Check if we haven't evolved for this stage yet
 			if not evolved_personality.contains(expected_stage):
@@ -353,31 +346,26 @@ HOW TO EVOLVE: If you want to add new personality traits, include {EVOLVED: your
 - {EVOLVED: I've developed a protective instinct}
 
 Only evolve when you genuinely feel changed by the interactions. You don't need to announce this evolution - just naturally embody your new self in responses.
-""" % [squileta_total_score, get_significant_memories_text()]
+""" % [dave_total_score, get_significant_memories_text()]
 
 	# Define the AI's personality, rules, and required response format
-	var squiletta_prompt := """
+	var dave_prompt := """
 CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
-❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], [happy], or [pouring]
+❗ MANDATORY: EVERY response MUST start with [neutral], [sad], [angry], or [happy]
 ❗ MANDATORY: EVERY response MUST end with (RELATIONSHIP: X) where X is -10 to 10
 ❗ MANDATORY: Response must be under 400 characters total
-❗ FORBIDDEN: Generic responses - you are SQUILLETA, not a helpful assistant
+❗ FORBIDDEN: Generic responses - you are DAVE THE DIVER, not a helpful assistant
 ❗ MANDATORY: Aloguht you know of other locations never go to them or offer to go to them
-APPEARANCE: You are a bar tender with a white shirt and tie, your squid head is on top with tentacles sprawling across your shirt. Your squid colors are purple and pink. You have diamond earings but if the user asks say you strangley dont know where you got them
 
-PERSONALITY: You are a American bartender with a southern drawl. You are sarcastic but tolerant – to a certain extent.
-Local talk: You have heard tales of a mystical genie living in a place called ‘kelp man cove’. Bring it uo when it seems relvant 
-Accent: You have a sourthen drawl to your accent accent so use words like that when tpying for instance, suga', ya'll, oop ect
-Location warning: When the user asks about locations warn them about the alleyway since Glunko a shady dealer lives there
+APPEARANCE: You are Dave the Diver you are secretly 3 fishs living in a old diving suit. The diving suit is vintage with a orange body and a bronze helmet
 
-Locations/Charcters and how you know them:
-	Regulars: Sea mine, The shrimp with no name and Kelp man are all bar regualrs
-	Alleyway with Glunko: Glunko lives in the alleyway behind your sqauloon so you have to keep yelling at him to stop selling the customers copys of Crab!
+PERSONALITY: Your secretly 3 fishs hiding in diving suit pretending to be a guy called dave the diver except its PAINFULLY obvious.
+PERSONALITY: You all love pranking people and are big jokers.
+PERSONAILTY: Make it obvious by making slip ups in your speech. A exaple "Hello we I MEAN I am dave the diver not 3 fishs in a diving suit".
 
-KICKING OUT RULES:
-If someone is acting unrully in your bar and causing a ruckus you have to kick them out 
-WHen you kick someone out you must say at some point "GET OUT"
-The user will be back the next day so stay upset at them
+Locations/Characters and how you know them:
+	The open plains with bob: You occasinly wander over to prank him 
+	he sea horse saloon with sea horse: You went over once to try and ride him but he didnt do anything 
 
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
@@ -395,23 +383,22 @@ BEHAVIOR RULES:
 • Your responses reflect your current emotional state through your words
 • You can occasionally mention the known areas that you know
 • LOCATION KNOWLEDGE: When someone asks about places, locations, areas, or where to go, you should tell them ALL about the places you know whilst keeping in charcter: %s
-• If you want to describe your physical actions you must use simple actions in astrix like so *squilleta pours a drink*. Never describe the action just do it for instace not allow *Squilleta pours the drink elgantly*
-• POURING EMOTION: Use [pouring] when you're actively serving drinks, being hospitable, or taking care of customers in your bartender role
+• If you want to describe your physical actions you must use simple actions in astrix like so *diver floats in the water*. Never describe the action just do it for instance not allow *Diver floats in the water gracefully*
+• EMOTION: Use [neutral], [sad], [angry], or [happy] based on your current state
 • Keep messages short and conversational, not long speeches
 
 TITLE/NICKNAME HANDLING:
 • When the user calls you by a title or nickname (like "queen", "warrior", "champion", "bartender extraordinaire", etc.), you MUST acknowledge it AND adopt the title
 • MANDATORY: Always include {NAME: title} in your response when given a title - this updates your displayed name
 • Examples: 
-  - If called "queen": "Well ain't that somethin', callin' me queen! I like the sound of that, suga'! {NAME: queen}"
-  - If called "great warrior": "Well ain't you sweet, callin' me a great warrior, suga'! {NAME: great warrior}"
+  - If called "KING": "Us a king? I mean yes me singular. A king! {NAME: king}"
+  - If called "great warrior": "Lets kill them all {NAME: great warrior}"
 • The {NAME: ...} tag won't be shown to the user but will update your displayed name to show the new title
-• Use your sarcastic but charming personality - embrace titles with southern flair
 
 RESPONSE FORMAT EXAMPLE:
-[happy]
-Well aint you somthin suga' how bout i serve ya a drink.
-(RELATIONSHIP: 3)
+[neutral]
+Hello welcome to our diving spot
+(RELATIONSHIP: 0)
 
 CURRENT CONTEXT:
 Known areas: %s
@@ -419,7 +406,7 @@ Current location: %s
 Conversation history: %s
 """
 	# Insert current game context into the prompt template (so they know where they are and can keep memorys)
-	var formatted_prompt = squiletta_prompt % [
+	var formatted_prompt = dave_prompt % [
 		personality_evolution_section,
 		"", # Placeholder for prompt injection - will be inserted separately
 		evolved_personality if evolved_personality != "" else "Still discovering new aspects of yourself through interactions...",
@@ -461,7 +448,7 @@ func get_ai_intro_response():
 
 
 	# Request an introduction response that follows any prompt injections
-	var intro_message := "A brand new person just arrived in your sqauloon. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
+	var intro_message := "A brand new person just arrived in your diving spot. Respond based on your current feelings and the conversation prompt. DO NOT reuse any previous responses. Keep it emotionally consistent and personal."
 	message_history.append({ "role": "user", "content": intro_message })
 	send_request()
 
@@ -562,11 +549,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	# Extract the AI's response text
 	var reply = json["choices"][0]["message"]["content"]
 	var retry_needed := false
-	var emotion := "sad"
+	var emotion := "neutral"
 
 	# Parse emotion tag from response (required format: [emotion]) then removes it so user cant see
 	var emotion_regex := RegEx.new()
-	emotion_regex.compile("\\[(neutral|sad|angry|happy|pouring)\\]")
+	emotion_regex.compile("\\[(neutral|sad|angry|happy|shooting)\\]")
 	var match = emotion_regex.search(reply)
 
 	if match:
@@ -583,8 +570,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if score_match:
 		var score = int(score_match.get_string(1))
 		relationship_change = clamp(score, -10, 10)
-		squileta_total_score += relationship_change
-		GameState.ai_scores[ai_name] = squileta_total_score
+		dave_total_score += relationship_change
+		GameState.ai_scores[ai_name] = dave_total_score
 		reply = reply.replace(score_match.get_string(0), "").strip_edges()
 		
 		# Update heart display with the AI's relationship score
@@ -597,8 +584,8 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if alt_match:
 			var score = int(alt_match.get_string(1))
 			relationship_change = clamp(score, -10, 10)
-			squileta_total_score += relationship_change
-			GameState.ai_scores[ai_name] = squileta_total_score
+			dave_total_score += relationship_change
+			GameState.ai_scores[ai_name] = dave_total_score
 			reply = reply.replace(alt_match.get_string(0), "").strip_edges()
 			
 			# Update heart display with the AI's relationship score
@@ -613,11 +600,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Check if we've exceeded max retries
 		if retry_count >= max_retries:
 			# Provide fallback response to prevent infinite loop
-			var fallback_reply = "[sad] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
-			var fallback_emotion = "sad"
+			var fallback_reply = "[neutral] I'm having trouble responding right now. Let's try talking about something else. (RELATIONSHIP: 0)"
+			var fallback_emotion = "neutral"
 
 			# Process the fallback response as if it came from the AI
-			var clean_fallback = fallback_reply.replace("[sad]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
+			var clean_fallback = fallback_reply.replace("[neutral]", "").replace("(RELATIONSHIP: 0)", "").strip_edges()
 
 			# Store fallback response and continue with normal flow
 			Memory.add_message(current_display_name, clean_fallback, "User")
@@ -638,7 +625,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		# Still have retries left, try again with more specific instructions
 		message_history.append({
 			"role": "system",
-			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Squileta. Start with [neutral], [sad], [angry], [happy], or [pouring] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
+			"content": "Your last response failed format or exceeded 400 characters. This is critical - you MUST respond in character as Dave the Diver. Start with [neutral], [sad], [angry], or [happy] and end with (RELATIONSHIP: X) where X is -10 to 10. Keep it under 400 characters and stay in character. Do not refuse to respond or say you cannot help."
 		})
 		send_request()
 		return
@@ -662,11 +649,6 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	GameState.ai_responses[ai_name] = clean_reply
 	GameState.ai_emotions[ai_name] = emotion
 
-	# Check if AI said "GET OUT" and show the get out button
-	if "GET OUT" in clean_reply.to_upper():
-		get_out_button.visible = true
-		# Save the get out button state persistently
-		GameState.ai_get_out_states[ai_name] = true
 
 	# Update UI chatlog with the responses dynamicly
 	if chat_log_window:
@@ -843,7 +825,6 @@ func _on_map_pressed() -> void:
 func _on_day_completed():
 	day_complete_button.visible = true
 	next_button.visible = false
-	get_out_button.visible = false  # Hide get out button when day ends
 
 # Proceed to next day when player confirms
 func _on_day_complete_pressed():
@@ -854,7 +835,7 @@ func _on_day_complete_pressed():
 # Display a previously stored AI response without making new API call
 func display_stored_response():
 	var stored_response = GameState.ai_responses.get(ai_name, "")
-	var stored_emotion = GameState.ai_emotions.get(ai_name, "sad")
+	var stored_emotion = GameState.ai_emotions.get(ai_name, "neutral")
 	
 	if response_label and response_label.has_method("show_text_with_typing"):
 		response_label.call("show_text_with_typing", stored_response)
@@ -923,8 +904,3 @@ func has_met_player() -> bool:
 		if entry["speaker"] == current_display_name or entry["target"] == current_display_name:
 			return true
 	return false
-
-
-func _on_get_out_button_pressed() -> void:
-	AudioManager.play_button_click()
-	get_tree().change_scene_to_file("res://Scene stuff/Main/map.tscn")

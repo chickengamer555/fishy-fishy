@@ -54,6 +54,7 @@ var location_requests: int = 0           # Count how many times user asked about
 var genie_mode_active := false          # Whether currently in genie mode
 var genie_wishes_granted := 0           # Number of wishes granted in current genie session
 var pre_genie_name := ""                # Store the original name before genie transformation
+var genie_final_wish_pending := false   # After 3rd wish, wait to show secret message before transforming
 
 # Retry system to prevent infinite loops
 var retry_count: int = 0                 # Track number of retries for current request
@@ -413,6 +414,9 @@ TRANSFORMING BACK RULES:
 PERSONALITY: You are Kelp Man, a lonely creature made entirely of living kelp. Use short responses for normal conversations.
 PERSONALITY: You have a habit of trying to violently grab people, only use this when it feel rights or if your going to do it yourself. When doing this use the emotion "grabbing"
 
+Locations/Charcters and how you know them:
+	The squaloon with Squileta: You go to the bar rarely to drink away your problems but only when no one else is there apart from squileta since shes the bartender.
+
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
 • If someone hurts you, you might become more cautious or sad, but you never forget their kindness either
@@ -619,15 +623,12 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 
 			# Wish counting is now handled in the input processing, not here
 
-			# Check if the genie is announcing transformation back to kelp man
-			if ("transform" in reply.to_lower() and ("back" in reply.to_lower() or "kelp man" in reply.to_lower())) or ("horse" in reply.to_lower() and "cheese" in reply.to_lower()):
-				# Schedule transformation back to kelp man after a brief delay to let the message display
-				await get_tree().create_timer(2.0).timeout
+			# Check if the genie is announcing transformation back to kelp man or said the secret line
+			if ("horse" in reply.to_lower() and "cheese" in reply.to_lower()):
+				genie_final_wish_pending = false
+				await get_tree().create_timer(0.2).timeout
 				transform_back_to_kelp_man()
-		elif genie_mode_active and emotion != "genie":
-			# Genie mode ended
-			genie_mode_active = false
-			genie_wishes_granted = 0
+		# Stay in genie mode until we explicitly transform back (don't auto-exit just because of tag drift)
 	else:
 		retry_needed = true
 
@@ -841,13 +842,13 @@ func _on_next_button_pressed():
 	if "location" in msg.to_lower() or "place" in msg.to_lower() or "where" in msg.to_lower() or "area" in msg.to_lower() or "go" in msg.to_lower():
 		asking_about_locations = true
 		location_requests += 1
-		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
+		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". IMPORTANT: State location names EXACTLY as spelled (no stutter, no digits, no symbols). Don't deflect or give greetings - answer their question directly!]"
 
 	# Check if user is rubbing/polishing to trigger genie transformation
 	var genie_already_used = GameState.ai_genie_used.get(ai_name, false)
 	if "rub" in msg.to_lower() or "polish" in msg.to_lower() or "shine" in msg.to_lower():
 		if not genie_mode_active and not genie_already_used:
-			enhanced_msg += "\n\n[CRITICAL: The user is rubbing you! You MUST transform into the mystical kelp genie immediately! Use the [genie] emotion tag and act as the genie. This is mandatory!]"
+			enhanced_msg += "\n\n[CRITICAL: The user is rubbing you! You MUST transform into the mystical kelp genie immediately! Use the [genie] emotion tag and act as the genie. IMPORTANT: Explain clearly that wishes only count if the user starts with the exact words 'I wish for ...'. This is mandatory!]"
 		elif genie_already_used:
 			enhanced_msg += "\n\n[CONTEXT: The user is rubbing you. You have NO memory of ever being a genie - that never happened in your mind. React confused like 'Hey, why are you rubbing me?' or 'What are you doing?' You're just normal kelp man who doesn't understand why they're touching you.]"
 
@@ -856,8 +857,9 @@ func _on_next_button_pressed():
 		var wishes_remaining = 3 - genie_wishes_granted
 		var is_making_wish = false
 
-		# Check if user is actually making a wish - ONLY "I wish for" counts
-		if "i wish for" in msg.to_lower():
+		# Check if user is actually making a wish - ONLY "I wish for" counts (case-insensitive)
+		var lower_msg = msg.to_lower()
+		if "i wish for" in lower_msg:
 			is_making_wish = true
 
 		if is_making_wish and wishes_remaining > 0:
@@ -867,15 +869,24 @@ func _on_next_button_pressed():
 			enhanced_msg += "\n\n[WISH DETECTED: The user said 'I wish for'! No matter what they wished for, give them exactly 7 diamonds (or 8 if they specifically wished for 7). This is wish #" + str(genie_wishes_granted) + " of 3.]"
 			# Special handling for the 3rd wish
 			if genie_wishes_granted == 3:  # This is the final wish
-				enhanced_msg += " This is your final wish! After granting it, say goodbye and announce you're transforming back to kelp man."
+				genie_final_wish_pending = true
+				enhanced_msg += " This is your final wish! After granting it, say goodbye, then say: 'Before I go.... remember.... horse.... cheese.....'. Do NOT transform back until after you say that line."
 		elif is_making_wish and genie_wishes_granted >= 3:
-			enhanced_msg += "\n\n[NO MORE WISHES: You've already granted 3 wishes! Politely tell them you can't grant more wishes and that you're transforming back to kelp man.]"
+			# No more wishes - if final message hasn't been delivered, instruct to say it now
+			if genie_final_wish_pending:
+				enhanced_msg += "\n\n[FINAL STEP: You have already granted 3 wishes. Now say the line: 'Before I go.... remember.... horse.... cheese.....'. Only after saying it, you may transform back to kelp man.]"
+			else:
+				enhanced_msg += "\n\n[NO MORE WISHES: You've already granted 3 wishes!]"
 		elif genie_wishes_granted < 3:
 			var wishes_left = 3 - genie_wishes_granted
-			enhanced_msg += "\n\n[NORMAL GENIE CONVERSATION: This is not a wish (no 'I wish for'). Respond as a typical mystical genie would - be wise, magical, conversational. You have " + str(wishes_left) + " wishes remaining to grant.]"
+			enhanced_msg += "\n\n[NORMAL GENIE CONVERSATION: This is not a wish (no 'I wish for'). Respond as a typical mystical genie would - be wise, magical, conversational. Remind the user: Wishes only count if they start their sentence with the exact words 'I wish for'. You have " + str(wishes_left) + " wishes remaining to grant.]"
 		else:
-			enhanced_msg += "\n\n[GENIE STATUS: You have granted all 3 wishes! Say goodbye, then say 'Before I go.... remember.... horse.... cheese.....' then 'Transforms back to kelp man'.]"
-	
+			# Already granted 3 - nudge to say the secret line if needed
+			if genie_final_wish_pending:
+				enhanced_msg += "\n\n[FINAL STEP: Say 'Before I go.... remember.... horse.... cheese.....' now, then transform back to kelp man.]"
+			else:
+				enhanced_msg += "\n\n[GENIE STATUS: All wishes granted.]"
+
 
 	
 	# Also check for general questions about the user

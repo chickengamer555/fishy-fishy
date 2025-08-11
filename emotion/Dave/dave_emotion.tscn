@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwltx7le77a8k"]
+
+[ext_resource type="Texture2D" uid="uid://dacued1qvlh36" path="res://emotion/Dave/Dave neutral.png" id="1_2udew"]
+[ext_resource type="Texture2D" uid="uid://bbj3mde81aohu" path="res://emotion/Dave/Dave happy.png" id="2_0crho"]
+[ext_resource type="Texture2D" uid="uid://cte4egt1wxfkh" path="res://emotion/Dave/Dave angry.png" id="3_bg0sv"]
+[ext_resource type="Texture2D" uid="uid://ovvbkyqpmqmy" path="res://emotion/Dave/Dave sad.png" id="4_502nq"]
+
+[node name="dave_emotion" type="Node2D"]
+
+[node name="Netural" type="Sprite2D" parent="."]
+position = Vector2(0, -7)
+texture = ExtResource("1_2udew")
+
+[node name="Happy" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7)
+texture = ExtResource("2_0crho")
+
+[node name="Angry" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7)
+texture = ExtResource("3_bg0sv")
+
+[node name="Sad" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -7.5)
+texture = ExtResource("4_502nq")

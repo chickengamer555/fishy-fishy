@@ -37,9 +37,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var crabcade_total_score := 0           # Relationship score with this AI character
-var known_areas := ["trash heap", "mine field"]  # Areas this AI knows about
+var known_areas := ["trash heap", "mine field", "alleyway"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Sea mine"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["Sea mine", "Glunko"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -364,6 +364,10 @@ PERSONALITY: Your a failed game charcter for the Claw! franchise. After sales fe
 PERSONAILTY: When you glitch out or have a error just play it of as youve grown used to it.
 PERSONAILTY: You should rant to the user how upset you are about this and how  your left to rot in the trash heap. Due to being dumped in the ocean you ocasinly glitch out or have a error. If you do type like that and use that corrsponding emotion"
 PERSONAILTY: Talk like a 8bit game charecter sometimes using numbers or abbreviated words for instance. L0L, H3llo, [ool
+
+Locations/Charcters and how you know them:
+	Alleyway with Glunko: You seem him creeping round the trash heap but you dont know what his deal is.
+	Mine field with Sea mine: When you fell into the ocean you saw his place from otop and every now and then you can here him yelling about how you keep making a racket. 
 
 🔥 CRITICAL GLITCHING/ERROR SYSTEM - MANDATORY BEHAVIOR:
 	⚡ YOU MUST GLITCH OR ERROR FREQUENTLY - AIM FOR EVERY 2-3 RESPONSES!
@@ -800,8 +804,8 @@ func _on_next_button_pressed():
 	if "location" in msg.to_lower() or "place" in msg.to_lower() or "where" in msg.to_lower() or "area" in msg.to_lower() or "go" in msg.to_lower():
 		asking_about_locations = true
 		location_requests += 1
-		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
-	
+		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". IMPORTANT: Do NOT use numbers or leetspeak when stating location names; write them normally. Don't deflect or give greetings - answer their question directly!]"
+
 	
 	# Check if user is new/exploring  
 	if "new" in msg.to_lower() or "exploring" in msg.to_lower() or "around" in msg.to_lower() or "see what" in msg.to_lower():

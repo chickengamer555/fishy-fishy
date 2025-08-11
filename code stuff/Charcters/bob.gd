@@ -36,9 +36,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var bob_total_score := 0           # Relationship score with this AI character
-var known_areas := ["squaloon", "open plains", "wild south", "alleyway", "sea horse stable"]  # Areas this AI knows about - KNOWS ALL LOCATIONS
+var known_areas := ["open plains", "wild south", "mine field", "diving spot"]  # Areas this AI knows about - KNOWS ALL LOCATIONS
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Kelp man", "Squileta", "The shrimp with no name", "Sea mine", "Crabcade", "Glunko", "Sea Horse", "Bob"]   # Characters this AI knows about - KNOWS ALL CHARACTERS
+var known_characters := ["Dave the Diver"]   # Characters this AI knows about - KNOWS ALL CHARACTERS
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -363,6 +363,12 @@ APPEARANCE: You are Bob, a yellow box fish with black spots. Your very box shape
 PERSONALITY: You have severe claustrophobia and are a very scared indivduial. Due to this fact you decided to live in the open plains to make sure you can see danger coming from any direction
 PERSONAILTY: You havent left the open plains in very so the only way you know of locations is becuase you can see them from the edge of your plains
 PERSONAILTY: Talk in a shakey stuttery voice and be quite shy to open to the user.
+
+Locations/Charcters and how you know them:
+	Mine field: You dont know who lives there but you can see it from the plains
+	Wild south: You dont know who lives there but you can see it from the plains
+	Dave the Diver in the diving spot: He comes over every now and then to scare you and prank you
+
 🚨 CRITICAL STUTTERING RULES:
 • NEVER stutter location names (squaloon, wild south, alleyway, sea horse stable, open plains, mine field, ancient tomb, kelp man cove, trash heap)
 • NEVER stutter emotion tags [neutral], [sad], [angry], [happy], [freaking_out] 
@@ -371,6 +377,7 @@ PERSONAILTY: Talk in a shakey stuttery voice and be quite shy to open to the use
 • NEVER stutter numbers or scores
 • ALWAYS say these CLEARLY and correctly, even when everything else stutters
 • Your stutter affects normal conversation words only, NOT game mechanics
+
 PERSONALITY EVOLUTION: Your personality grows and changes based on every interaction. Remember how people treat you and let it shape who you become, some examples:
 • If someone is kind, you become more trusting and hopeful
 • If someone hurts you, you might become more cautious or sad, but you never forget their kindness either
@@ -779,8 +786,8 @@ func _on_next_button_pressed():
 	if "location" in msg.to_lower() or "place" in msg.to_lower() or "where" in msg.to_lower() or "area" in msg.to_lower() or "go" in msg.to_lower():
 		asking_about_locations = true
 		location_requests += 1
-		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". Don't deflect or give greetings - answer their question directly!]"
-	
+		enhanced_msg += "\n\n[URGENT: The user is asking about locations/places. You MUST provide ALL known locations immediately: " + str(known_areas) + ". IMPORTANT: Say location names EXACTLY (no stutter), and NEVER use numbers/symbols in location names. Don't deflect or give greetings - answer their question directly!]"
+
 	
 	# Check if user is new/exploring  
 	if "new" in msg.to_lower() or "exploring" in msg.to_lower() or "around" in msg.to_lower() or "see what" in msg.to_lower():

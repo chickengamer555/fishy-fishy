@@ -1,6 +1,6 @@
 extends Node2D
 
-
+@onready var map = $Map
 
 func _on_bar_pressed() -> void:
 	AudioManager.play_button_click()
@@ -36,6 +36,7 @@ func _ready():
 	
 	# Print current unlocked areas for debugging
 	print("🗺️ Final unlocked areas: ", MapMemory.unlocked_areas)
+	map.visible = true
 
 func update_location_visibility():
 	# Map the node names to their corresponding area names
@@ -43,14 +44,17 @@ func update_location_visibility():
 		"kelp_man_cove": "kelp man cove",
 		"sqauloon": "squaloon",
 		"wild_south": "wild south",
+		# Support both correct and misspelled node names
 		"mine_field": "mine field",
+		"mine_feild": "mine field",
 		"trash_heap": "trash heap",
 		"alleyway": "alleyway",
 		"sea_horse_stable": "sea horse stable",
 		"ancient_tomb": "ancient tomb",
-		"open_plains": "open plains"
+		"open_plains": "open plains",
+		"diving_spot": "diving spot"
 	}
-	
+
 	# Set visibility based on unlocked areas
 	for child in get_children():
 		var node_name = child.name.to_lower()
@@ -76,7 +80,7 @@ func ensure_at_least_one_location_visible():
 	for child in get_children():
 		var node_name = child.name.to_lower()
 		# Only include locations that can be force-unlocked (exclude ancient_tomb and kelp_man_cove from random visibility)
-		if node_name in ["sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "open_plains"]:
+		if node_name in ["sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "open_plains", "diving_spot"]:
 			location_nodes.append(child)
 			if child.visible:
 				visible_locations.append(child)
@@ -100,7 +104,8 @@ func ensure_at_least_one_location_visible():
 			"trash_heap": "trash heap",
 			"alleyway": "alleyway",
 			"sea_horse_stable": "sea horse stable",
-			"open_plains": "open plains"
+			"open_plains": "open plains",
+			"diving_spot": "diving spot"
 		}
 		
 		var node_name = chosen_location.name.to_lower()
@@ -111,7 +116,7 @@ func ensure_at_least_one_location_visible():
 	
 	# Final check
 	for child in get_children():
-		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "ancient_tomb", "open_plains"]:
+		if child.name.to_lower() in ["kelp_man_cove", "sqauloon", "wild_south", "mine_field", "trash_heap", "alleyway", "sea_horse_stable", "ancient_tomb", "open_plains", "diving_spot"]:
 			print("🗺️ Final: ", child.name, " visible: ", child.visible)
 
 
@@ -123,11 +128,14 @@ func _on_wild_south_pressed() -> void:
 	MapMemory.set_location("wild south")
 
 
+# Note: Function name kept to match existing signal connection in the scene
 func _on_mine_feild_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/sea_mine.tscn")
 	MapMemory.set_location("mine field")
+	# Ensure the area is unlocked when navigating directly
+	MapMemory.unlock_area("mine field")
 
 
 func _on_trash_heap_pressed() -> void:
@@ -162,3 +170,10 @@ func _on_open_plains_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Bob.tscn")
 	MapMemory.set_location("open plains")
+
+
+func _on_diving_spot_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Charcters/Dave.tscn")
+	MapMemory.set_location("diving spot")

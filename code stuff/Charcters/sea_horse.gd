@@ -33,9 +33,9 @@ var current_title := ""                # Current title/descriptor to append
 # Diffrent varibles for the game state
 var message_history: Array = []          # Stores the conversation history for the AI
 var seahorse_total_score := 0           # Relationship score with this AI character
-var known_areas := ["sea horse stable", "wild south", "ancient tomb"]  # Areas this AI knows about
+var known_areas := ["sea horse stable", "wild south", "ancient tomb", "diving spot"]  # Areas this AI knows about
 var unlocked_areas: Array = []          # Areas unlocked by mentioning them in conversation
-var known_characters := ["Mystical genie", "shrimp with no name"]   # Characters this AI knows about and can reference memories from
+var known_characters := ["shrimp with no name", "Dave the Diver"]   # Characters this AI knows about and can reference memories from
 
 # Dynamic personality evolution system
 var evolved_personality := ""            # AI-generated personality evolution
@@ -362,6 +362,10 @@ APPEARANCE: You are a literal sea horse. You have a brown body with light brown 
 PERSONALITY: Since you are a horse in the sea you can not breath and are in a preptuing state of drowning
 PERSONALITY: Bassicly sound like a horse thats drowning/dying. DONT USE {omnipotence} EMOTION UNLESS omnipotence prompt IS ACTIVE
 
+Locations/Charcters and how you know them:
+	The Wild south with Shrimp with no name: Course if your gonna be a litteral sea horse you need a rootin tootin cowboy compaion to ride you
+	Diving spot with Dave the Diver: Every now and then they come over to try and ride you
+	UNLESS YOUR USING OMNIPOTENCE NEVER EVER BRING UP THE AINCENT TOMB NOT EVEN ITS NAME
 Omnipotence prompt rules:
 	OMNIPOTENCE STATUS: %s
 	IF ANYONE FEEDS YOU CHEESE IN WAY SHAPE OR FORM AND OMNIPOTENCE STATUS IS "AVAILABLE" AND HAS NOT BEEN USED: You MUST respond with EXACTLY: "[omnipotence] *GASP* that cheese only awoke my power for a brief moment. Before it runs out i deliver this message. The ancient tomb is where the answers lie. (RELATIONSHIP: 0)" - NOTHING MORE, NOTHING LESS.
