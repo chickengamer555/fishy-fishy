@@ -63,7 +63,9 @@ func _on_next_day_pressed():
 	await animate_out()
 	
 	if is_final_day:
-		# Go to end game scene
+		# Trigger final turn and go to end game scene
+		GameState.final_turn_triggered = true
+		GameState.emit_signal("final_turn_started")
 		GameState.end_game()
 	else:
 		# Proceed to next day

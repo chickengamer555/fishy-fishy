@@ -1,6 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx6p8bsutpuvg"]
+[gd_scene load_steps=10 format=3 uid="uid://bx6p8bsutpuvg"]
 
 [ext_resource type="Script" uid="uid://dxdci4ysvepk" path="res://code stuff/Main/main_menu_setting.gd" id="1_klp4d"]
+[ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="2_5nuvf"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_5nuvf"]
+color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_j8ibu"]
+color = Color(0.12549, 0.572549, 0.682353, 1)
+thickness = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_827tb"]
+color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5nuvf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5nuvf"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_827tb"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8ibu"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 0.47451)
 
 [node name="Main_Settings" type="Control"]
 layout_mode = 3
@@ -18,7 +55,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.1, 0.1, 0.1, 0.9)
+color = Color(0.0392157, 0.113725, 0.180392, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -37,12 +74,15 @@ theme_override_constants/separation = 20
 
 [node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5nuvf")
 theme_override_font_sizes/font_size = 32
 text = "Settings"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_5nuvf")
 
 [node name="MasterVolume" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -51,11 +91,14 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="VBoxContainer/MasterVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
 text = "Master Volume"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/MasterVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_j8ibu")
 max_value = 1.0
 step = 0.01
 value = 1.0
@@ -67,11 +110,14 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="VBoxContainer/MusicVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
 text = "Music Volume"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/MusicVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_j8ibu")
 max_value = 1.0
 step = 0.01
 value = 1.0
@@ -83,35 +129,90 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="VBoxContainer/SFXVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
 text = "SFX Volume"
 
 [node name="HSlider" type="HSlider" parent="VBoxContainer/SFXVolume"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_j8ibu")
 max_value = 1.0
 step = 0.01
 value = 1.0
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_827tb")
 
 [node name="Dyslexia_mode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5nuvf")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_827tb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j8ibu")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5nuvf")
 text = "DYSLEXIA MODE
 "
 
 [node name="Drunk_mode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5nuvf")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_827tb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j8ibu")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5nuvf")
 text = "DRUNK MODE"
 
 [node name="Unlock_All" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5nuvf")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_827tb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j8ibu")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5nuvf")
 text = "UNLOCK ALL"
 
 [node name="BackButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Back"
+theme_override_fonts/font = ExtResource("2_5nuvf")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5nuvf")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_827tb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j8ibu")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_5nuvf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5nuvf")
+text = "BACK"
 
 [connection signal="pressed" from="VBoxContainer/Dyslexia_mode" to="." method="_on_dyslexia_mode_pressed"]
 [connection signal="pressed" from="VBoxContainer/Drunk_mode" to="." method="_on_prompt_injection_pressed"]

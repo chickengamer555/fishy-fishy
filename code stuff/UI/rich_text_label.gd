@@ -88,7 +88,7 @@ func _fit_font_to_label(preview_text: String) -> void:
 	var current_size = min_font_size
 	
 	# Round min_font_size up to nearest multiple of 8
-	var rounded_min = ((min_font_size + 7) / 8) * 8
+	var rounded_min = int((min_font_size + 7) / 8) * 8
 	current_size = rounded_min
 	
 	# Generate all multiples of 8 up to max_font_size

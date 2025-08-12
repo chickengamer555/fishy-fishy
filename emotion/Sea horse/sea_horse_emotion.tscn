@@ -5,7 +5,7 @@
 
 [node name="sea_horse_emotion" type="Node2D"]
 
-[node name="Netural" type="Sprite2D" parent="."]
+[node name="Neutral" type="Sprite2D" parent="."]
 position = Vector2(0, -1)
 texture = ExtResource("1_ea61b")
 

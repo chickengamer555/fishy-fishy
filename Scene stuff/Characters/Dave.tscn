@@ -1,0 +1,548 @@
+[gd_scene load_steps=65 format=3 uid="uid://btq45lag61emg"]
+
+[ext_resource type="Script" uid="uid://y0mrbtldhtuf" path="res://code stuff/Characters/dave.gd" id="1_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://8v88yp6qpecu" path="res://UI STUFF/Diving spot/Backround.png" id="2_7xyvi"]
+[ext_resource type="PackedScene" uid="uid://bwltx7le77a8k" path="res://emotion/Dave/dave_emotion.tscn" id="3_7xyvi"]
+[ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_uud1j"]
+[ext_resource type="Texture2D" uid="uid://ddprxc3qgsvx6" path="res://UI STUFF/Diving spot/Ai pannel.png" id="5_q0u2r"]
+[ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_4f5h5"]
+[ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_13uty"]
+[ext_resource type="Texture2D" uid="uid://dbka41idre1cw" path="res://UI STUFF/Diving spot/Player input pannel.png" id="8_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://dt52yrtr7b0y2" path="res://UI STUFF/Diving spot/Log button hover.png" id="9_q0u2r"]
+[ext_resource type="Texture2D" uid="uid://d2n1voyncuvdx" path="res://UI STUFF/Diving spot/Log button.png" id="10_d7rnv"]
+[ext_resource type="Texture2D" uid="uid://d2e3cnue75way" path="res://UI STUFF/Diving spot/Send button hover.png" id="11_uud1j"]
+[ext_resource type="Texture2D" uid="uid://cc242pktn3107" path="res://UI STUFF/Diving spot/Send button.png" id="12_o0mjd"]
+[ext_resource type="Texture2D" uid="uid://csuyrmjchnmbf" path="res://UI STUFF/Diving spot/next day hover.png" id="13_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://dni68pxwowkr0" path="res://UI STUFF/Diving spot/next day.png" id="14_q0u2r"]
+[ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="15_6cpqd"]
+[ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="16_bdylj"]
+[ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="17_lmac3"]
+[ext_resource type="Texture2D" uid="uid://jvv68paue5pp" path="res://UI STUFF/Diving spot/Stat box pannel.png" id="18_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="19_vkx6s"]
+[ext_resource type="Texture2D" uid="uid://dra5f325dmwan" path="res://UI STUFF/Heart/Heart2.png" id="20_k3g22"]
+[ext_resource type="Texture2D" uid="uid://bi3h6nb02trds" path="res://UI STUFF/Heart/Heart3.png" id="21_nfhb6"]
+[ext_resource type="Texture2D" uid="uid://ca8h3pkll88jg" path="res://UI STUFF/Heart/Heart4.png" id="22_0rhcl"]
+[ext_resource type="Texture2D" uid="uid://crjg6hloydhnj" path="res://UI STUFF/Heart/Heart5.png" id="23_riyr5"]
+[ext_resource type="Texture2D" uid="uid://bhd1yk0nj74pw" path="res://UI STUFF/Heart/Heart6.png" id="24_c0xdb"]
+[ext_resource type="Texture2D" uid="uid://bg4em6q8l0qp6" path="res://UI STUFF/Heart/Heart7.png" id="25_cdnj4"]
+[ext_resource type="Texture2D" uid="uid://bhdep4r72bwnb" path="res://UI STUFF/Heart/Heart8.png" id="26_w8p20"]
+[ext_resource type="Texture2D" uid="uid://tir4wugpbwi0" path="res://UI STUFF/Heart/Heart9.png" id="27_iesny"]
+[ext_resource type="Texture2D" uid="uid://tkpqup6qcs3l" path="res://UI STUFF/Heart/Heart10.png" id="28_urcs4"]
+[ext_resource type="Texture2D" uid="uid://dw164v6tuqqkf" path="res://UI STUFF/Heart/Heart11.png" id="29_kfam8"]
+[ext_resource type="Texture2D" uid="uid://du6yxm8ttt02t" path="res://UI STUFF/Heart/Heart12.png" id="30_0a5ai"]
+[ext_resource type="Texture2D" uid="uid://y0q6l23vvyxg" path="res://UI STUFF/Heart/Heart13.png" id="31_6ongj"]
+[ext_resource type="Texture2D" uid="uid://b7ri7xw2wgpuv" path="res://UI STUFF/Heart/Heart14.png" id="32_4akab"]
+[ext_resource type="Texture2D" uid="uid://jhjan7p8iioi" path="res://UI STUFF/Heart/Heart15.png" id="33_6e4mi"]
+[ext_resource type="Texture2D" uid="uid://p24wj5sqo1gr" path="res://UI STUFF/Heart/Heart16.png" id="34_vp6jf"]
+[ext_resource type="Texture2D" uid="uid://cfcauarcpfprv" path="res://UI STUFF/Heart/Heart17.png" id="35_g8ia1"]
+[ext_resource type="Texture2D" uid="uid://c0cjogauuci8o" path="res://UI STUFF/Heart/Heart18.png" id="36_4prmg"]
+[ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="37_6oi5i"]
+[ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="38_7lx03"]
+[ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="39_fwqhl"]
+[ext_resource type="Texture2D" uid="uid://d2mt3esh0xd2g" path="res://UI STUFF/Diving spot/banner.png" id="40_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://gu04acbyxx38" path="res://UI STUFF/Diving spot/Map.png" id="41_7xyvi"]
+[ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="42_vf42s"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
+shader = ExtResource("4_uud1j")
+shader_parameter/wave_amplitude = 0.004
+shader_parameter/wave_frequency = 13.28
+shader_parameter/wave_speed = 1.0
+shader_parameter/tint_color = Color(0, 0.282353, 0.72549, 0.0392157)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4tnxu"]
+texture = ExtResource("5_q0u2r")
+modulate_color = Color(1, 1, 1, 0.901961)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w2ql3"]
+texture = ExtResource("8_7xyvi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njf6d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dc7i1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cq230"]
+texture = ExtResource("9_q0u2r")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lbieo"]
+texture = ExtResource("10_d7rnv")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjer1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty227"]
+texture = ExtResource("11_uud1j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4v0k"]
+texture = ExtResource("12_o0mjd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5po65"]
+texture = ExtResource("12_o0mjd")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l1km0"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uuph3"]
+texture = ExtResource("13_7xyvi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5soc"]
+texture = ExtResource("14_q0u2r")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njf6d"]
+bg_color = Color(0.533473, 0.594343, 0.774528, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_panel"]
+bg_color = Color(0.580392, 0.258824, 0.113725, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.3, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_scroll"]
+bg_color = Color(0.682353, 0.666667, 0.658824, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.2, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_86uu6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6q1om"]
+texture = ExtResource("41_7xyvi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l1km0"]
+texture = ExtResource("41_7xyvi")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8p2t1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1n1a7"]
+texture = ExtResource("42_vf42s")
+
+[node name="Dave" type="Node2D"]
+position = Vector2(590, 255)
+script = ExtResource("1_7xyvi")
+
+[node name="KelpManCoveSpritesheet1" type="Sprite2D" parent="."]
+position = Vector2(50, 110)
+scale = Vector2(10, 10)
+texture = ExtResource("2_7xyvi")
+
+[node name="dave_emotion" parent="." instance=ExtResource("3_7xyvi")]
+position = Vector2(-59, 222)
+scale = Vector2(10, 10)
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_1qk4g")
+offset_left = -590.0
+offset_top = -266.0
+offset_right = -462.0
+offset_bottom = -207.0
+scale = Vector2(10, 12.52)
+mouse_filter = 2
+
+[node name="AIResponsePanel" type="Panel" parent="."]
+custom_minimum_size = Vector2(82, 23)
+offset_left = -550.0
+offset_top = 230.0
+offset_right = 270.0
+offset_bottom = 460.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_4tnxu")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AIResponsePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.5
+offset_top = 19.9
+offset_right = -19.5
+offset_bottom = -20.1
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.0707859, 0.228395, 0.268522, 1)
+theme_override_fonts/normal_font = ExtResource("6_4f5h5")
+theme_override_font_sizes/normal_font_size = 24
+text = "VvvV"
+scroll_active = false
+script = ExtResource("7_13uty")
+min_font_size = 16
+
+[node name="TypingTimer" type="Timer" parent="."]
+wait_time = 0.005
+
+[node name="PlayerInputPanel" type="Panel" parent="."]
+custom_minimum_size = Vector2(32, 31)
+offset_left = 335.0
+offset_top = 60.0
+offset_right = 655.0
+offset_bottom = 370.0
+mouse_force_pass_scroll_events = false
+theme_override_styles/panel = SubResource("StyleBoxTexture_w2ql3")
+
+[node name="PlayerInput" type="TextEdit" parent="PlayerInputPanel"]
+layout_mode = 0
+offset_left = 25.9999
+offset_top = 20.0
+offset_right = 346.0
+offset_bottom = 334.0
+scale = Vector2(0.855, 0.86)
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0705882, 0.227451, 0.266667, 1)
+theme_override_colors/caret_background_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0.0705882, 0.168627, 1)
+theme_override_constants/caret_width = 5
+theme_override_fonts/font = ExtResource("6_4f5h5")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxTexture_njf6d")
+wrap_mode = 1
+indent_wrapped_lines = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 335.0
+offset_top = 350.0
+offset_right = 370.0
+offset_bottom = 362.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10, 10)
+theme_override_constants/separation = 1
+
+[node name="ChatLog" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(16, 12)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_dc7i1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_cq230")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_lbieo")
+theme_override_styles/normal = SubResource("StyleBoxTexture_lbieo")
+
+[node name="NextButton" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(15, 12)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hjer1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ty227")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_w4v0k")
+theme_override_styles/normal = SubResource("StyleBoxTexture_5po65")
+
+[node name="DayCompleteButton" type="Button" parent="."]
+visible = false
+custom_minimum_size = Vector2(33, 18)
+offset_left = 335.0
+offset_top = 290.0
+offset_right = 368.0
+offset_bottom = 308.0
+scale = Vector2(10, 10)
+theme_override_styles/focus = SubResource("StyleBoxEmpty_l1km0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_uuph3")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_g5soc")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g5soc")
+
+[node name="ChatLogWindow" type="Window" parent="."]
+title = "Chat Log - Bob"
+initial_position = 1
+size = Vector2i(500, 500)
+visible = false
+transient = true
+always_on_top = true
+min_size = Vector2i(500, 500)
+max_size = Vector2i(1920, 1080)
+content_scale_mode = 1
+content_scale_aspect = 1
+theme_override_colors/title_color = Color(0, 0, 0, 0)
+theme_override_styles/embedded_border = SubResource("StyleBoxFlat_njf6d")
+script = ExtResource("15_6cpqd")
+
+[node name="ChatLogPanel" type="Panel" parent="ChatLogWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_chat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatLogWindow/ChatLogPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.911204, 0.975667, 0.98165, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "Conversation History"
+autowrap_mode = 3
+
+[node name="FontSizeContainer" type="HBoxContainer" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FontSizeLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "Font Size:"
+
+[node name="DecreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "A-"
+
+[node name="IncreaseFontButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "A+"
+
+[node name="CloseButton" type="Button" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer"]
+layout_mode = 2
+tooltip_text = "Close Chat Log"
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "X"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_chat_scroll")
+horizontal_scroll_mode = 0
+
+[node name="ChatLogLabel" type="RichTextLabel" parent="ChatLogWindow/ChatLogPanel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.14902, 0.360784, 0.380392, 1)
+theme_override_fonts/normal_font = ExtResource("6_4f5h5")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "ddddddddddddddddddddddddddddffffffffffffff"
+fit_content = true
+scroll_following = true
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="ChatLogWindow/ChatLogPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.976471, 0.980392, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 32
+text = "0 messages"
+horizontal_alignment = 2
+autowrap_mode = 3
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(520, 380)
+stream = ExtResource("17_lmac3")
+
+[node name="Statsbox" type="Sprite2D" parent="."]
+position = Vector2(495, -55)
+scale = Vector2(10, 10)
+texture = ExtResource("18_7xyvi")
+
+[node name="Heart -10" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("19_vkx6s")
+
+[node name="Heart -9" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("20_k3g22")
+
+[node name="Heart -8" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("21_nfhb6")
+
+[node name="Heart -7" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("22_0rhcl")
+
+[node name="Heart -6" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("23_riyr5")
+
+[node name="Heart -5" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("24_c0xdb")
+
+[node name="Heart -4" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("25_cdnj4")
+
+[node name="Heart -3" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("26_w8p20")
+
+[node name="Heart -2" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("27_iesny")
+
+[node name="Heart -1" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("28_urcs4")
+
+[node name="Heart 0" type="Sprite2D" parent="Statsbox"]
+position = Vector2(7.5, 0.1)
+texture = ExtResource("29_kfam8")
+
+[node name="Heart 1" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("30_0a5ai")
+
+[node name="Heart 2" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("31_6ongj")
+
+[node name="Heart 3" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("32_4akab")
+
+[node name="Heart 4" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("33_6e4mi")
+
+[node name="Heart 5" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("34_vp6jf")
+
+[node name="Heart 6" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("35_g8ia1")
+
+[node name="Heart 7" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("36_4prmg")
+
+[node name="Heart 8" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("37_6oi5i")
+
+[node name="Heart 9" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("38_7lx03")
+
+[node name="Heart 10" type="Sprite2D" parent="Statsbox"]
+visible = false
+position = Vector2(7.5, 0.1)
+texture = ExtResource("39_fwqhl")
+
+[node name="Action_left" type="Label" parent="Statsbox"]
+offset_left = -14.0
+offset_top = -6.7
+offset_right = 14.0
+offset_bottom = 20.3
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 24
+text = "10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NameBarFrame004" type="Sprite2D" parent="."]
+position = Vector2(50, -200)
+scale = Vector2(10, 10)
+texture = ExtResource("40_7xyvi")
+
+[node name="map" type="Button" parent="NameBarFrame004"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -81.0
+offset_top = -11.0
+offset_right = -70.0
+offset_bottom = -2.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_86uu6")
+theme_override_styles/hover = SubResource("StyleBoxTexture_6q1om")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_l1km0")
+theme_override_styles/normal = SubResource("StyleBoxTexture_l1km0")
+metadata/_edit_use_anchors_ = true
+
+[node name="Settings" type="Button" parent="NameBarFrame004"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -10.5
+offset_right = -181.0
+offset_bottom = -1.5
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_8p2t1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1n1a7")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1n1a7")
+theme_override_styles/normal = SubResource("StyleBoxTexture_1n1a7")
+
+[node name="Label" type="Label" parent="NameBarFrame004"]
+offset_left = -48.1
+offset_top = -5.5
+offset_right = 41.9
+offset_bottom = 4.5
+theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
+theme_override_fonts/font = ExtResource("16_bdylj")
+theme_override_font_sizes/font_size = 8
+text = "DIVING SPOT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
+[connection signal="pressed" from="HBoxContainer/ChatLog" to="." method="_on_chat_log_pressed"]
+[connection signal="pressed" from="HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="DayCompleteButton" to="." method="_on_day_complete_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/DecreaseFontButton" to="ChatLogWindow" method="_on_decrease_font_button_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/IncreaseFontButton" to="ChatLogWindow" method="_on_increase_font_button_pressed"]
+[connection signal="pressed" from="ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/CloseButton" to="ChatLogWindow" method="_on_close_button_pressed"]
+[connection signal="pressed" from="NameBarFrame004/map" to="." method="_on_map_pressed"]
+[connection signal="pressed" from="NameBarFrame004/Settings" to="." method="_on_settings_pressed"]

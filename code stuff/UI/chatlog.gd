@@ -54,7 +54,7 @@ func show_chat_log():
 		constrain_window_position()
 	else:
 		# Just bring to front if already visible
-		move_to_foreground()
+		grab_focus()
 
 func add_message(role: String, content: String, character_name_at_time: String = ""):
 	var message_data = { "role": role, "content": content }
@@ -96,29 +96,29 @@ func clear_all_chat_logs():
 	update_chat_log_display()
 
 func update_chat_log_display():
-	var log := ""
+	var chat_text := ""
 	var message_count := 0
-	
+
 	# Get the current character's chat log
 	var current_chat_log = character_chat_logs.get(character_name, [])
-	
+
 	for entry in current_chat_log:
 		message_count += 1
 		if entry["role"] == "user":
-			# Player message 
-			log += "You:\n"
-			log += entry["content"] + "\n"
+			# Player message
+			chat_text += "You:\n"
+			chat_text += entry["content"] + "\n"
 		else:
 			# Character message
 			var display_name = entry.get("character_name", character_name)
-			log += display_name + ":\n"
-			log += entry["content"] + "\n"
-	
-	if log.is_empty():
-		log = "No conversation history yet"
+			chat_text += display_name + ":\n"
+			chat_text += entry["content"] + "\n"
+
+	if chat_text.is_empty():
+		chat_text = "No conversation history yet"
 		message_count = 0
-	
-	chat_log_label.text = log.strip_edges()
+
+	chat_log_label.text = chat_text.strip_edges()
 	chat_log_status_label.text = str(message_count) + " messages with " + character_name
 
 func _on_window_close_requested():

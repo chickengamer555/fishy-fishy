@@ -8,7 +8,7 @@
 
 [node name="bob_emotion" type="Node2D"]
 
-[node name="Netural" type="Sprite2D" parent="."]
+[node name="Neutral" type="Sprite2D" parent="."]
 position = Vector2(0, -7)
 texture = ExtResource("2_miy43")
 

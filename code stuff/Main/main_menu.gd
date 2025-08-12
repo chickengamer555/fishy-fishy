@@ -1,18 +1,17 @@
 extends Control
 
-var file_dialog: FileDialog
+@onready var file_dialog = $ApiKeyFileDialog
 
 func _ready() -> void:
 	setup_file_dialog()
+	style_file_dialog()
 
 func setup_file_dialog() -> void:
-	file_dialog = FileDialog.new()
-	file_dialog.size = Vector2i(800, 600)
+	# Configure the existing dialog from the scene
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.add_filter("*.json", "JSON Files")
 	file_dialog.add_filter("*.txt", "Text Files")
-	file_dialog.file_selected.connect(_on_file_selected)
 	
 	# Set the initial directory to the user's Documents folder
 	var documents_path = ""
@@ -26,8 +25,6 @@ func setup_file_dialog() -> void:
 		print("Set file dialog to start in Documents: ", documents_path)
 	else:
 		print("Could not find Documents folder, using default location")
-	
-	add_child(file_dialog)
 
 func _on_play_pressed() -> void:
 	AudioManager.play_button_click()
@@ -110,3 +107,35 @@ func _on_settings_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu_setting.tscn")
+
+func style_file_dialog():
+	if not file_dialog:
+		return
+	
+	# Load the font
+	var font = load("res://Other/Tiny5-Regular.ttf")
+	
+	# Create custom background style
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.0392157, 0.113725, 0.180392, 1)  # Dark blue background
+	bg_style.border_width_left = 3
+	bg_style.border_width_top = 3
+	bg_style.border_width_right = 3
+	bg_style.border_width_bottom = 3
+	bg_style.border_color = Color(0.12549, 0.572549, 0.682353, 1)  # Teal border
+	bg_style.corner_radius_top_left = 8
+	bg_style.corner_radius_top_right = 8
+	bg_style.corner_radius_bottom_left = 8
+	bg_style.corner_radius_bottom_right = 8
+	
+	# Apply styling via code
+	file_dialog.title = "Select API Key File"
+	file_dialog.add_theme_color_override("title_color", Color(1, 1, 1, 1))
+	file_dialog.add_theme_font_override("title_font", font)
+	file_dialog.add_theme_font_size_override("title_font_size", 24)
+	file_dialog.add_theme_font_override("font", font)
+	file_dialog.add_theme_font_size_override("font_size", 18)
+	file_dialog.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	file_dialog.add_theme_color_override("file_icon_color", Color(0.12549, 0.572549, 0.682353, 1))
+	file_dialog.add_theme_color_override("folder_icon_color", Color(0.12549, 0.572549, 0.682353, 1))
+	file_dialog.add_theme_stylebox_override("panel", bg_style)

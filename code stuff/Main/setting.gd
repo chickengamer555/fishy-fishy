@@ -5,6 +5,7 @@ static var previous_scene: String
 @onready var master_slider = $VBoxContainer/MasterVolume/HSlider
 @onready var music_slider = $VBoxContainer/MusicVolume/HSlider
 @onready var sfx_slider = $VBoxContainer/SFXVolume/HSlider
+@onready var end_game_dialog = $EndGameDialog
 
 func _ready() -> void:
 	# Connect volume sliders to their respective functions
@@ -19,6 +20,9 @@ func _ready() -> void:
 	if sfx_slider:
 		sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 		sfx_slider.value = AudioManager.get_sfx_volume()
+	
+	# Style the end game dialog
+	style_end_game_dialog()
 
 func _on_master_volume_changed(value: float):
 	AudioManager.set_master_volume(value)
@@ -39,26 +43,40 @@ func _on_back_button_pressed() -> void:
 	else:
 		get_tree().change_scene_to_file(previous_scene)
 
-func _on_end_buttton_pressed() -> void:
+func _on_end_button_pressed() -> void:
 	AudioManager.play_button_click()
-	
-	var dialog = ConfirmationDialog.new()
-	dialog.title = "Confirm Exit"
-	dialog.dialog_text = "Are you sure you want to end the game?"
-	
-	# Connect the confirmed signal and handle dialog cleanup on close
-	dialog.confirmed.connect(_on_end_game_confirmed)
-	dialog.close_requested.connect(_on_dialog_closed.bind(dialog))
-	
-	add_child(dialog)
-	dialog.popup_centered()
+	end_game_dialog.popup_centered()
 
 func _on_end_game_confirmed():
 	AudioManager.play_button_click()
 	# Only end the game if the user confirmed
 	GameState.end_game()
 
-func _on_dialog_closed(dialog: ConfirmationDialog):
-	# Clean up the dialog when it's closed (regardless of how it was closed)
-	if dialog and is_instance_valid(dialog):
-		dialog.queue_free()
+func style_end_game_dialog():
+	if not end_game_dialog:
+		return
+	
+	# Load the font
+	var font = load("res://Other/Tiny5-Regular.ttf")
+	
+	# Create custom background style
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.0392157, 0.113725, 0.180392, 1)  # Dark blue background
+	bg_style.border_width_left = 3
+	bg_style.border_width_top = 3
+	bg_style.border_width_right = 3
+	bg_style.border_width_bottom = 3
+	bg_style.border_color = Color(0.12549, 0.572549, 0.682353, 1)  # Teal border
+	bg_style.corner_radius_top_left = 8
+	bg_style.corner_radius_top_right = 8
+	bg_style.corner_radius_bottom_left = 8
+	bg_style.corner_radius_bottom_right = 8
+	
+	# Apply styling via code
+	end_game_dialog.add_theme_color_override("title_color", Color(1, 1, 1, 1))
+	end_game_dialog.add_theme_font_override("title_font", font)
+	end_game_dialog.add_theme_font_size_override("title_font_size", 24)
+	end_game_dialog.add_theme_font_override("font", font)
+	end_game_dialog.add_theme_font_size_override("font_size", 20)
+	end_game_dialog.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	end_game_dialog.add_theme_stylebox_override("panel", bg_style)

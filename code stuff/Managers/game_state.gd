@@ -2,6 +2,7 @@ extends Node
 
 signal day_or_action_changed
 signal day_completed
+signal final_turn_started
 var just_started_new_day := false
 var days_left := 10
 var actions_left := 10
