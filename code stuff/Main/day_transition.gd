@@ -83,3 +83,7 @@ func _on_next_day_pressed():
 func _input(event):
 	if event.is_action_pressed("ui_cancel") and next_day_button.visible and not next_day_button.disabled:
 		_on_next_day_pressed() 
+
+
+func _on_next_day_button_pressed() -> void:
+	pass # Replace with function body.

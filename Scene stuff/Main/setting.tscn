@@ -145,23 +145,6 @@ value = 1.0
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_4yhbh")
 
-[node name="BackButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_x0ggx")
-theme_override_font_sizes/font_size = 32
-theme_override_styles/focus = SubResource("StyleBoxEmpty_y2ue3")
-theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_m7oyg")
-theme_override_styles/hover = SubResource("StyleBoxFlat_pqsny")
-theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_4yhbh")
-theme_override_styles/normal = SubResource("StyleBoxFlat_4yhbh")
-text = "BACK"
-
 [node name="EndButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_x0ggx")
@@ -179,12 +162,29 @@ theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_4yhbh")
 theme_override_styles/normal = SubResource("StyleBoxFlat_4yhbh")
 text = "END GAME"
 
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y2ue3")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_m7oyg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pqsny")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_4yhbh")
+theme_override_styles/normal = SubResource("StyleBoxFlat_4yhbh")
+text = "BACK"
+
 [node name="EndGameDialog" type="ConfirmationDialog" parent="."]
 title = "Confirm Exit"
 initial_position = 2
 size = Vector2i(500, 200)
 dialog_text = "Are you sure you want to end the game?"
 
-[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/EndButton" to="." method="_on_end_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="confirmed" from="EndGameDialog" to="." method="_on_end_game_confirmed"]

@@ -90,7 +90,7 @@ texture = ExtResource("15_niip7")
 bg_color = Color(0.533473, 0.594343, 0.774528, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_panel"]
-bg_color = Color(0.164706, 0.623529, 0.113725, 1)
+bg_color = Color(0.415686, 0.0784314, 0.027451, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -102,7 +102,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chat_scroll"]
-bg_color = Color(0.564706, 1, 0.521569, 1)
+bg_color = Color(1, 0.929412, 0, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1

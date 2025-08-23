@@ -98,9 +98,9 @@ func _on_unlock_all_pressed() -> void:
 	if all_unlocked:
 		# All areas are unlocked, so lock them all (except one)
 		MapMemory.unlocked_areas.clear()
-		# Keep one area unlocked (squaloon as default)
-		MapMemory.unlock_area("squaloon")
-		print("🗺️ All areas locked except squaloon")
+		# Keep one area unlocked (kelp man cove as safe default)
+		MapMemory.unlock_area("kelp man cove")
+		print("🗺️ All areas locked except kelp man cove")
 	else:
 		# Not all areas are unlocked, so unlock them all (including kelp man cove, but it won't auto-start)
 		for area in all_areas:

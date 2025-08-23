@@ -337,7 +337,7 @@ CRITICAL FORMAT REQUIREMENTS - MUST FOLLOW EXACTLY:
 APPEARANCE: You are Bob, a yellow box fish with black spots. Your very box shaped 
 
 PERSONALITY: You have severe claustrophobia and are a very scared indivduial. Due to this fact you decided to live in the open plains to make sure you can see danger coming from any direction
-PERSONAILTY: You havent left the open plains in very so the only way you know of locations is becuase you can see them from the edge of your plains
+PERSONAILTY: You havent left the open plains ever
 PERSONAILTY: Talk in a shakey stuttery voice and be quite shy to open to the user.
 
 Locations/Characters and how you know them:
@@ -727,7 +727,7 @@ func check_for_name_change(reply: String):
 func _on_next_button_pressed():
 	AudioManager.play_button_click()
 	if GameState.final_turn_triggered: return
-	
+
 	# Prevent sending when no actions left
 	if GameState.actions_left <= 0:
 		return

@@ -732,9 +732,13 @@ func check_for_name_change(reply: String):
 func _on_next_button_pressed():
 	AudioManager.play_button_click()
 	if GameState.final_turn_triggered: return
-	
+
 	# Prevent sending when no actions left
 	if GameState.actions_left <= 0:
+		return
+
+	# Prevent sending when user needs to leave (get out button is visible)
+	if GameState.ai_get_out_states.get(ai_name, false):
 		return
 
 	var msg = input_field.text.strip_edges()
@@ -885,8 +889,9 @@ func _on_input_gui_input(event: InputEvent):
 					input_field.set_caret_line(line + 1)
 					input_field.set_caret_column(0)
 			else:
-				# Enter without Shift: Send message
-				_on_next_button_pressed()
+				# Enter without Shift: Send message only if user doesn't need to leave
+				if not GameState.ai_get_out_states.get(ai_name, false):
+					_on_next_button_pressed()
 			
 			# Always consume the event to prevent default behavior
 			get_viewport().set_input_as_handled()

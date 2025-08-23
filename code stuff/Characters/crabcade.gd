@@ -794,7 +794,7 @@ func check_for_name_change(reply: String):
 func _on_next_button_pressed():
 	AudioManager.play_button_click()
 	if GameState.final_turn_triggered: return
-	
+
 	# Prevent sending when no actions left
 	if GameState.actions_left <= 0:
 		return

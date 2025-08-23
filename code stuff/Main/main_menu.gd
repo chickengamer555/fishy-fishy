@@ -139,3 +139,9 @@ func style_file_dialog():
 	file_dialog.add_theme_color_override("file_icon_color", Color(0.12549, 0.572549, 0.682353, 1))
 	file_dialog.add_theme_color_override("folder_icon_color", Color(0.12549, 0.572549, 0.682353, 1))
 	file_dialog.add_theme_stylebox_override("panel", bg_style)
+
+
+func _on_tutorial_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Main/tutorial.tscn")
