@@ -2,22 +2,22 @@
 
 [ext_resource type="Script" uid="uid://dw71ov3fmdscm" path="res://code stuff/Characters/drift_wood.gd" id="1_xnn3t"]
 [ext_resource type="PackedScene" uid="uid://dwu5wk2m4uolf" path="res://emotion/Driftwood/drift_wood_emotion.tscn" id="2_xnn3t"]
-[ext_resource type="Texture2D" uid="uid://db0cm7lwf881r" path="res://UI STUFF/Driftwood/Backround.png" id="2_ydsfi"]
+[ext_resource type="Texture2D" uid="uid://db0cm7lwf881r" path="res://UI STUFF/Ancient tomb/Backround.png" id="2_ydsfi"]
 [ext_resource type="Shader" uid="uid://dikse5fp3siql" path="res://Other/underwater.gdshader" id="4_gtlq0"]
-[ext_resource type="Texture2D" uid="uid://du57anydupkes" path="res://UI STUFF/Driftwood/Ai pannel.png" id="5_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://du57anydupkes" path="res://UI STUFF/Ancient tomb/Ai pannel.png" id="5_xnn3t"]
 [ext_resource type="FontFile" uid="uid://ca5uyoxsavb66" path="res://Other/Jersey10-Regular.ttf" id="6_t5s0b"]
 [ext_resource type="Script" uid="uid://b35bkcuwsmllw" path="res://code stuff/UI/rich_text_label.gd" id="7_qcjwr"]
-[ext_resource type="Texture2D" uid="uid://ku06yq1siqmi" path="res://UI STUFF/Driftwood/Player input pannel.png" id="8_xnn3t"]
-[ext_resource type="Texture2D" uid="uid://dk76vlvqq6flk" path="res://UI STUFF/Driftwood/Log button hover.png" id="9_xnn3t"]
-[ext_resource type="Texture2D" uid="uid://bv2xs6ywo36dw" path="res://UI STUFF/Driftwood/Log button.png" id="10_ydsfi"]
-[ext_resource type="Texture2D" uid="uid://djd1cxvy7hihb" path="res://UI STUFF/Driftwood/Send button hover.png" id="11_ydsfi"]
-[ext_resource type="Texture2D" uid="uid://dfwn046nmhupc" path="res://UI STUFF/Driftwood/Send button.png" id="12_eufcx"]
-[ext_resource type="Texture2D" uid="uid://pktpbp0surou" path="res://UI STUFF/Driftwood/next day hover.png" id="14_xnn3t"]
-[ext_resource type="Texture2D" uid="uid://dt7mgvdmua6my" path="res://UI STUFF/Driftwood/next day.png" id="15_ydsfi"]
+[ext_resource type="Texture2D" uid="uid://ku06yq1siqmi" path="res://UI STUFF/Ancient tomb/Player input pannel.png" id="8_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://dk76vlvqq6flk" path="res://UI STUFF/Ancient tomb/Log button hover.png" id="9_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://bv2xs6ywo36dw" path="res://UI STUFF/Ancient tomb/Log button.png" id="10_ydsfi"]
+[ext_resource type="Texture2D" uid="uid://djd1cxvy7hihb" path="res://UI STUFF/Ancient tomb/Send button hover.png" id="11_ydsfi"]
+[ext_resource type="Texture2D" uid="uid://dfwn046nmhupc" path="res://UI STUFF/Ancient tomb/Send button.png" id="12_eufcx"]
+[ext_resource type="Texture2D" uid="uid://pktpbp0surou" path="res://UI STUFF/Ancient tomb/next day hover.png" id="14_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://dt7mgvdmua6my" path="res://UI STUFF/Ancient tomb/next day.png" id="15_ydsfi"]
 [ext_resource type="Script" uid="uid://cknajgl5bsa1t" path="res://code stuff/UI/chatlog.gd" id="16_v6ql2"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="17_1bnsp"]
 [ext_resource type="AudioStream" uid="uid://cbijn1nxu78y3" path="res://Sound stuff/click-233950.mp3" id="18_y4yeh"]
-[ext_resource type="Texture2D" uid="uid://6y7nc5ta0mvi" path="res://UI STUFF/Driftwood/Stat box pannel.png" id="20_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://6y7nc5ta0mvi" path="res://UI STUFF/Ancient tomb/Stat box pannel.png" id="20_xnn3t"]
 [ext_resource type="Texture2D" uid="uid://dyik45dn3x82b" path="res://UI STUFF/Heart/Heart1.png" id="22_k8dje"]
 [ext_resource type="Texture2D" uid="uid://dra5f325dmwan" path="res://UI STUFF/Heart/Heart2.png" id="23_018aq"]
 [ext_resource type="Texture2D" uid="uid://bi3h6nb02trds" path="res://UI STUFF/Heart/Heart3.png" id="24_iqj8b"]
@@ -39,8 +39,8 @@
 [ext_resource type="Texture2D" uid="uid://bpefr3rh6f7oy" path="res://UI STUFF/Heart/Heart19.png" id="40_bc27m"]
 [ext_resource type="Texture2D" uid="uid://csvn64lesjknn" path="res://UI STUFF/Heart/Heart20.png" id="41_cuxd5"]
 [ext_resource type="Texture2D" uid="uid://c2rjr27teifow" path="res://UI STUFF/Heart/Heart21.png" id="42_eqdpj"]
-[ext_resource type="Texture2D" uid="uid://dretx4vp4cyii" path="res://UI STUFF/Driftwood/banner.png" id="43_xnn3t"]
-[ext_resource type="Texture2D" uid="uid://dg2sbttn4m2ar" path="res://UI STUFF/Driftwood/Map.png" id="44_ydsfi"]
+[ext_resource type="Texture2D" uid="uid://dretx4vp4cyii" path="res://UI STUFF/Ancient tomb/banner.png" id="43_xnn3t"]
+[ext_resource type="Texture2D" uid="uid://dg2sbttn4m2ar" path="res://UI STUFF/Ancient tomb/Map.png" id="44_ydsfi"]
 [ext_resource type="Texture2D" uid="uid://gqxxgwwcbi57" path="res://UI STUFF/Settings_button_frame004.png" id="45_1s5ul"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qk4g"]
@@ -261,7 +261,6 @@ size = Vector2i(500, 500)
 visible = false
 transient = true
 always_on_top = true
-
 content_scale_mode = 1
 content_scale_aspect = 1
 theme_override_colors/title_color = Color(0, 0, 0, 0)
