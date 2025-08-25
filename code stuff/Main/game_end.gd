@@ -13,20 +13,38 @@ func display_all_scores():
 	for child in score_container.get_children():
 		if child != score_template:
 			child.queue_free()
-	
-	# Display all AI scores
+
+	# Display all AI scores with max possible score
 	for ai_name in GameState.ai_scores:
 		var score_label = score_template.duplicate()
-		score_label.text = ai_name + ": " + str(GameState.ai_scores[ai_name])
+		var current_score = GameState.ai_scores[ai_name]
+		var max_possible_score = calculate_max_possible_score(ai_name)
+		score_label.text = ai_name + ": " + str(current_score) + "/" + str(max_possible_score)
 		score_label.visible = true
 		score_container.add_child(score_label)
-	
+
 	# If no scores, show a message
 	if GameState.ai_scores.is_empty():
 		var no_scores_label = score_template.duplicate()
 		no_scores_label.text = "No scores recorded"
 		no_scores_label.visible = true
 		score_container.add_child(no_scores_label)
+
+# Calculate the maximum possible score for a character based on their interaction count
+func calculate_max_possible_score(ai_name: String) -> int:
+	var interaction_count = 0
+
+	# Count interactions with this character from Memory.shared_memory
+	for entry in Memory.shared_memory:
+		var speaker = entry["speaker"]
+		var target = entry["target"]
+
+		# Count user messages to this character (each interaction can give max +10 points)
+		if speaker == "User" and target == ai_name:
+			interaction_count += 1
+
+	# Each interaction can give a maximum of +10 relationship points
+	return interaction_count * 10
 
 func setup_button():
 	main_menu_button.pressed.connect(on_main_menu_pressed)

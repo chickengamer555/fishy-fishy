@@ -99,7 +99,7 @@ func _ready() -> void:
 	gameplay2.visible = false
 	gameplay_label.visible = false
 	setting_2.visible = false
-	banner.position = Vector2(0, -7)
+	banner.visible = false
 	setting_1.visible = false
 	if leave_button:
 		leave_button.visible = false
@@ -166,7 +166,7 @@ func _on_game_play_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	banner.text = ("TO START YOU MUST CHOOSE A LOCATION")
 	gameplay_label.visible = true
-	gameplay_label.position = Vector2(534.0, 325.0)
+	gameplay_label.position = Vector2(-186, -90)
 	gameplay1.visible = true
 	menu.visible = false
 	banner.visible = true
@@ -178,7 +178,7 @@ func _on_settings_pressed() -> void:
 	await get_tree().create_timer(0.1).timeout
 	banner.visible = false
 	gameplay_label.visible = true
-	gameplay_label.position = Vector2(533, 216)
+	gameplay_label.position = Vector2(-182.0, -195)
 	menu.visible = false
 	current_index = 0  # Reset index for settings section
 	gameplay_label.text = setting1_messages[current_index]
@@ -221,7 +221,8 @@ func _on_squaloon_pressed() -> void:
 	gameplay2_arrow.visible = false
 	gameplay2_circle.visible = false
 	banner.visible = true
-	banner.position = Vector2(0, 14)
+	banner.position = Vector2(251.0, 348)
+	gameplay_label.position = Vector2(-681, -289)
 	
 
 
@@ -548,7 +549,7 @@ func _on_setting_1_settings_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	gameplay_label.visible = true
-	gameplay_label.position = Vector2(800, 0)
+	gameplay_label.position = Vector2(106.0, -408)
 	current_index = 0  # Reset index for settings section
 	gameplay_label.text = setting2_messages[current_index]
 	current_index = (current_index + 1) % setting2_messages.size()
