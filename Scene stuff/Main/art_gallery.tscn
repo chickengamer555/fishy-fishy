@@ -1,0 +1,464 @@
+[gd_scene load_steps=12 format=3 uid="uid://doni1l68wfssw"]
+
+[ext_resource type="Script" uid="uid://cvg608du7rp6i" path="res://code stuff/Main/art_gallery.gd" id="1_xxxxx"]
+[ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="2_x0ggx"]
+[ext_resource type="Texture2D" uid="uid://b1vdxwt0dqhr8" path="res://emotion/Squileta/Squileta happy.png" id="3_7nplr"]
+[ext_resource type="Texture2D" uid="uid://sxvw6qsce7ox" path="res://UI STUFF/Main menu/Bob fish.png" id="3_bob"]
+[ext_resource type="Texture2D" uid="uid://b0dl0mit1ablh" path="res://UI STUFF/Alleyway/Send button.png" id="6_ui"]
+[ext_resource type="Texture2D" uid="uid://cpd4644xejb2k" path="res://UI STUFF/Main menu/Backround.png" id="7_backgrounds"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_settings_normal"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_settings_hover"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 0.47451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button"]
+bg_color = Color(0.0392157, 0.113725, 0.180392, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_image_border"]
+bg_color = Color(0.0196078, 0.0568627, 0.0901961, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[node name="Art Gallery" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xxxxx")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0392157, 0.113725, 0.180392, 1)
+
+[node name="MainView" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeaveButton" type="Button" parent="MainView"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 124.0
+offset_bottom = 74.0
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+text = "LEAVE"
+
+[node name="Title" type="Label" parent="MainView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -300.0
+offset_right = 150.0
+offset_bottom = -250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 48
+text = "FISHYS"
+horizontal_alignment = 1
+
+[node name="CategoryContainer" type="HBoxContainer" parent="MainView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -100.0
+offset_right = 400.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="CharactersCategory" type="VBoxContainer" parent="MainView/CategoryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CharactersPreview" type="TextureButton" parent="MainView/CategoryContainer/CharactersCategory"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource("3_7nplr")
+stretch_mode = 5
+
+[node name="CharactersLabel" type="Label" parent="MainView/CategoryContainer/CharactersCategory"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+text = "CHARACTERS"
+horizontal_alignment = 1
+
+[node name="UICategory" type="VBoxContainer" parent="MainView/CategoryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UIPreview" type="TextureButton" parent="MainView/CategoryContainer/UICategory"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource("6_ui")
+stretch_mode = 5
+
+[node name="UILabel" type="Label" parent="MainView/CategoryContainer/UICategory"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+text = "UI ELEMENTS"
+horizontal_alignment = 1
+
+[node name="BackgroundsCategory" type="VBoxContainer" parent="MainView/CategoryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackgroundsPreview" type="TextureButton" parent="MainView/CategoryContainer/BackgroundsCategory"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource("7_backgrounds")
+stretch_mode = 5
+
+[node name="BackgroundsLabel" type="Label" parent="MainView/CategoryContainer/BackgroundsCategory"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+text = "BACKGROUNDS"
+horizontal_alignment = 1
+
+[node name="DetailView" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackButton" type="Button" parent="DetailView"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 124.0
+offset_bottom = 74.0
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+text = "BACK"
+
+[node name="DetailTitle" type="Label" parent="DetailView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -300.0
+offset_right = 150.0
+offset_bottom = -250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 48
+text = "CHARACTERS"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DetailView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -200.0
+offset_right = 500.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="DetailView/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 25
+columns = 4
+
+[node name="ArtCardTemplate" type="Button" parent="DetailView/ScrollContainer/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(200, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+flat = true
+
+[node name="CardPanel" type="Panel" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_button")
+
+[node name="MarginContainer" type="MarginContainer" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ImageContainer" type="CenterContainer" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ImageBorderPanel" type="Panel" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer/VBoxContainer/ImageContainer"]
+custom_minimum_size = Vector2(180, 170)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_image_border")
+
+[node name="ImageCenterContainer" type="CenterContainer" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer/VBoxContainer/ImageContainer/ImageBorderPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ArtImage" type="TextureRect" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer/VBoxContainer/ImageContainer/ImageBorderPanel/ImageCenterContainer"]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = ExtResource("3_bob")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ArtLabel" type="Label" parent="DetailView/ScrollContainer/GridContainer/ArtCardTemplate/CardPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 25)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 18
+text = "Fishys"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FullscreenView" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FullscreenBackground" type="ColorRect" parent="FullscreenView"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0392157, 0.113725, 0.180392, 1)
+
+[node name="FullscreenCloseButton" type="Button" parent="FullscreenView"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 124.0
+offset_bottom = 74.0
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+text = "CLOSE"
+
+[node name="FullscreenBackButton" type="Button" parent="FullscreenView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = 300.0
+offset_right = -30.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+text = "BACK"
+
+[node name="FullscreenNextButton" type="Button" parent="FullscreenView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 30.0
+offset_top = 300.0
+offset_right = 130.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_settings_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_settings_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_settings_normal")
+text = "NEXT"
+
+[node name="FullscreenContainer" type="VBoxContainer" parent="FullscreenView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="FullscreenTitle" type="Label" parent="FullscreenView/FullscreenContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_x0ggx")
+theme_override_font_sizes/font_size = 36
+text = "Art Title"
+horizontal_alignment = 1
+
+[node name="FullscreenImage" type="TextureRect" parent="FullscreenView/FullscreenContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="pressed" from="MainView/LeaveButton" to="." method="_on_leave_button_pressed"]
+[connection signal="pressed" from="MainView/CategoryContainer/CharactersCategory/CharactersPreview" to="." method="_on_characters_preview_pressed"]
+[connection signal="pressed" from="MainView/CategoryContainer/UICategory/UIPreview" to="." method="_on_ui_preview_pressed"]
+[connection signal="pressed" from="MainView/CategoryContainer/BackgroundsCategory/BackgroundsPreview" to="." method="_on_backgrounds_preview_pressed"]
+[connection signal="pressed" from="DetailView/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="FullscreenView/FullscreenCloseButton" to="." method="_on_fullscreen_close_button_pressed"]
+[connection signal="pressed" from="FullscreenView/FullscreenBackButton" to="." method="_on_fullscreen_back_button_pressed"]
+[connection signal="pressed" from="FullscreenView/FullscreenNextButton" to="." method="_on_fullscreen_next_button_pressed"]

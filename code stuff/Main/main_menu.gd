@@ -145,3 +145,9 @@ func _on_tutorial_pressed() -> void:
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/tutorial.tscn")
+
+
+func _on_gallery_pressed() -> void:
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Main/art_gallery.tscn")

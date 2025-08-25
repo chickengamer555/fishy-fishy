@@ -599,3 +599,8 @@ func _on_tips_1_back_button_pressed():
 	AudioManager.play_button_click()
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu.tscn")
+
+func _on_back_button_pressed():
+	AudioManager.play_button_click()
+	await get_tree().create_timer(0.1).timeout
+	get_tree().change_scene_to_file("res://Scene stuff/Main/main_menu.tscn")

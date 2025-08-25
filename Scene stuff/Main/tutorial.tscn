@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://cbqktqsfj2wxo"]
+[gd_scene load_steps=76 format=3 uid="uid://cbqktqsfj2wxo"]
 
 [ext_resource type="Script" uid="uid://q0e5mbmvy66k" path="res://code stuff/Main/tutorial.gd" id="1_jl252"]
 [ext_resource type="FontFile" uid="uid://bm5o7wdxohasl" path="res://Other/Tiny5-Regular.ttf" id="2_8cev8"]
@@ -222,7 +222,23 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_57wyj"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tutorial_focus"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tutorial_normal"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tutorial_hover"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.12549, 0.572549, 0.682353, 0.47451)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0amgr"]
 content_margin_left = 15.0
@@ -232,9 +248,11 @@ content_margin_bottom = 10.0
 bg_color = Color(0.0392157, 0.113725, 0.180392, 1)
 
 [node name="Tutorial" type="Node2D"]
+position = Vector2(695, 410)
 script = ExtResource("1_jl252")
 
 [node name="Tips 1" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -1057,85 +1075,115 @@ horizontal_alignment = 2
 autowrap_mode = 3
 
 [node name="Menu" type="Control" parent="."]
-visible = false
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Game_play" type="Button" parent="Menu"]
+[node name="Background" type="ColorRect" parent="Menu"]
 layout_mode = 0
-offset_left = -2.0
-offset_top = 138.0
-offset_right = 654.0
-offset_bottom = 290.0
-theme_override_colors/font_hover_pressed_color = Color(0.819608, 0.992157, 1, 1)
-theme_override_colors/font_hover_color = Color(0.819751, 0.990403, 1, 1)
-theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.819608, 0.992157, 1, 1)
+offset_left = -695.0
+offset_top = -409.0
+offset_right = 585.0
+offset_bottom = 316.0
+color = Color(0.0392157, 0.113725, 0.180392, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = -306.0
+offset_right = 115.0
+offset_bottom = 194.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Menu/VBoxContainer"]
+layout_mode = 2
 theme_override_fonts/font = ExtResource("2_8cev8")
-theme_override_font_sizes/font_size = 128
-theme_override_styles/focus = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_57wyj")
+theme_override_font_sizes/font_size = 48
+text = "PICK A TUTORIAL"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxLine_ah8vt")
+
+[node name="Game_play" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_8cev8")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tutorial_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tutorial_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_tutorial_normal")
 text = "GAME PLAY"
 
-[node name="Tips" type="Button" parent="Menu"]
-layout_mode = 0
-offset_top = 375.0
-offset_right = 560.0
-offset_bottom = 527.0
-theme_override_colors/font_hover_pressed_color = Color(0.819608, 0.992157, 1, 1)
-theme_override_colors/font_hover_color = Color(0.819751, 0.990403, 1, 1)
-theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.819608, 0.992157, 1, 1)
+[node name="Tips" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
 theme_override_fonts/font = ExtResource("2_8cev8")
-theme_override_font_sizes/font_size = 128
-theme_override_styles/focus = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_57wyj")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tutorial_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tutorial_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_tutorial_normal")
 text = "TIPS"
 
-[node name="Settings" type="Button" parent="Menu"]
-layout_mode = 0
-offset_left = 707.0
-offset_top = 160.0
-offset_right = 1267.0
-offset_bottom = 312.0
-theme_override_colors/font_hover_pressed_color = Color(0.819608, 0.992157, 1, 1)
-theme_override_colors/font_hover_color = Color(0.819751, 0.990403, 1, 1)
-theme_override_colors/font_color = Color(0.921569, 0.996078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.819608, 0.992157, 1, 1)
+[node name="Settings" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
 theme_override_fonts/font = ExtResource("2_8cev8")
-theme_override_font_sizes/font_size = 128
-theme_override_styles/focus = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_57wyj")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_57wyj")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tutorial_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tutorial_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_tutorial_normal")
 text = "SETTINGS"
+
+[node name="BackButton" type="Button" parent="Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_8cev8")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_tutorial_focus")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tutorial_hover")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_tutorial_normal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_tutorial_normal")
+text = "BACK"
 
 [node name="end_tutorial" type="Button" parent="."]
 visible = false
@@ -1208,7 +1256,8 @@ autowrap_mode = 3
 [connection signal="pressed" from="Gameplay 2/ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/DecreaseFontButton" to="." method="_on_decrease_font_button_pressed"]
 [connection signal="pressed" from="Gameplay 2/ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/IncreaseFontButton" to="." method="_on_increase_font_button_pressed"]
 [connection signal="pressed" from="Gameplay 2/ChatLogWindow/ChatLogPanel/VBoxContainer/FontSizeContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Menu/Game_play" to="." method="_on_game_play_pressed"]
-[connection signal="pressed" from="Menu/Tips" to="." method="_on_tips_pressed"]
-[connection signal="pressed" from="Menu/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/Game_play" to="." method="_on_game_play_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/Tips" to="." method="_on_tips_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="end_tutorial" to="." method="_on_end_tutorial_pressed"]
