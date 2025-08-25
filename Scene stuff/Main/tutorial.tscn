@@ -729,7 +729,6 @@ scale = Vector2(10, 10)
 texture = ExtResource("5_vb3i6")
 
 [node name="Gameplay 2" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

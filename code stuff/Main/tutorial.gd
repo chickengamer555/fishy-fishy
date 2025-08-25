@@ -221,7 +221,6 @@ func _on_squaloon_pressed() -> void:
 	gameplay2_arrow.visible = false
 	gameplay2_circle.visible = false
 	banner.visible = true
-	banner.position = Vector2(251.0, 348)
 	gameplay_label.position = Vector2(-681, -289)
 	
 
