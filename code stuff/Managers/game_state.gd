@@ -39,16 +39,3 @@ func end_game():
 	var tree = get_tree()
 	if tree:
 		tree.change_scene_to_file("res://Scene stuff/Main/game_end.tscn")
-
-func _input(event):
-	# Handle F11 for window maximize toggle
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_F11:
-			toggle_window_size()
-
-func toggle_window_size():
-	var current_mode = DisplayServer.window_get_mode()
-	if current_mode == DisplayServer.WINDOW_MODE_MAXIMIZED:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)

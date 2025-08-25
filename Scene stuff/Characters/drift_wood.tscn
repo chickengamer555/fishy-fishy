@@ -261,8 +261,7 @@ size = Vector2i(500, 500)
 visible = false
 transient = true
 always_on_top = true
-min_size = Vector2i(500, 500)
-max_size = Vector2i(1920, 1080)
+
 content_scale_mode = 1
 content_scale_aspect = 1
 theme_override_colors/title_color = Color(0, 0, 0, 0)

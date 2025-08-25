@@ -16,6 +16,8 @@ var chat_font_size: int:
 
 # Color variables removed
 
+
+
 # Chat window fullscreen state
 var chat_window_is_fullscreen := false
 var chat_window_normal_size := Vector2i(600, 400)
@@ -45,7 +47,7 @@ func show_chat_log():
 	# Only popup if not already visible to avoid resetting styling
 	if not visible:
 		popup_centered()
-		
+
 		# Apply initial scaling and constraints
 		var tree = get_tree()
 		if tree:
@@ -134,19 +136,19 @@ func update_text_scaling():
 	var base_size = Vector2(600, 400)  # Reference size
 	var scale_factor = min(window_size.x / base_size.x, window_size.y / base_size.y)
 	scale_factor = clamp(scale_factor, 0.7, 2.0)  # Limit scaling range
-	
+
 	# Scale title font
 	chat_log_title_label.add_theme_font_size_override("font_size", int(16 * scale_factor))
-	
+
 	# Scale chat content font
 	var chat_size = int(chat_font_size * scale_factor)
 	chat_log_label.add_theme_font_size_override("normal_font_size", chat_size)
 	chat_log_label.add_theme_font_size_override("bold_font_size", chat_size)
 	chat_log_label.add_theme_font_size_override("italic_font_size", chat_size)
-	
+
 	# Line spacing for readability
 	chat_log_label.add_theme_constant_override("line_separation", int(2 * scale_factor))
-	
+
 	# Scale status label font
 	chat_log_status_label.add_theme_font_size_override("font_size", int(12 * scale_factor))
 
@@ -154,11 +156,11 @@ func constrain_window_position():
 	var screen_size = DisplayServer.screen_get_size()
 	var window_size = size
 	var window_pos = position
-	
+
 	# Constrain to screen bounds
 	window_pos.x = clamp(window_pos.x, 0, screen_size.x - window_size.x)
 	window_pos.y = clamp(window_pos.y, 0, screen_size.y - window_size.y)
-	
+
 	position = window_pos
 
 # Font size button handlers - now uses predefined sizes
@@ -229,12 +231,12 @@ func _on_fullscreen_button_pressed():
 
 func toggle_fullscreen():
 	chat_window_is_fullscreen = !chat_window_is_fullscreen
-	
+
 	if chat_window_is_fullscreen:
 		# Store current size and position
 		chat_window_normal_size = size
 		chat_window_normal_position = position
-		
+
 		# Set to fullscreen
 		var screen_size = DisplayServer.screen_get_size()
 		position = Vector2i.ZERO
@@ -243,6 +245,6 @@ func toggle_fullscreen():
 		# Restore normal size and position
 		size = chat_window_normal_size
 		position = chat_window_normal_position
-	
+
 	# Update text scaling for new size
 	update_text_scaling()
