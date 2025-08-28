@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dyaa6ycg6uc0x"]
 
-[ext_resource type="Texture2D" uid="uid://dsc480r717oy7" path="res://emotion/Shrimp no name/neutral.png" id="1_cg7nm"]
-[ext_resource type="Texture2D" uid="uid://dil7robrx7028" path="res://emotion/Shrimp no name/Sad.png" id="2_57w6l"]
-[ext_resource type="Texture2D" uid="uid://clk40hrmj8lut" path="res://emotion/Shrimp no name/Angry.png" id="3_57w6l"]
-[ext_resource type="Texture2D" uid="uid://ct8gq85jscnpo" path="res://emotion/Shrimp no name/happy.png" id="4_pqhjt"]
-[ext_resource type="Texture2D" uid="uid://do7ghayf15vk4" path="res://emotion/Shrimp no name/Shooting.png" id="5_4hus8"]
+[ext_resource type="Texture2D" uid="uid://dsc480r717oy7" path="res://emotion/Shrimp no name/shrimp neutral.png" id="1_cg7nm"]
+[ext_resource type="Texture2D" uid="uid://dil7robrx7028" path="res://emotion/Shrimp no name/shrimp sad.png" id="2_57w6l"]
+[ext_resource type="Texture2D" uid="uid://clk40hrmj8lut" path="res://emotion/Shrimp no name/shrimp angry.png" id="3_57w6l"]
+[ext_resource type="Texture2D" uid="uid://ct8gq85jscnpo" path="res://emotion/Shrimp no name/shrimp happy.png" id="4_pqhjt"]
+[ext_resource type="Texture2D" uid="uid://do7ghayf15vk4" path="res://emotion/Shrimp no name/shrimp shooting.png" id="5_4hus8"]
 
 [node name="shrimp_emotion" type="Node2D"]
 
